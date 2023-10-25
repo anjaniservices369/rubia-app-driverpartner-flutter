@@ -1,0 +1,287 @@
+import 'package:base_project_flutter/constants/constants.dart';
+import 'package:base_project_flutter/constants/stetuesConstant.dart';
+import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
+import 'package:base_project_flutter/globalWidgets/button.dart';
+import 'package:base_project_flutter/globalWidgets/leadingbackbtn.dart';
+import 'package:base_project_flutter/responsive.dart';
+import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
+import 'package:base_project_flutter/views/enable_location/enable_location.dart';
+import 'package:base_project_flutter/views/locationError/locationError.dart';
+import 'package:base_project_flutter/views/profile_review/profile_review.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../constants/imageConstant.dart';
+import '../location_popup_page.dart';
+
+class ApplicationStatusPage extends StatefulWidget {
+  const ApplicationStatusPage({Key? key, this.profileStatus, this.profiledetails});
+  final profileStatus;
+  final profiledetails;
+  @override
+  State<ApplicationStatusPage> createState() => _ApplicationStatusPageState();
+}
+
+class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
+  Future<void> launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(url),
+      );
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        backgroundColor: tWhite,
+        leading: BackButtonLeading(
+          onTap: () {
+            Twl.willpopAlert(context);
+          },
+        ),
+      ),
+      backgroundColor: tBackground,
+      body: Padding(
+        padding: EdgeInsets.all(2),
+        child: widget.profileStatus == profile_verified_rejected
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1,
+                          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                          decoration: BoxDecoration(color: tWhite, boxShadow: [tBoxShadow], borderRadius: BorderRadius.circular(30)),
+                          child: Column(
+                            children: [
+                              Lottie.asset(
+                                Images.DOCUMENT_REJECTED,
+                                height: 25.h,
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        widget.profiledetails ?? " ",
+                                        overflow: TextOverflow.clip,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 3,
+                                        style: GoogleFonts.mulish(color: tRed, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 10.sp : 13.sp),
+                                      ),
+                                      SizedBox(
+                                        height: 1.h,
+                                      ),
+                                      Text(
+                                        'Your Applicaton has been rejected ',
+                                        style: GoogleFonts.mulish(
+                                            color: tSecondaryColor, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 11.sp : 13.sp),
+                                      ),
+                                      Text(
+                                        'try again after sometime ',
+                                        style: GoogleFonts.mulish(
+                                            color: tSecondaryColor, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 11.sp : 13.sp),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      child: Button(
+                        // height: 7.h,
+                        // width: 55.w,
+                        color: tPrimaryColor,
+                        textcolor: tWhite,
+                        bottonText: 'Contact us'.tr,
+                        borderSide: BorderSide(color: tPrimaryColor),
+                        // boxshadow: [
+                        //   tButtonBoxshadow
+                        // ],
+                        onTap: (startLoading, stopLoading, btnState) async {
+                          await launchURL(CHAT_LINK);
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Center(
+                    child: Container(
+                      child: Button(
+                        textcolor: tWhite,
+                        bottonText: 'Exit'.tr,
+                        onTap: (startLoading, stopLoading, btnState) {
+                          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  )
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1,
+                          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                          decoration: BoxDecoration(color: tWhite, boxShadow: [tBoxShadow], borderRadius: BorderRadius.circular(30)),
+                          child: Column(
+                            children: [
+                              Lottie.asset(
+                                Images.DOCUMENT_REJECTED,
+                                height: 25.h,
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              Text(
+                                widget.profiledetails ?? " ",
+                                style: GoogleFonts.mulish(color: tRed, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 11.sp : 12.sp),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 30,
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Your Applicaton still in progress ',
+                                        style: GoogleFonts.mulish(
+                                            color: tSecondaryColor, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 11.sp : 13.sp),
+                                      ),
+                                      Text(
+                                        'try again after sometime ',
+                                        style: GoogleFonts.mulish(
+                                            color: tSecondaryColor, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 11.sp : 13.sp),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      child: Button(
+                        textcolor: tWhite,
+                        bottonText: 'go_home'.tr,
+                        onTap: (startLoading, stopLoading, btnState) {
+                          Twl.forceNavigateTo(context, ProfileReview());
+                          // SystemChannels.platform
+                          //     .invokeMethod('SystemNavigator.pop');
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  )
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+//Verification sucess status
+
+class VerificationSucessPage extends StatefulWidget {
+  const VerificationSucessPage({Key? key});
+
+  @override
+  State<VerificationSucessPage> createState() => _VerificationSucessPageState();
+}
+
+class _VerificationSucessPageState extends State<VerificationSucessPage> {
+  @override
+  // void initState() {
+  //   super.initState();
+  //   new Future.delayed(const Duration(seconds: 3), () async {}).then((value) {
+  //     // Twl.forceNavigateTo(context, BottomNavigation());
+  //     //here it should navigateto location page
+  //     Twl.forceNavigateTo(context, LocationErrorScreen());
+  //   });
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: tBackground,
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 5.h),
+            Container(
+              height: 50.h,
+              child: Lottie.asset('assets/lottie/SucessLottie.json'),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              'Verification Done',
+              style: GoogleFonts.mulish(color: tBlack, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 18.sp),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              'Your payment is successfully completed',
+              style: GoogleFonts.mulish(color: tBlack, fontSize: isTab(context) ? 10.sp : 12.sp),
+            ),
+            SizedBox(height: 8.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: tDefaultPadding / 0.3),
+              child: Button(
+                  borderSide: BorderSide(
+                    color: tPrimaryColor,
+                  ),
+                  color: tPrimaryColor,
+                  textcolor: tWhite,
+                  bottonText: 'Go Home',
+                  onTap: (startLoading, stopLoading, btnState) async {
+                    startLoading();
+                    Twl.forceNavigateTo(context, LocationPopUpPage());
+                    stopLoading();
+                  }),
+            ),
+            SizedBox(height: 4.h),
+          ],
+        ),
+      ),
+    );
+  }
+}

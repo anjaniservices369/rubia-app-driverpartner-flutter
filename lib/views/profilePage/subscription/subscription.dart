@@ -1,0 +1,546 @@
+import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
+import 'package:base_project_flutter/constants/constants.dart';
+import 'package:base_project_flutter/constants/imageConstant.dart';
+import 'package:base_project_flutter/globalWidgets/button.dart';
+import 'package:base_project_flutter/responsive.dart';
+import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
+import 'package:base_project_flutter/views/profile_review/profile_review.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpaymentcomponents/cfpaymentcomponent.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
+import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
+import 'package:flutter_cashfree_pg_sdk/utils/cfexceptions.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../../globalFuctions/globalFunctions.dart';
+
+class Subscription extends StatefulWidget {
+  const Subscription({Key? key}) : super(key: key);
+
+  @override
+  _SubscriptionState createState() => _SubscriptionState();
+}
+
+class _SubscriptionState extends State<Subscription> {
+  var planDetails;
+  var resNok;
+  fetchDriverPlans() async {
+    var res = await DriverDetailsApi().getDriverPlans(context);
+    if (res != null && res['status'] == 'OK') {
+      setState(() {
+        planDetails = res['details'];
+      });
+    } else {
+      setState(() {
+        resNok = res['status'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    fetchDriverPlans();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: tYellow,
+        leading: GestureDetector(
+          onTap: () {
+            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: BoxDecoration(
+                color: tWhite,
+                boxShadow: [tBoxShadow],
+                borderRadius: BorderRadius.circular(6)),
+            child: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: tPrimaryColor,
+              size: 16,
+            ),
+          ),
+        ),
+        centerTitle: false,
+        title: Text('subscription_plan'.tr,
+            style: TextStyle(
+                fontSize: isTab(context) ? 14.sp : 16.sp,
+                color: tBlue,
+                fontWeight: FontWeight.w700)),
+      ),
+      body: WillPopScope(
+        onWillPop: () {
+          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+        },
+        child: planDetails == null
+            ? resNok == 'NOK'
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Text('No data found',
+                        style: TextStyle(
+                            fontSize: isTab(context) ? 10.sp : 14.sp,
+                            color: tBlue,
+                            fontWeight: FontWeight.w800)),
+                  )
+                : Container(
+                    padding: EdgeInsets.all(10),
+                    child: SpinKitRotatingCircle(color: tAppbarColor),
+                  )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: tDefaultPadding),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(17)),
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: isTab(context) ? 30.h : 20.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(17),
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                          Images.DRIVER,
+                                        ),
+                                        fit: BoxFit.contain),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3.h,
+                                ),
+                                Text('Driver Prime Membership',
+                                    style: TextStyle(
+                                        fontSize:
+                                            isTab(context) ? 10.sp : 14.sp,
+                                        color: tBlue,
+                                        fontWeight: FontWeight.w800)),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text('Elevate Your Driving Experience with',
+                                    style: TextStyle(
+                                        fontSize: isTab(context) ? 7.sp : 10.sp,
+                                        color: tLightBrown,
+                                        fontWeight: FontWeight.w600)),
+                                SizedBox(
+                                  height: 0.5.h,
+                                ),
+                                Center(
+                                  child: Text('Premium Features!',
+                                      style: TextStyle(
+                                          fontSize:
+                                              isTab(context) ? 7.sp : 10.sp,
+                                          color: tLightBrown,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 30),
+                                  child: Divider(
+                                    color: tGray,
+                                    height: 2.h,
+                                    thickness: 0.5,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 1.h,
+                                        width: 1.h,
+                                        decoration: BoxDecoration(
+                                            color: tBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Text(
+                                          'Premium Features for Enhanced Driving',
+                                          style: TextStyle(
+                                              fontSize:
+                                                  isTab(context) ? 7.sp : 10.sp,
+                                              color: tBlue,
+                                              fontWeight: FontWeight.w600))
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 1.h,
+                                        width: 1.h,
+                                        decoration: BoxDecoration(
+                                            color: tBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: Text(
+                                            'Elevate Your Experience with Prime Membership',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.clip,
+                                                fontSize: isTab(context)
+                                                    ? 7.sp
+                                                    : 10.sp,
+                                                color: tBlue,
+                                                fontWeight: FontWeight.w600)),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 1.h,
+                                        width: 1.h,
+                                        decoration: BoxDecoration(
+                                            color: tBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Text(
+                                          'Exclusive Benefits for Prime Drivers',
+                                          style: TextStyle(
+                                              fontSize:
+                                                  isTab(context) ? 7.sp : 10.sp,
+                                              color: tBlue,
+                                              fontWeight: FontWeight.w600))
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 1.h,
+                                        width: 1.h,
+                                        decoration: BoxDecoration(
+                                            color: tBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: Text(
+                                            'Unlock Premium Features for Better Driving',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.clip,
+                                                fontSize: isTab(context)
+                                                    ? 7.sp
+                                                    : 10.sp,
+                                                color: tBlue,
+                                                fontWeight: FontWeight.w600)),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      planDetails['plan_activated'] == false
+                          ? Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(17)),
+                              elevation: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 4.h,
+                                    ),
+                                    Text('Only at just ',
+                                        style: TextStyle(
+                                            fontSize:
+                                                isTab(context) ? 10.sp : 14.sp,
+                                            color: tBlue,
+                                            fontWeight: FontWeight.w800)),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    Text(
+                                        currencySymbol +
+                                            planDetails['price'].toString() +
+                                            ' /-',
+                                        style: TextStyle(
+                                            fontSize:
+                                                isTab(context) ? 12.sp : 16.sp,
+                                            color: tPrimaryColor,
+                                            fontWeight: FontWeight.w800)),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Container(
+                                          child: Text('info..........',
+                                              style: TextStyle(
+                                                  fontSize: isTab(context)
+                                                      ? 10.sp
+                                                      : 12.sp,
+                                                  color: tLightBrown,
+                                                  fontWeight: FontWeight.w400)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(17)),
+                              elevation: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 4.h,
+                                    ),
+                                    Text('Plan expires in',
+                                        style: TextStyle(
+                                            fontSize:
+                                                isTab(context) ? 10.sp : 14.sp,
+                                            color: tBlue,
+                                            fontWeight: FontWeight.w800)),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    Text(
+                                        currencySymbol +
+                                            planDetails['validity_in_days']
+                                                .toString() +
+                                            ' days',
+                                        style: TextStyle(
+                                            fontSize:
+                                                isTab(context) ? 12.sp : 16.sp,
+                                            color: tPrimaryColor,
+                                            fontWeight: FontWeight.w800)),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Container(
+                                          child: Text('info..........',
+                                              style: TextStyle(
+                                                  fontSize: isTab(context)
+                                                      ? 10.sp
+                                                      : 12.sp,
+                                                  color: tLightBrown,
+                                                  fontWeight: FontWeight.w400)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                      SizedBox(height: 3.h),
+                      planDetails['plan_activated'] == false
+                          ? Button(
+                              textcolor: tWhite,
+                              bottonText: 'subscribe_now'.tr,
+                              borderSide: BorderSide(
+                                color: tPrimaryColor,
+                              ),
+                              onTap:
+                                  (startLoading, stopLoading, btnState) async {
+                                print('object');
+                                Map<String, String> param = {
+                                  'order_amount':
+                                      planDetails['price'].toString()
+                                };
+                                var res = await DriverDetailsApi()
+                                    .createSubscriptionOrderApi(context, param);
+                                if (res != null && res['status'] == 'OK') {
+                                  stopLoading();
+                                  cfPaymentGatewayService.setCallback(
+                                    verifyPayment,
+                                    onError,
+                                  );
+                                  pay(res['details']['order_id'].toString(),
+                                      res['details']['payment_session_id']);
+                                } else {
+                                  stopLoading();
+                                  Twl.createAlert(
+                                      context, 'Oops', res['error'].toString());
+                                  stopLoading();
+                                }
+                              },
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  size: 6.w,
+                                  color: tBlue,
+                                ),
+                                SizedBox(width: 1.w),
+                                Text('Subscribed',
+                                    style: TextStyle(
+                                        fontSize:
+                                            isTab(context) ? 10.sp : 14.sp,
+                                        color: tBlue,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                      SizedBox(height: 2.h),
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  void verifyPayment(String orderId) async {
+    print("Verify Payment/...........");
+    print("Verify Payment.........");
+    Map<String, String> param = {
+      'orderId': orderId,
+    };
+    //Api hit here
+    var res = await DriverDetailsApi().getDriverSubscription(context, param);
+    if (res != null && res['status'] == 'OK') {
+      Twl.forceNavigateTo(context, Subscription());
+    } else {
+      Twl.createAlert(context, 'Oops', res['error'].toString());
+    }
+  }
+
+  void onError(CFErrorResponse errorResponse, String orderId) async {
+    print(errorResponse.getMessage());
+    print(errorResponse.getStatus().toString());
+    print(errorResponse.getCode().toString());
+    print("Error while making payment");
+    return Twl.createAlert(context, errorResponse.getStatus().toString(),
+        errorResponse.getMessage().toString());
+  }
+
+  void receivedEvent(String event_name, Map<dynamic, dynamic> meta_data) {
+    print(event_name);
+    print(meta_data);
+  }
+
+  var cfPaymentGatewayService = CFPaymentGatewayService();
+  CFEnvironment environment = CFEnvironment.SANDBOX;
+
+  CFSession? createSession(orderId, sessionID) {
+    print(orderId);
+    print('sessionID');
+    print(sessionID);
+    try {
+      var session = CFSessionBuilder()
+          .setEnvironment(environment)
+          .setOrderId(orderId)
+          .setPaymentSessionId(sessionID)
+          .build();
+      return session;
+    } on CFException catch (e) {
+      print("e.createSession");
+      print(e.message);
+    }
+    return null;
+  }
+
+  pay(orderId, sessionId) async {
+    print(orderId);
+    print('sessionID');
+    print(sessionId);
+    try {
+      var session = createSession(orderId, sessionId);
+      List<CFPaymentModes> components = <CFPaymentModes>[];
+      var paymentComponent =
+          CFPaymentComponentBuilder().setComponents(components).build();
+
+      var theme = CFThemeBuilder()
+          .setNavigationBarBackgroundColorColor("#FF0000")
+          .setPrimaryFont("Menlo")
+          .setSecondaryFont("Futura")
+          .build();
+
+      var cfDropCheckoutPayment = CFDropCheckoutPaymentBuilder()
+          .setSession(session!)
+          .setPaymentComponent(paymentComponent)
+          .setTheme(theme)
+          .build();
+
+      cfPaymentGatewayService.doPayment(cfDropCheckoutPayment);
+    } on CFException catch (e) {
+      print("e.pay");
+      print(e.message);
+    }
+  }
+}

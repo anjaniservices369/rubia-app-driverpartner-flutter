@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "786955192797",
+    "project_id": "rubia-services",
+    "storage_bucket": "rubia-services.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786955192797:android:35da4690c646dc353b4e34",
+        "android_client_info": {
+          "package_name": "com.rubia.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786955192797-m1b2qgp42roj6t66fkdu7k3skods0v3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2SO-RiESXPoZVt426YccpntCw--Zwkbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786955192797-m1b2qgp42roj6t66fkdu7k3skods0v3v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786955192797:android:060b656f08891ff43b4e34",
+        "android_client_info": {
+          "package_name": "com.rubia.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786955192797-m1b2qgp42roj6t66fkdu7k3skods0v3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2SO-RiESXPoZVt426YccpntCw--Zwkbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786955192797-m1b2qgp42roj6t66fkdu7k3skods0v3v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
