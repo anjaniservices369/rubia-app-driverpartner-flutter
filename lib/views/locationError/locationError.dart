@@ -166,11 +166,12 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       print(addressLine);
       print('locality');
       print(locality);
-      // print('sublocality${subLocality}');
+      // print('sublocality :');
+
       setState(() {
         isLoading = true;
       });
-      var res = await UserAPI().getUpdateLatLong(context, lat.toString(), long.toString());
+      var res = await UserAPI().getUpdateLatLong(context, lat.toString(), long.toString(),locality.toString());
       if (res != null && res['status'] == 'OK') {
         print('helloDude');
         Twl.navigateTo(context, BottomNavigation());
@@ -263,6 +264,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
         final permission = await locPermission.LocationPermissions().requestPermissions(
           permissionLevel: locPermission.LocationPermissionLevel.locationAlways,
         );
+
         if (permission == PermissionStatus.granted) {
           print('getUserLocation..............');
           await getUserLocation();

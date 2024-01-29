@@ -1,18 +1,22 @@
-import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../constants/constants.dart';
 import '../../globalFuctions/globalFunctions.dart';
-import '../ride_info/ride_info.dart';
+import '../bottomNavigation.dart/bottomNavigation.dart';
 import 'componats/accepted_rides.dart';
+import 'package:http/http.dart' as http;
 
 import 'componats/avalableRIde.dart';
 
@@ -53,14 +57,32 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
           automaticallyImplyLeading: false,
           elevation: 0,
           titleSpacing: 7,
-          title: Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Text(
-              'bookings'.tr,
-              style: GoogleFonts.mulish(
-                color: tSecondaryColor,
-                fontWeight: FontWeight.w700,
-                fontSize: isTab(context) ? 10.sp : 17.sp,
+          title: InkWell(
+            onTap: () async {
+              var path = await getApplicationDocumentsDirectory();
+              Hive.init(path.path);
+              //  await Hive.openBox('peopleBox');
+              // final box = Hive.box('peopleBox');
+              Hive.init(path.path);
+              await Hive.openBox('peopleBox');
+              final box = Hive.box('peopleBox');
+              List a = [];
+              for (var element in box.values) {
+                a.add(element);
+              }
+              String validJson =
+                  a.toString().replaceFirst(RegExp(r',\s*]$'), ']');
+              log(validJson);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text(
+                'bookings'.tr,
+                style: GoogleFonts.mulish(
+                  color: tSecondaryColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: isTab(context) ? 10.sp : 17.sp,
+                ),
               ),
             ),
           ),
@@ -119,8 +141,147 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
             ])),
         floatingActionButton: FloatingActionButton(
           backgroundColor: tPrimaryColor,
-          onPressed: () {
-            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+          onPressed: () async {
+               Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+               String apiUrl = 'http://rubiaservices.org/app/api/user/assign-booking-to-driver';
+
+               // Make the GET request
+               try {
+                 var response = await http.get(Uri.parse(apiUrl));
+
+                 // Check if the request was successful (status code 200)
+                 if (response.statusCode == 200) {
+                   // Handle the response here, if needed
+                   print('Request successful: ${response.body}');
+                 } else {
+                   // Handle errors, e.g., status code other than 200
+                   print('Request failed with status: ${response.statusCode}');
+                 }
+               } catch (error) {
+                 // Handle network-related errors
+                 print('Error: $error');
+               }
+            // var path = await getApplicationDocumentsDirectory();
+            // Hive.init(path.path);
+            // await Hive.openBox('peopleBox');
+            // final box = Hive.box('peopleBox');
+            // var a = box.values;
+            // List b = [
+            //   17.440941,
+            //   78.3769953,
+            //   17.4409826,
+            //   78.3769953,
+            //   17.4409065,
+            //   78.3769953,
+            //   17.4408572,
+            //   78.3769951,
+            //   17.4412591,
+            //   78.3769956,
+            //   17.4409263,
+            //   78.3769953,
+            //   17.4409386,
+            //   78.3769953,
+            //   17.4409423,
+            //   78.3769953,
+            //   17.4409422,
+            //   78.3769952,
+            //   17.4409799,
+            //   78.3769955,
+            //   17.4409076,
+            //   78.3769952,
+            //   17.4412019,
+            //   78.3769953,
+            //   17.441204,
+            //   78.3769953,
+            //   17.4411029,
+            //   78.3769953,
+            //   17.4411025,
+            //   78.3769953,
+            //   17.4411031,
+            //   78.3769953,
+            //   17.4411038,
+            //   78.3769953,
+            //   17.4325166,
+            //   78.3687622,
+            //   17.4329704,
+            //   78.3691376,
+            //   17.4336293,
+            //   78.3693403,
+            //   17.4343697,
+            //   78.3686036,
+            //   17.4355822,
+            //   78.3672482,
+            //   17.4365649,
+            //   78.3661669,
+            //   17.4374505,
+            //   78.3650798,
+            //   17.4383066,
+            //   78.3639014,
+            //   17.4387738,
+            //   78.3635622,
+            //   17.4386873,
+            //   78.3639877,
+            //   17.4382512,
+            //   78.364559,
+            //   17.4388445,
+            //   78.3655193,
+            //   17.4398803,
+            //   78.366466,
+            //   17.440949,
+            //   78.3674316,
+            //   17.4407698,
+            //   78.3687494,
+            //   17.4403682,
+            //   78.3701015,
+            //   17.4400423,
+            //   78.3715198,
+            //   17.4413663,
+            //   78.3717586,
+            //   17.4420553,
+            //   78.372322,
+            //   17.441587,
+            //   78.3736967,
+            //   17.4410832,
+            //   78.3747171,
+            //   17.4400407,
+            //   78.3763162,
+            //   17.4403878,
+            //   78.3770162,
+            //   17.4414046,
+            //   78.3770733,
+            //   17.4429039,
+            //   78.3771157,
+            //   17.4445543,
+            //   78.3770903,
+            //   17.4461715,
+            //   78.3773291,
+            //   17.4475038,
+            //   17.4475038,
+            // ];
+            // for (var element in a) {
+            //   b.add(element);
+            // }
+            // List<Map<String, String>> formattedCoordinates = [];
+
+            // for (int i = 0; i < b.length; i += 1) {
+            //   // print(b[i]);
+            //   double lat = double.parse(b[i].toString().split(',').first);
+            //   double lng = double.parse(b[i].toString().split(',').last);
+
+            //   formattedCoordinates.add({
+            //     jsonEncode("lat"): jsonEncode(lat.toString()),
+            //     jsonEncode("lng"): jsonEncode(lng.toString()),
+            //   });
+            // }
+
+            // // Convert the list to a JSON string
+            // String jsonResult = formattedCoordinates.toString();
+
+            // // Print the formatted JSON
+            // //   var c = jsonEncode(jsonResult);
+            // print(jsonResult);
+
+            //  calcDis(box.values);
           },
           child: Icon(
             Icons.refresh,

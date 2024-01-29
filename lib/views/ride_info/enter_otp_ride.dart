@@ -1,14 +1,23 @@
+import 'dart:developer';
+
+import 'package:base_project_flutter/background_services/background_services.dart';
+import 'package:base_project_flutter/background_services/notification.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
+import 'package:base_project_flutter/views/ride_info/componants/verification_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:base_project_flutter/constants/constants.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../globalFuctions/globalFunctions.dart';
 import '../../../../../responsive.dart';
+import '../../api_services/rideBookingsApi.dart';
 import '../../globalWidgets/button.dart';
 import '../../providers/background_locator.dart';
 import '../odometer/starting_odometer_details.dart';
@@ -19,9 +28,8 @@ import 'package:background_locator_2/background_locator.dart';
 import 'package:background_locator_2/location_dto.dart';
 import 'package:background_locator_2/settings/android_settings.dart';
 import 'package:background_locator_2/settings/ios_settings.dart';
-import 'package:background_locator_2/settings/locator_settings.dart';
-import 'package:location_permissions/location_permissions.dart' as locPermission;
-
+import 'package:location_permissions/location_permissions.dart'
+as locPermission;
 import 'location_callback_handler.dart';
 import 'location_service_repository.dart';
 import 'file_manager.dart';
@@ -36,6 +44,24 @@ class OtpDetailCard extends StatefulWidget {
 class _OtpDetailCardState extends State<OtpDetailCard> {
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _otpCodeController = TextEditingController();
+  var flag = null;
+
+
+  notifyArrivedLocation() async {
+    var res = await RideBookingsApi().notifyArrivedLocation(context, widget.bookingDetails['id'].toString());
+    if (res != null && res['status'] == 'OK') {
+      setState(() {
+        print(res['details']);
+        // bookingDetails = res['details'];
+
+      });
+    } else {
+      setState(() {
+        print(res['error']);
+        // resNOK = res['status'];
+      });
+    }
+  }
 
   // Future<void> initLocationService() async {
   //   await BackgroundLocation.startLocationService();
@@ -51,18 +77,31 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
   bool isRunning = false;
   LocationDto? lastLocation;
 
+  //bg service
+  late BackgroundService backgroundService;
+
   @override
   void initState() {
     super.initState();
 
-    if (IsolateNameServer.lookupPortByName(LocationServiceRepository.isolateName) != null) {
-      IsolateNameServer.removePortNameMapping(LocationServiceRepository.isolateName);
+    backgroundService = BackgroundService();
+    if (IsolateNameServer.lookupPortByName(
+        LocationServiceRepository.isolateName) !=
+        null) {
+      IsolateNameServer.removePortNameMapping(
+          LocationServiceRepository.isolateName);
     }
+    if(flag == null){
+      flag = 404;
+      notifyArrivedLocation();
+    }else{
 
-    IsolateNameServer.registerPortWithName(port.sendPort, LocationServiceRepository.isolateName);
+    }
+    IsolateNameServer.registerPortWithName(
+        port.sendPort, LocationServiceRepository.isolateName);
     try {
       port.listen(
-        (dynamic data) async {
+            (dynamic data) async {
           await updateUI(data);
         },
       );
@@ -79,9 +118,12 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
   }
 
   Future<void> updateUI(dynamic data) async {
+
     final log = await FileManager.readLogFile();
 
-    LocationDto? locationDto = (data != null) ? LocationDto.fromJson(data) : null;
+
+    LocationDto? locationDto =
+    (data != null) ? LocationDto.fromJson(data) : null;
     await _updateNotificationText(locationDto!);
 
     if (mounted)
@@ -99,11 +141,14 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     }
 
     await BackgroundLocator.updateNotificationText(
-        title: "new location received", msg: "${DateTime.now()}", bigMsg: "${data.latitude}, ${data.longitude}");
+        title: "new location received",
+        msg: "${DateTime.now()}",
+        bigMsg: "${data.latitude}, ${data.longitude}");
   }
 
   Future<void> initPlatformState() async {
     print('Initializing...');
+
     await BackgroundLocator.initialize();
     logStr = await FileManager.readLogFile();
     print('Initialization done');
@@ -114,6 +159,56 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     print('Running ${isRunning.toString()}');
   }
 
+  final FlutterLocalNotificationsPlugin f = FlutterLocalNotificationsPlugin();
+
+  @pragma('vm:entry-point')
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    //NotificatipnS
+    await NotificationService(f).initialize(context);
+    if (await backgroundService.instance.isRunning()) {
+      await backgroundService.initializeService();
+    }
+//     backgroundService.instance.on('on_location_changed').listen((event) async{
+//     //  if (event != null) {
+//         // final position = Position(
+//         //   longitude: double.tryParse(event['longitude'].toString()) ?? 0.0,
+//         //   latitude: double.tryParse(event['latitude'].toString()) ?? 0.0,
+//         //   timestamp: DateTime.fromMillisecondsSinceEpoch(
+//         //       event['timestamp'].toInt(),
+//         //       isUtc: true),
+//         //   accuracy: double.tryParse(event['accuracy'].toString()) ?? 0.0,
+//         //   altitude: double.tryParse(event['altitude'].toString()) ?? 0.0,
+//         //   heading: double.tryParse(event['heading'].toString()) ?? 0.0,
+//         //   speed: double.tryParse(event['speed'].toString()) ?? 0.0,
+//         //   speedAccuracy:
+//         //       double.tryParse(event['speed_accuracy'].toString()) ?? 0.0, altitudeAccuracy: 1,
+//         // );
+//         //final position = Position(longitude: double.tryParse(event['longitude'].toString()) ?? 0.0,latitude: double.tryParse(event['latitude'].toString()) ?? 0.0, timestamp: DateTime.now(), accuracy: 0.0, altitude: 0.0, altitudeAccuracy: 0.0, heading: 0.0, headingAccuracy: 0.0, speed: 0.0, speedAccuracy: double.tryParse(event['speed_accuracy'].toString()) ?? 0.0,);
+
+//    //   }
+//     });
+    backgroundService.instance.on('on_location_changed').listen((event) {
+      if (event != null) {
+        final position = Position(
+          longitude: double.tryParse(event['longitude'].toString()) ?? 0.0,
+          latitude: double.tryParse(event['latitude'].toString()) ?? 0.0,
+          timestamp: DateTime.now(),
+          accuracy: 0.0,
+          altitude: 0.0,
+          altitudeAccuracy: 0.0,
+          heading: 0.0,
+          headingAccuracy: 0.0,
+          speed: 0.0,
+          speedAccuracy:
+          double.tryParse(event['speed_accuracy'].toString()) ?? 0.0,
+        );
+        log(position.latitude.toString());
+      }
+    });
+  }
+
   bool hasError = false;
   @override
   Widget build(BuildContext context) {
@@ -122,7 +217,8 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     // print("Array converted ");
     // print(locationData.toString());
     final homePageProvider = Provider.of<HomePageProvider>(context);
-    BackgroundLocationProvider _data = Provider.of<BackgroundLocationProvider>(context);
+    BackgroundLocationProvider _data =
+    Provider.of<BackgroundLocationProvider>(context);
     return Container(
       child: WillPopScope(
         onWillPop: () {
@@ -148,24 +244,37 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                           decoration: BoxDecoration(
                               color: tWhite,
                               boxShadow: [tBoxShadow],
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30))),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 1.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 3.5.w, vertical: 1.h),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.0.h),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: tPrimaryColor),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 2.0.h),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: tPrimaryColor),
                                     child: Column(
                                       children: [
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Row(
                                             children: [
-                                              Text(widget.bookingDetails['car_model'],
+                                              Text(
+                                                  widget.bookingDetails[
+                                                  'car_model'],
                                                   style: GoogleFonts.mulish(
-                                                      color: tWhite, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 14.sp)),
+                                                      color: tWhite,
+                                                      fontWeight:
+                                                      FontWeight.w700,
+                                                      fontSize: isTab(context)
+                                                          ? 10.sp
+                                                          : 14.sp)),
                                             ],
                                           ),
                                         ),
@@ -173,39 +282,66 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                           height: 1.h,
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: tPink),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(60),
+                                                  color: tPink),
                                               child: Padding(
                                                 padding: EdgeInsets.all(8.0),
                                                 child: Center(
                                                     child: Icon(
-                                                  Icons.person,
-                                                  color: tPrimaryColor,
-                                                )),
+                                                      Icons.person,
+                                                      color: tPrimaryColor,
+                                                    )),
                                               ),
                                             ),
                                             SizedBox(
                                               width: 3.w,
                                             ),
-                                            Text(widget.bookingDetails['user_details']['first_name'],
+                                            Text(
+                                                widget.bookingDetails[
+                                                'user_details']
+                                                ['first_name'] ?? "N/A",
                                                 style: GoogleFonts.mulish(
-                                                    color: tWhite, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 9.sp : 12.sp)),
-                                            Text(widget.bookingDetails['user_details']['last_name'],
+                                                    color: tWhite,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: isTab(context)
+                                                        ? 9.sp
+                                                        : 12.sp)),
+                                            Text(
+                                                widget.bookingDetails[
+                                                'user_details']
+                                                ['last_name'] ?? "N/A",
                                                 style: GoogleFonts.mulish(
-                                                    color: tWhite, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 9.sp : 12.sp)),
+                                                    color: tWhite,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: isTab(context)
+                                                        ? 9.sp
+                                                        : 12.sp)),
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () {
                                                 launch(
-                                                  "tel://" + widget.bookingDetails['user_details']['contact_no'].toString(),
+                                                  "tel://" +
+                                                      widget.bookingDetails[
+                                                      'user_details']
+                                                      ['contact_no']
+                                                          .toString(),
                                                 );
                                               },
                                               child: Container(
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: tgreen),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        60),
+                                                    color: tgreen),
                                                 child: Padding(
-                                                    padding: EdgeInsets.all(12.0),
+                                                    padding:
+                                                    EdgeInsets.all(12.0),
                                                     child: Icon(
                                                       Icons.call,
                                                       color: tWhite,
@@ -221,20 +357,31 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                 ),
                                 Text('Enter OTP',
                                     style: GoogleFonts.mulish(
-                                        color: tSecondaryColor, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 11.sp : 14.sp)),
+                                        color: tSecondaryColor,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize:
+                                        isTab(context) ? 11.sp : 14.sp)),
                                 SizedBox(
                                   height: 1.3.h,
                                 ),
                                 Text('Please ask OTP to the customer',
                                     style: GoogleFonts.mulish(
-                                        color: tSecondaryColor, fontWeight: FontWeight.w600, fontSize: isTab(context) ? 9.sp : 12.sp)),
+                                        color: tSecondaryColor,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize:
+                                        isTab(context) ? 9.sp : 12.sp)),
                                 SizedBox(
                                   height: 2.5.h,
                                 ),
                                 Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 8.w),
                                     child: PinCodeTextField(
-                                      textStyle: TextStyle(color: tBlack, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 12.sp : 15.sp),
+                                      textStyle: TextStyle(
+                                          color: tBlack,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize:
+                                          isTab(context) ? 12.sp : 15.sp),
                                       appContext: context,
                                       pastedTextStyle: TextStyle(
                                         color: tBlack,
@@ -255,17 +402,21 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                       pinTheme: PinTheme(
                                           shape: PinCodeFieldShape.box,
                                           borderWidth: 1.5,
-                                          borderRadius: BorderRadius.circular(15),
+                                          borderRadius:
+                                          BorderRadius.circular(15),
                                           activeColor: tgreen,
                                           selectedColor: tgreen,
                                           selectedFillColor: Color(0xffF4F4F4),
                                           inactiveFillColor: Color(0xffF4F4F4),
                                           inactiveColor: tgreen,
-                                          fieldHeight: isTab(context) ? 10.w : 14.w,
-                                          fieldWidth: isTab(context) ? 10.w : 14.w,
+                                          fieldHeight:
+                                          isTab(context) ? 10.w : 14.w,
+                                          fieldWidth:
+                                          isTab(context) ? 10.w : 14.w,
                                           activeFillColor: Color(0xffF4F4F4)),
                                       cursorColor: tBlack,
-                                      animationDuration: Duration(milliseconds: 300),
+                                      animationDuration:
+                                      Duration(milliseconds: 300),
                                       enableActiveFill: true,
                                       controller: _otpCodeController,
                                       keyboardType: TextInputType.number,
@@ -297,7 +448,8 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                       color: tPrimaryColor,
                                       textcolor: tWhite,
                                       bottonText: 'Next',
-                                      onTap: (startLoading, stopLoading, btnState) async {
+                                      onTap: (startLoading, stopLoading,
+                                          btnState) async {
                                         startLoading();
                                         homePageProvider.status = '0';
                                         print(logStr.toString());
@@ -311,30 +463,45 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                             print(result);
                                             print('Location >>>>>>>>>>>>.');
 
-                                            print('Location 1221378216368126 >>>>>>>>>>>>.');
+                                            print(
+                                                'Location 1221378216368126 >>>>>>>>>>>>.');
                                             Map<String, String> param = {
-                                              'booking_id': widget.bookingDetails['id'].toString(),
-                                              'final_pickup_latitude': widget.bookingDetails['pickup_latitude'].toString(),
-                                              'final_pickup_longitude': widget.bookingDetails['pickup_longitude'].toString(),
+                                              'booking_id': widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              'final_pickup_latitude': widget
+                                                  .bookingDetails[
+                                              'pickup_latitude']
+                                                  .toString(),
+                                              'final_pickup_longitude': widget
+                                                  .bookingDetails[
+                                              'pickup_longitude']
+                                                  .toString(),
                                               'otp': _otpCodeController.text,
                                             };
                                             print(param);
-                                            var res = await homePageProvider.getDriverArrivedLocation(context, param);
+                                            var res = await homePageProvider
+                                                .getDriverArrivedLocation(
+                                                context, param);
                                             if (res['status'] == 'OK') {
                                               return showDialog(
                                                   context: context,
                                                   builder: (ctx) => Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(logStr.toString()),
-                                                          StartingOdometerDetails(
-                                                            bookingDetails: widget.bookingDetails,
-                                                          )
-                                                          // VerificationPopUp(bookingDetails: widget.bookingDetails)
-                                                        ],
-                                                      ));
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      Text(logStr
+                                                          .toString()),
+                                                      VerificationPopUp(
+                                                          bookingDetails: widget
+                                                              .bookingDetails)
+                                                      // VerificationPopUp(bookingDetails: widget.bookingDetails)
+                                                    ],
+                                                  ));
                                             } else {
-                                              Twl.createAlert(context, 'Oops', res['error'].toString());
+                                              Twl.createAlert(context, 'Oops',
+                                                  res['error'].toString());
                                             }
                                           } else {
                                             Twl.createAlert(context, 'Oops',
@@ -372,15 +539,14 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     });
   }
 
+// this is function to backgrpung locater
   Future<bool> _onStart() async {
     if (await _checkLocationPermission()) {
-      await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
+      //await _startLocator();
+      await Geolocator.getCurrentPosition();
+      await backgroundService.initializeService();
+      backgroundService.setServiceAsForeground();
 
-      setState(() {
-        isRunning = _isRunning;
-        lastLocation = null;
-      });
       return true;
     } else {
       print('error');
@@ -401,7 +567,8 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
         access == PermissionStatus.limited ||
         access == PermissionStatus.permanentlyDenied ||
         access == PermissionStatus.restricted) {
-      final permission = await locPermission.LocationPermissions().requestPermissions(
+      final permission =
+      await locPermission.LocationPermissions().requestPermissions(
         permissionLevel: locPermission.LocationPermissionLevel.locationAlways,
       );
       if (permission == PermissionStatus.granted) {
@@ -414,7 +581,8 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     } else if (access == PermissionStatus.granted) {
       return true;
     } else {
-      final permission = await locPermission.LocationPermissions().requestPermissions(
+      final permission =
+      await locPermission.LocationPermissions().requestPermissions(
         permissionLevel: locPermission.LocationPermissionLevel.locationAlways,
       );
       if (permission == PermissionStatus.granted) {
@@ -465,35 +633,47 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     // }
   }
 
-  Future<void> _startLocator() async {
-    Map<String, dynamic> data = {'countInit': 1};
-    return await BackgroundLocator.registerLocationUpdate(LocationCallbackHandler.callback,
-        initCallback: LocationCallbackHandler.initCallback,
-        initDataCallback: data,
-        disposeCallback: LocationCallbackHandler.disposeCallback,
-        iosSettings:
-            IOSSettings(accuracy: LocationAccuracy.NAVIGATION, distanceFilter: 20, stopWithTerminate: false, showsBackgroundLocationIndicator: true),
-        autoStop: false,
-        androidSettings: AndroidSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            interval: 5,
-            wakeLockTime: 60 * 60 * 60,
-            distanceFilter: 20,
-            client: LocationClient.google,
-            androidNotificationSettings: AndroidNotificationSettings(
-                notificationChannelName: 'Location tracking',
-                notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Track location in background',
-                notificationBigMsg:
-                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-                notificationIconColor: Colors.grey,
-                notificationTapCallback: LocationCallbackHandler.notificationCallback)));
-  }
+// Future<void> _startLocator() async {
+//   Map<String, dynamic> data = {'countInit': 1};
+//   return await BackgroundLocator.registerLocationUpdate(
+//       LocationCallbackHandler.callback,
+//       initCallback: LocationCallbackHandler.initCallback,
+//       initDataCallback: data,
+//       disposeCallback: LocationCallbackHandler.disposeCallback,
+//       iosSettings: IOSSettings(
+//           accuracy: LocationAccuracy.NAVIGATION,
+//           distanceFilter: 20,
+//           stopWithTerminate: false,
+//           showsBackgroundLocationIndicator: true),
+//       autoStop: false,
+//       androidSettings: AndroidSettings(
+//           accuracy: LocationAccuracy.NAVIGATION,
+//           interval: 5,
+//           wakeLockTime: 60 * 60 * 60,
+//           distanceFilter: 20,
+//           client: LocationClient.google,
+//           androidNotificationSettings: AndroidNotificationSettings(
+//               notificationChannelName: 'Location tracking',
+//               notificationTitle: 'Start Location Tracking',
+//               notificationMsg: 'Track location in background',
+//               notificationBigMsg:
+//                   'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
+//               notificationIconColor: Colors.grey,
+//               notificationTapCallback:
+//                   LocationCallbackHandler.notificationCallback)));
+// }
 }
 
 class CustomOtpPinwidget extends StatelessWidget {
   const CustomOtpPinwidget(
-      {Key? key, this.selectedFillColor, this.inactiveFillColor, this.otpLength, this.shape, this.fieldHeight, this.fieldWidth, this.inactiveColor})
+      {Key? key,
+        this.selectedFillColor,
+        this.inactiveFillColor,
+        this.otpLength,
+        this.shape,
+        this.fieldHeight,
+        this.fieldWidth,
+        this.inactiveColor})
       : super(key: key);
 
   final selectedFillColor;
@@ -510,7 +690,10 @@ class CustomOtpPinwidget extends StatelessWidget {
 
     bool hasError = false;
     return PinCodeTextField(
-      textStyle: TextStyle(color: tBlack, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 12.sp : 15.sp),
+      textStyle: TextStyle(
+          color: tBlack,
+          fontWeight: FontWeight.w700,
+          fontSize: isTab(context) ? 12.sp : 15.sp),
       // backgroundColor: Colors.white,
       appContext: context,
       pastedTextStyle: TextStyle(
@@ -589,7 +772,8 @@ class _OrderIdCardState extends State<OrderIdCard> {
       children: [
         Container(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.0.h),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: tPrimaryColor),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14), color: tPrimaryColor),
             child: Column(
               children: [
                 Align(
@@ -597,7 +781,10 @@ class _OrderIdCardState extends State<OrderIdCard> {
                   child: Row(
                     children: [
                       Text('EG65406504',
-                          style: GoogleFonts.mulish(color: tWhite, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 14.sp)),
+                          style: GoogleFonts.mulish(
+                              color: tWhite,
+                              fontWeight: FontWeight.w700,
+                              fontSize: isTab(context) ? 10.sp : 14.sp)),
                     ],
                   ),
                 ),
@@ -608,24 +795,31 @@ class _OrderIdCardState extends State<OrderIdCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: tPink),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: tPink),
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Center(
                             child: Icon(
-                          Icons.person,
-                          color: tPrimaryColor,
-                        )),
+                              Icons.person,
+                              color: tPrimaryColor,
+                            )),
                       ),
                     ),
                     SizedBox(
                       width: 3.w,
                     ),
                     Text('Manikanta chemiti',
-                        style: GoogleFonts.mulish(color: tWhite, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 9.sp : 12.sp)),
+                        style: GoogleFonts.mulish(
+                            color: tWhite,
+                            fontWeight: FontWeight.w700,
+                            fontSize: isTab(context) ? 9.sp : 12.sp)),
                     Spacer(),
                     Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: tgreen),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: tgreen),
                       child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Icon(

@@ -210,118 +210,127 @@ class _NotifactionpageState extends State<Notifactionpage> {
                             color: tAppbarColor,
                           ),
                         )
-                  : ListView.builder(
-                      itemCount: provider.myNotificationList.length,
-                      physics: ScrollPhysics(),
-                      controller: scrollController,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        var notificationDetails =
-                            provider.myNotificationList[index];
-                        return GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 4.w, vertical: 0.6.h),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4.w, vertical: 1.h),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: tWhite,
-                                  boxShadow: [tBoxShadow]),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                tPrimaryColor.withOpacity(0.2)),
-                                        child: Padding(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Icon(
-                                              Icons.notifications,
-                                              color: tPrimaryColor,
-                                            )),
-                                      ),
-                                      SizedBox(
-                                        width: 3.w,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1,
-                                              child: Text(
-                                                  notificationDetails['title'],
-                                                  // name[index],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.mulish(
-                                                      color: tSecondaryColor,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: isTab(context)
-                                                          ? 8.sp
-                                                          : 12.sp)),
-                                            ),
-                                            SizedBox(
-                                              height: 0.5.h,
-                                            ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1,
-                                              child: Text(
-                                                  notificationDetails[
-                                                      'description'],
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.mulish(
-                                                      color: tDeepBrown,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: isTab(context)
-                                                          ? 7.sp
-                                                          : 8.5.sp)),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 1.5.h,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                        Twl.dateFormate(
-                                            notificationDetails['created_on']),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.mulish(
-                                            color: tDeepBrown,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize:
-                                                isTab(context) ? 7.sp : 9.sp)),
-                                  )
-                                ],
-                              )),
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        await myNotificationProvider.getFavorites(
+                          context: context,
+                          page: '${myNotificationProvider.currentPage}',
                         );
-                      });
+                      },
+                    color: tAppbarColor,
+                    child: ListView.builder(
+                        itemCount: provider.myNotificationList.length,
+                        physics: ScrollPhysics(),
+                        controller: scrollController,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          var notificationDetails =
+                              provider.myNotificationList[index];
+                          return GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 4.w, vertical: 0.6.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4.w, vertical: 1.h),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: tWhite,
+                                    boxShadow: [tBoxShadow]),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color:
+                                                  tPrimaryColor.withOpacity(0.2)),
+                                          child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Icon(
+                                                Icons.notifications,
+                                                color: tPrimaryColor,
+                                              )),
+                                        ),
+                                        SizedBox(
+                                          width: 3.w,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    1,
+                                                child: Text(
+                                                    notificationDetails['title'],
+                                                    // name[index],
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.mulish(
+                                                        color: tSecondaryColor,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: isTab(context)
+                                                            ? 8.sp
+                                                            : 12.sp)),
+                                              ),
+                                              SizedBox(
+                                                height: 0.5.h,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    1,
+                                                child: Text(
+                                                    notificationDetails[
+                                                        'description'],
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.mulish(
+                                                        color: tDeepBrown,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: isTab(context)
+                                                            ? 7.sp
+                                                            : 8.5.sp)),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 1.5.h,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                          Twl.dateFormate(
+                                              notificationDetails['created_on']),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.mulish(
+                                              color: tDeepBrown,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize:
+                                                  isTab(context) ? 7.sp : 9.sp)),
+                                    )
+                                  ],
+                                )),
+                          );
+                        }),
+                  );
             })));
   }
 }

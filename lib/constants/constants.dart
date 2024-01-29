@@ -70,6 +70,7 @@ const tBackbtnBoxShadow = BoxShadow(
 
 const mapKey = 'AIzaSyCg3ESJsiCH3csUNUf1mhrPCLbAS-5iLXQ';
 const currencySymbol = '₹ ';
+const MAX_DISTANCE = 25;
 
 const CHAT_LINK = 'https://tawk.to/chat/64c8a78d94cf5d49dc67ad3d/1h6nst12a';
 // const tBoxShadow =

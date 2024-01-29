@@ -16,6 +16,7 @@ import 'package:base_project_flutter/views/profilePage/ridehistory/ridehistory.d
 import 'package:base_project_flutter/views/profilePage/subscription/subscription.dart';
 import 'package:base_project_flutter/views/profilePage/support/support.dart';
 import 'package:base_project_flutter/views/profilePage/tutorials/tutorialspage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +28,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../api_services/DriverDetailApis.dart';
 import '../../constants/constants.dart';
 import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
+import '../collect_payment.dart/collect_payment.dart';
+import '../joiningfees/joining _fees.dart';
+import 'package:package_info/package_info.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -38,16 +44,24 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
   @override
   void initState() {
     fetchCheckDetails();
     // TODO: implement
     super.initState();
+    _getVersion();
+    loading = false;
   }
 
   var authCode;
   var checkDetails;
   var check;
+  String _version = 'V1.0.3';
+  final picker = ImagePicker();
+  String profileImage = '';
+  bool loading = false;
+
   fetchCheckDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -59,6 +73,97 @@ class _ProfilePageState extends State<ProfilePage> {
         print('checkDetailsgggggggggg');
         print(checkDetails);
       });
+    }
+  }
+
+  Future getProfileImage(String type) async {
+    var pickedFile;
+    if (type == 'camera') {
+      pickedFile = await picker.pickImage(
+          source: ImageSource.camera,
+          maxHeight: 480,
+          maxWidth: 640,
+          imageQuality: 50);
+    } else if (type == 'gallery') {
+      pickedFile = await picker.pickImage(
+          source: ImageSource.gallery,
+          maxHeight: 480,
+          maxWidth: 640,
+          imageQuality: 50);
+    } else {
+      pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+      );
+    }
+
+    if (pickedFile != null) {
+      File _file = File(pickedFile.path);
+      print(_file.lengthSync());
+      // ignore: non_constant_identifier_names
+      String ImageName = pickedFile.path;
+      print("13" + ImageName);
+      // ignore: unused_local_variable
+      String url;
+      // Upload file
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+      storage.ref().child("$ImageName" + DateTime.now().toString());
+      print(ref);
+      UploadTask uploadTask = ref.putFile(_file);
+      print(uploadTask);
+
+      setState(() => loading = true);
+      uploadTask.then((res) async {
+        url = await res.ref.getDownloadURL();
+        print(url);
+
+        setState(() {
+          profileImage = url;
+        });
+        uploadImage(profileImage);
+        return profileImage = url;
+
+        // return getFileName(url);
+      });
+    }
+    // ignore: unused_element
+  }
+
+
+  uploadImage(profileImage) async {
+    Map<String, String> param = {
+      'profile_image': profileImage.toString()
+    };
+    print(param);
+
+    var res = await DriverDetailsApi().uploadProfileImageApi(
+      context,
+      param,
+    );
+    if (res != null && res['status'] == 'OK') {
+      Twl.forceNavigateTo(
+          context,
+          BottomNavigation(
+            tabIndexId: 3,
+          ));
+      // setState(() => loading = false);
+    }else {
+      setState(() => loading = false);
+      Twl.createAlert(
+          context, 'Oops', res['error'].toString());
+    }
+  }
+
+  Future<void> _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = packageInfo.version;
+    });
+  }
+
+  Future<void> _launchUrl(Uri _url) async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
     }
   }
 
@@ -103,14 +208,12 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 height: 2.h,
               ),
-              checkDetails == null
-                  ? Container(
+              if (checkDetails == null || loading) Container(
                       padding: EdgeInsets.all(10),
                       child: SpinKitRotatingCircle(
                         color: tAppbarColor,
                       ),
-                    )
-                  : Stack(
+                    ) else Stack(
                       clipBehavior: Clip.none,
                       children: [
                         Container(
@@ -149,6 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 30),
                             child: Stack(
+                              alignment: Alignment.bottomRight,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -176,10 +280,112 @@ class _ProfilePageState extends State<ProfilePage> {
                                               backgroundColor: tWhite,
                                               radius: isTab(context) ? 20 : 30,
                                             )
+                                          : profileImage.isNotEmpty
+                                          ? CircleAvatar(
+                                        backgroundImage: NetworkImage(profileImage),
+                                        backgroundColor: tWhite,
+                                        radius: isTab(context) ? 20 : 30,
+                                      )
                                           : CircleAvatar(),
                                     ),
                                   ),
                                 ),
+                                Positioned(
+                                  child: InkWell(
+                                    onTap: () async {
+                                      showBarModalBottomSheet(
+                                          expand: false,
+                                          context: context,
+                                          backgroundColor: tWhite,
+                                          builder: (context) => Container(
+                                              height:
+                                              isMobile(context) ? 150 : 30.w,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 60, top: 30, right: 60),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            getProfileImage(
+                                                                'camera');
+
+                                                            // getImage('camera getImage(
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              Image.asset(
+                                                                "assets/images/Camera.png",
+                                                                scale:
+                                                                isTab(context)
+                                                                    ? 3
+                                                                    : 5,
+                                                              ),
+                                                              SizedBox(
+                                                                height:
+                                                                tDefaultPadding,
+                                                              ),
+                                                              Text("camera".tr)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            getProfileImage(
+                                                                'gallery');
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              Image.asset(
+                                                                "assets/images/imageUpload.png",
+                                                                scale:
+                                                                isTab(context)
+                                                                    ? 3
+                                                                    : 5,
+                                                              ),
+                                                              SizedBox(
+                                                                height:
+                                                                tDefaultPadding,
+                                                              ),
+                                                              Text("Gallery".tr)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: tPrimaryColor,
+                                          borderRadius:
+                                          BorderRadius.circular(50.0)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: tWhite,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -418,6 +624,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(color: tBlue),
                         ),
                       ),
+
+
                       ListTile(
                         onTap: () {
                           Twl.forceNavigateTo(context, Support());
@@ -430,6 +638,56 @@ class _ProfilePageState extends State<ProfilePage> {
                           'support'.tr,
                           style: TextStyle(color: tBlue),
                         ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+
+                      ListTile(
+                        onTap: () => _launchUrl(
+                            Uri.parse("https://rubia.services/privacy%20and%20policy.html")
+                        ),
+                        leading: Image.asset(
+                          Images.PRIVACT_POLICY,
+                          scale: 3.5,
+                        ),
+                        title: Text(
+                          'Privacy Policy',
+                          style: TextStyle(color: tBlue),
+                        ),
+                      ),
+
+                      ListTile(
+                        onTap: () => _launchUrl(
+                            Uri.parse("https://rubia.services/terme%20and%20conditions.html")),
+                        leading: Image.asset(
+                          Images.TERMS_CONDITIONS,
+                          scale: 3.5,
+                        ),
+                        title: Text(
+                          'Terms & Conditions',
+                          style: TextStyle(color: tBlue),
+                        ),
+                      ),
+
+                      ListTile(
+                        onTap: () => _launchUrl(
+                            Uri.parse("https://rubia.services/RefundPolicy.html")),
+                        leading: Image.asset(
+                          Images.REFUND_POLICY,
+                          scale: 3.5,
+                        ),
+                        title: Text(
+                          'Cancellation & Refund Policy',
+                          style: TextStyle(color: tBlue),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        'Version: $_version',
+                        style: TextStyle(fontSize: 16.0),
                       ),
                     ],
                   ),

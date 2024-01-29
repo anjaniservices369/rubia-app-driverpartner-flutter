@@ -167,7 +167,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                   },
                                   keyboardType: TextInputType.text,
                                   readOnly: false,
-                                  hinttext: "Eg : Avinash naidu",
+                                  hinttext: "Enter Your Full Name",
                                   controller: _personOneNameController,
                                 ),
                                 SizedBox(
@@ -229,36 +229,36 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'aadhar_number'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[0-9]",
-                                    )),
-                                    LengthLimitingTextInputFormatter(12),
-                                  ],
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "aadhar_number_Cant_Be_Empty".tr;
-                                    } else if (value.length != 12 &&
-                                        value.length < 12) {
-                                      return "aadhar_number_Must_Be_12_Digits"
-                                          .tr;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  readOnly: false,
-                                  hinttext: 'Eg: 1234 5678 9876'.tr,
-                                  controller: _personOneAdharCardNumber,
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
+                                // TextFildTital(
+                                //   text: 'aadhar_number'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   inputFormatters: <TextInputFormatter>[
+                                //     FilteringTextInputFormatter.allow(RegExp(
+                                //       "[0-9]",
+                                //     )),
+                                //     LengthLimitingTextInputFormatter(12),
+                                //   ],
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return "aadhar_number_Cant_Be_Empty".tr;
+                                //     } else if (value.length != 12 &&
+                                //         value.length < 12) {
+                                //       return "aadhar_number_Must_Be_12_Digits"
+                                //           .tr;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.number,
+                                //   readOnly: false,
+                                //   hinttext: 'Eg: 1234 5678 9876'.tr,
+                                //   controller: _personOneAdharCardNumber,
+                                // ),
+                                // SizedBox(
+                                //   height: 2.h,
+                                // ),
                               ],
                             )),
                         Text(
@@ -300,7 +300,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                   },
                                   keyboardType: TextInputType.text,
                                   readOnly: false,
-                                  hinttext: "Eg : Avinash naidu",
+                                  hinttext: "Enter Your Full Name",
                                   controller: _personTwoNameController,
                                 ),
                                 SizedBox(
@@ -362,37 +362,37 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'aadhar_number'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[0-9]",
-                                    )),
-                                    LengthLimitingTextInputFormatter(12),
-                                  ],
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "aadhar_number_Cant_Be_Empty".tr;
-                                      //
-                                    } else if (value.length != 12 &&
-                                        value.length < 12) {
-                                      return "aadhar_number_Must_Be_12_Digits"
-                                          .tr;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  readOnly: false,
-                                  hinttext: 'Eg: 1234 5678 9876'.tr,
-                                  controller: _personTwoAdharCardNumber,
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
+                                // TextFildTital(
+                                //   text: 'aadhar_number'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   inputFormatters: <TextInputFormatter>[
+                                //     FilteringTextInputFormatter.allow(RegExp(
+                                //       "[0-9]",
+                                //     )),
+                                //     LengthLimitingTextInputFormatter(12),
+                                //   ],
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return "aadhar_number_Cant_Be_Empty".tr;
+                                //       //
+                                //     } else if (value.length != 12 &&
+                                //         value.length < 12) {
+                                //       return "aadhar_number_Must_Be_12_Digits"
+                                //           .tr;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.number,
+                                //   readOnly: false,
+                                //   hinttext: 'Eg: 1234 5678 9876'.tr,
+                                //   controller: _personTwoAdharCardNumber,
+                                // ),
+                                // SizedBox(
+                                //   height: 2.h,
+                                // ),
                               ],
                             )),
                       ],
@@ -434,7 +434,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
                       } else {
                         stopLoading();
                         Twl.createAlert(
-                            context, 'Oops', res['error'].toString());
+                            context, 'Gibps', res['error'].toString());
                       }
                       //
                       stopLoading();

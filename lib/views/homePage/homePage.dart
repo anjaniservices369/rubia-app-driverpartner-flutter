@@ -23,8 +23,10 @@ import 'package:sizer/sizer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../constants/imageConstant.dart';
 import '../../providers/notifactionProvider.dart';
+import '../profile_review/profile_block.dart';
 import 'componats/earning_card.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, this.status}) : super(key: key);
@@ -121,16 +123,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     //     }
     //   }
     // });
-    FirebaseMessaging.instance.getInitialMessage();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+
+    void handleNewBookingNotification(RemoteMessage message) async {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
+
       if (notification != null && android != null && !kIsWeb) {
-        // addNotification(message.notification.title, message.notification.body,
-        //     message.notification.android.imageUrl);
-        const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          'channel!.id',
-          'channel!.name',
+        String soundName = 'noti6x';
+        print('Sound name : $soundName');
+        print("channel1 id home : ${channel1.id}");
+        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+          channel1.id,
+          channel1!.name,
           channelDescription: 'your other channel description',
           icon: '@mipmap/ic_launcher',
           importance: Importance.max,
@@ -138,39 +142,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           enableVibration: true,
           playSound: true,
           priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound("music"),
+          sound: RawResourceAndroidNotificationSound(soundName),
         );
+
         final NotificationDetails notificationDetails = NotificationDetails(
           android: androidNotificationDetails,
-          // iOS: darwinNotificationDetails,
-          // macOS: darwinNotificationDetails,
-          // linux: linuxPlatformChannelSpecifics,
         );
+
         await flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
           notification.body,
           notificationDetails,
         );
-        // flutterLocalNotificationsPlugin!.show(
-        // notification.hashCode,
-        // notification.title,
-        // notification.body,
-        // NotificationDetails(
-        //   android: AndroidNotificationDetails(
-        // channel!.id,
-        // channel!.name,
-        //     playSound: true,
-        //     sound: RawResourceAndroidNotificationSound('noti'),
-        //     // sound: 'resource://raw/noti',
-        //     // channel!.description,
-        //     // TODO add a proper drawable resource to android, for now using
-        //     //      one that already exists in example app.
-        //     icon: 'launch_background',
-        //     importance: Importance.max,
-        //     priority: Priority.high,
-        //   ),
-        // ));
 
         print('Message data: ${message.data}');
         if (message.notification != null) {
@@ -178,7 +162,63 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           print('onMessageOpenedApp --2');
         }
       }
+    }
+
+    void handleOtherNotifications(RemoteMessage message) async {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      if (notification != null && android != null && !kIsWeb) {
+        String soundName = 'music';
+        print('Sound name : $soundName');
+        print("channel2 id home: ${channel2.id}");
+
+        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+          channel2.id,
+          channel2!.name,
+          channelDescription: 'your other channel description',
+          icon: '@mipmap/ic_launcher',
+          importance: Importance.max,
+          enableLights: true,
+          enableVibration: true,
+          playSound: true,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound(soundName),
+        );
+
+        final NotificationDetails notificationDetails = NotificationDetails(
+          android: androidNotificationDetails,
+        );
+
+        await flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          notificationDetails,
+        );
+
+        print('Message data: ${message.data}');
+        if (message.notification != null) {
+          print('Message also contained a notification: ${message.notification}');
+          print('onMessageOpenedApp --2');
+        }
+      }
+    }
+
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      RemoteNotification? notification = message.notification;
+
+      if (notification != null && !kIsWeb) {
+        if (notification.title == 'New Booking') {
+
+          handleNewBookingNotification(message);
+        } else {
+          handleOtherNotifications(message);
+        }
+      }
     });
+
     fetchDriverExactLocation();
     FirebaseMessaging.instance.getInitialMessage();
     fetchCheckDetails();
@@ -218,10 +258,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     var authCode = pref.getString('authCode');
     var check = await UserAPI().checkApi(authCode!);
     if (check != null && check['status'] == 'OK') {
+      if (check['detail']['status'] == 0) {
+        Twl.navigateTo(context, ProfileBlock());
+      }
       setState(() {
         onlineStatus = check['detail']['online_status'];
         checkDetails = check['detail'];
       });
+
     } else {
       setState(() {
         statusNOK = check['status'];
@@ -284,8 +328,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void _showNotificationCustomSound() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channel!.id,
-      channel!.name,
+      channel2!.id,
+      channel2!.name,
       importance: Importance.max,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',

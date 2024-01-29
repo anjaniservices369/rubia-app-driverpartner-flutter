@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:get/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,14 +29,113 @@ class ApplicationStatusPage extends StatefulWidget {
 }
 
 class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
-  Future<void> launchURL(String url) async {
+  // Future<void> launchURL(String url) async {
+  //   if (await canLaunchUrl(Uri.parse(url))) {
+  //     await launchUrl(
+  //       Uri.parse(url),
+  //     );
+  //   } else {
+  //     print('Could not launch $url');
+  //   }
+  // }
+
+  void _launchDialer(String phoneNumber) async {
+    final url = 'tel://$phoneNumber';
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-        Uri.parse(url),
-      );
+      await launchUrl(Uri.parse(url));
     } else {
-      print('Could not launch $url');
+      throw 'Could not launch $url';
     }
+  }
+
+  void _showContactInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Contact Information', style: GoogleFonts.mulish(
+            color: tBlack,
+            fontSize: isTab(context) ? 16.sp : 14.sp,
+            fontWeight: FontWeight.w800,
+          ),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Phone: +91 78936 53899',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 16.sp : 14.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Email: rubia.services@gmail.com',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 14.sp : 12.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Address:  Rubia Services(OPC) Pvt.Ltd Lig 60/5, 4th Phase, KPHB Colony, Hyderabad, 500085' ,style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 14.sp : 12.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 100,
+                    child: Button(
+                      color: tPrimaryColor,
+                      textcolor: tWhite,
+                      bottonText: 'Call'.tr,
+                      borderSide: BorderSide(color: tPrimaryColor),
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        launch(
+                          "tel://+917893653899",
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    child: Button(
+                      color: tPrimaryColor,
+                      textcolor: tWhite,
+                      bottonText: 'Location'.tr,
+                      borderSide: BorderSide(color: tPrimaryColor),
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        MapsLauncher.launchCoordinates(17.4739803, 78.3886243);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
+          actions: [
+            Center(
+              child: Container(
+                child: Button(
+                  color: tPrimaryColor,
+                  textcolor: tWhite,
+                  bottonText: 'OK'.tr,
+                  borderSide: BorderSide(color: tPrimaryColor),
+                  onTap: (startLoading, stopLoading, btnState) async{
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height:2.h,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -121,8 +221,11 @@ class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
                         // boxshadow: [
                         //   tButtonBoxshadow
                         // ],
+                        // onTap: (startLoading, stopLoading, btnState) async {
+                        //   await launchURL(CHAT_LINK);
+                        // },
                         onTap: (startLoading, stopLoading, btnState) async {
-                          await launchURL(CHAT_LINK);
+                          _showContactInfoDialog(context);
                         },
                       ),
                     ),

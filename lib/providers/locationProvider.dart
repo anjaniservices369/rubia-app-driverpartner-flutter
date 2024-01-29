@@ -46,20 +46,20 @@ class LocationProvider with ChangeNotifier {
         if (previousPosition == null) {
           previousPosition = currentPosition;
         }
-        print('listening started');
-        print(previousPosition.toString());
-        print('listening started');
+        // print('listening started<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+        // print(previousPosition.toString());
+        // print('listening started>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         final distance = calculateDistance(previousPosition, currentPosition);
-        print(distance.toString());
-        print(currentPosition.latitude.toString());
-        print(currentPosition.longitude.toString());
+        // print(distance.toString());
+        // print(currentPosition.latitude.toString());
+        // print(currentPosition.longitude.toString());
         currentLatitude = currentPosition.latitude;
         currentLongitude = currentPosition.longitude;
         final intermediateLocation = LatLng(
           currentPosition.latitude,
           currentPosition.longitude,
         );
-        print(intermediateLocation.toString());
+        // print(intermediateLocation.toString());
         locationUpdates.add(intermediateLocation);
         if (!rideData.containsKey(bookingDetails['id'].toString())) {
           rideData[bookingDetails['id'].toString()] = [];

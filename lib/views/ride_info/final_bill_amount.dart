@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../responsive.dart';
+import '../../constants/stetuesConstant.dart';
 
 class FinalBillAmountWidget extends StatefulWidget {
   FinalBillAmountWidget({Key? key, this.estimateDetails, this.billDetails}) : super(key: key);
@@ -17,13 +18,50 @@ class FinalBillAmountWidget extends StatefulWidget {
 }
 
 class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
-  List<String> texts = [
-    'beyond_1km'.tr,
-    '1min_extra'.tr,
-    'night_charge'.tr,
-    'final_fare'.tr,
-    'cancellation_fee'.tr,
-  ];
+  var extraMin = 2;
+  var nightCharges = 300;
+  dynamic cancellationCharge = 100;
+  late List<String> texts;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cancellationCharge = widget.estimateDetails['driverCancellationCharge'];
+    getCharges();
+    texts = [
+      'If the trip extends time,extra charges as $currencySymbol $extraMin per extra min applicable.',
+      'Night Charge $currencySymbol $nightCharges on drives ending between 10:00PM & 05:59AM.',
+      'Final Fare will be Charged on time basis.',
+      'According to our Cancellation Policy,Charge of  $currencySymbol $cancellationCharge on Cancellation.',
+      'Maximum driver\'s duty can be 12 hours.'
+    ];
+
+  }
+
+  void getCharges() {
+    if(widget.estimateDetails['trip_type'] == TRIP_TYPE_INTERCITY && widget.estimateDetails['rider_type'] == RIDER_TYPE_ROUNDTRIP){
+      setState(() {
+        extraMin = widget.estimateDetails['price_detail']['extraMinCharge'];
+        nightCharges = widget.estimateDetails['night_charge'];
+      });
+    }else if(widget.estimateDetails['trip_type'] == TRIP_TYPE_INTERCITY && widget.estimateDetails['rider_type'] == RIDER_TYPE_ONEWAY){
+      setState(() {
+        extraMin = widget.estimateDetails['price_detail']['extraMinCharge'];
+        nightCharges = widget.estimateDetails['night_charge'];
+      });
+    }else if(widget.estimateDetails['trip_type'] == TRIP_TYPE_OUTSTATION && widget.estimateDetails['rider_type'] == RIDER_TYPE_ROUNDTRIP){
+      setState(() {
+        extraMin = widget.estimateDetails['price_detail']['extraMinCharge'];
+        nightCharges = widget.estimateDetails['night_charge'];
+      });
+    }else if(widget.estimateDetails['trip_type'] == TRIP_TYPE_OUTSTATION && widget.estimateDetails['rider_type'] == RIDER_TYPE_ONEWAY){
+      setState(() {
+        extraMin = widget.estimateDetails['price_detail']['extraMinCharge'];
+        nightCharges = widget.estimateDetails['night_charge'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +172,12 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
                     title: 'Additional Charges',
                     value: currencySymbol + widget.billDetails['additionalCharges'].toString(),
                   ),
+                if (widget.estimateDetails['cancellation_charges'] !=null && widget.estimateDetails['cancellation_charges'] > 0)
+                  priceListWidget(
+                    title: 'Cancellation Charges',
+                    value: currencySymbol + (widget.estimateDetails['cancellation_charges'] ?? 0).toStringAsFixed(0),
+                  ),
+
                 if (widget.billDetails['gst'] > 0)
                   priceListWidget(
                     title: 'GST',
@@ -231,7 +275,7 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
                             fontSize: isTab(context) ? 7.sp : 12.sp,
                           )),
                       Spacer(),
-                      Text(currencySymbol + '${widget.billDetails['estimatePrice'].toString()} ',
+                      Text(currencySymbol + '${((widget.estimateDetails['price_detail']['estimatePrice'] + (widget.estimateDetails['cancellation_charges'] ?? 0)).toStringAsFixed(0))} ',
                           style: GoogleFonts.mulish(
                             color: tSecondaryColor,
                             fontWeight: FontWeight.w600,
@@ -261,7 +305,7 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                height: 13.h,
+                                height: 14.h,
                                 width: 30.w,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),

@@ -15,6 +15,7 @@ import 'location_error_page/location_error_page.dart';
 class LocationPopUpPage extends StatefulWidget {
   const LocationPopUpPage({Key? key, this.details}) : super(key: key);
   final details;
+
   @override
   State<LocationPopUpPage> createState() => _LocationPopUpPageState();
 }
@@ -33,18 +34,26 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var access = await Permission.locationAlways.status;
+    var access1 = await Permission.notification.status;
     print("status");
     print(access);
 
-    bool locationPermissionRequested = prefs.getBool('locationPermissionRequested') ?? false;
+    bool locationPermissionRequested =
+        prefs.getBool('locationPermissionRequested') ?? false;
 
     if (!locationPermissionRequested &&
+        (access1 == PermissionStatus.denied ||
+            access1 == PermissionStatus.limited ||
+            access1 == PermissionStatus.permanentlyDenied ||
+            access1 == PermissionStatus.restricted) &&
         (access == PermissionStatus.denied ||
             access == PermissionStatus.limited ||
             access == PermissionStatus.permanentlyDenied ||
             access == PermissionStatus.restricted)) {
       final permission = await Permission.locationAlways.request();
-      if (permission == PermissionStatus.granted) {
+      final permission1 = await Permission.notification.request();
+      if (permission == PermissionStatus.granted &&
+          permission1 == PermissionStatus.granted) {
         // await Twl.forceNavigateTo(context, LocationErrorScreen());
         print('true');
         return true;
@@ -53,13 +62,16 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
         prefs.setBool('locationPermissionRequested', true);
         return false;
       }
-    } else if (access == PermissionStatus.granted) {
+    } else if (access == PermissionStatus.granted &&
+        access1 == PermissionStatus.granted) {
       // await Twl.forceNavigateTo(context, LocationErrorScreen());
       print('true');
       return true;
     } else {
       final permission = await Permission.locationAlways.request();
-      if (permission == PermissionStatus.granted) {
+      final permission1 = await Permission.notification.request();
+      if (permission == PermissionStatus.granted &&
+          permission1 == PermissionStatus.granted) {
         // await Twl.forceNavigateTo(context, LocationErrorScreen());
         print('true');
         return true;
@@ -74,6 +86,7 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
   @override
   int reason = 0;
   bool ischeckbox = false;
+
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
@@ -84,7 +97,8 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
         body: Dialog(
           backgroundColor: tWhite,
           insetPadding: EdgeInsets.symmetric(horizontal: 15),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
             width: 200,
             height: 450,
@@ -117,7 +131,10 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.mulish(fontSize: isTab(context) ? 9.sp : 13.sp, fontWeight: FontWeight.w400, color: tBlack),
+                        style: GoogleFonts.mulish(
+                            fontSize: isTab(context) ? 9.sp : 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: tBlack),
                       ),
                       SizedBox(
                         height: 4.h,
@@ -139,7 +156,8 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                               print('true >>>.');
                               print(result);
                               print('true >>>.');
-                              await Twl.forceNavigateTo(context, LocationErrorScreen());
+                              await Twl.forceNavigateTo(
+                                  context, LocationErrorScreen());
                             } else {
                               print('false >>>.');
                               await Twl.forceNavigateTo(
@@ -165,7 +183,10 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
-                            style: GoogleFonts.mulish(fontSize: isTab(context) ? 9.sp : 13.sp, fontWeight: FontWeight.w400, color: tbrown),
+                            style: GoogleFonts.mulish(
+                                fontSize: isTab(context) ? 9.sp : 13.sp,
+                                fontWeight: FontWeight.w400,
+                                color: tbrown),
                           ),
                         ],
                       ),
@@ -174,7 +195,10 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
-                        style: GoogleFonts.mulish(fontSize: isTab(context) ? 9.sp : 13.sp, fontWeight: FontWeight.w400, color: tbrown),
+                        style: GoogleFonts.mulish(
+                            fontSize: isTab(context) ? 9.sp : 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: tbrown),
                       ),
                     ],
                   ),

@@ -33,7 +33,7 @@ class Images {
   static const String EMERGENCYCONTACT =
       'assets/icons/Emergencycontactdetails.png';
 
-  ///
+  /////
   static const String JOININGIMGBACK = 'assets/icons/joiningimg.png';
   static const String DELEATEBTN = 'assets/icons/deletebtn.png';
   static const String DOCUMENT_PENDING = 'assets/lottie/documentPending.json';
@@ -48,6 +48,8 @@ class Images {
   static const String SELECT_BOOKINGS = 'assets/icons/selected_booking.png';
   static const String SELECT_WALLET = 'assets/icons/selected_wallet.png';
   static const String SELECT_PROFILE = 'assets/icons/selected_profile.png';
+  static const String USER_BLOCK = 'assets/images/user_block.jpg';
+
 // profile screen
   static const String EARNING = 'assets/icons/earnings.png';
   static const String RIDE_HISTORY = 'assets/icons/rides.png';
@@ -60,6 +62,9 @@ class Images {
   static const String BACK = 'assets/icons/back.png';
   static const String SUBSCRIPTION = 'assets/icons/subscription.png';
   static const String TUTORIALS = 'assets/icons/tutorials.png';
+  static const String TERMS_CONDITIONS = 'assets/icons/t&C.png';
+  static const String PRIVACT_POLICY = 'assets/icons/PrivacyPolicy.png';
+  static const String REFUND_POLICY = 'assets/icons/refund.png';
 
 // Support
   static const String EMAILSUPPORT = 'assets/icons/email_support.png';
@@ -71,6 +76,8 @@ class Images {
   static const String WHATSAPP = 'assets/icons/whatsapp.png';
   static const String FACEBOOK = 'assets/icons/facebook.png';
   static const String INSTAGRAM = 'assets/icons/instagram.png';
+  static const String TWITTER = 'assets/icons/twitter.png';
+
 
 // Reviwes
   static const String STAR = 'assets/icons/star.png';
@@ -114,4 +121,7 @@ class Images {
   static const String GET_DRIVER = 'assets/images/getDriver.png';
   static const String NO_NOTIFICATION = 'assets/images/noNotifications.png';
   static const String LINE = 'assets/icons/Line.png';
+
+  ///payment
+  static const String JOINING_QR_CODE = 'assets/images/qr_code.jpg';
 }

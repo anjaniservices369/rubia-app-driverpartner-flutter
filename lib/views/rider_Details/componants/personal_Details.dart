@@ -1,24 +1,31 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/globalFuctions/addressGoogleMaps.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../../api_services/userApi.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 
 import '../../../globalWidgets/button.dart';
-
 import 'package:intl/intl.dart';
 
 import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
+
 import '../../../responsive.dart';
 import '../add_Details.dart';
 
@@ -73,6 +80,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   var yearDiff;
   var _selectedDate;
   var formattedTemporaryDate;
+
   dateFormate(now) {
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     final String formatted = formatter.format(now);
@@ -173,6 +181,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
     }
     return age;
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -282,13 +291,29 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Email can't be empty";
-                                } else if (value.endsWith('@gmail.com') ==
-                                    false) {
-                                  return 'Enter a Valid Email Address';
-                                } else {
-                                  return null;
                                 }
+
+                                // Remove leading and trailing whitespaces
+                                String trimmedValue = value.trim();
+
+                                // Check if the trimmed value is equal to the original value (no extra spaces)
+                                if (value != trimmedValue) {
+                                  return 'Email cannot contain spaces';
+                                }
+
+                                if (trimmedValue.contains(' ')) {
+                                  return 'Email cannot contain spaces in the middle';
+                                }
+
+                                // Use a regular expression to validate the email format
+                                if (!RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b').hasMatch(trimmedValue)) {
+                                  return 'Enter a valid email address';
+                                }
+
+
+                                return null;
                               },
+
                               readOnly: false,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -428,91 +453,153 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             SizedBox(
                               height: 1.5.h,
                             ),
-                            TextFormField(
-                              readOnly: true,
+                            // TextFieldWidgets(
+                            //   readOnly: false,
+                            //   style: TextStyle(
+                            //       fontWeight: FontWeight.w600,
+                            //       color: tSecondaryColor),
+                            //   controller: _homeAddressController
+                            //     ..text = widget.address != null
+                            //         ? widget.address.toString()
+                            //         : ''
+                            //     ..selection = TextSelection.fromPosition(
+                            //         TextPosition(
+                            //             offset:
+                            //                 _homeAddressController.text.length -
+                            //                     0)),
+                            //   onChanged: (txt) {
+                            //     widget.address = txt;
+                            //     _homeAddressController.value = TextEditingValue(
+                            //         text: txt,
+                            //         selection: TextSelection.collapsed(
+                            //           offset: widget.address,
+                            //         ));
+                            //   },
+                            //   keyboardType: TextInputType.text,
+                            //   hinttext: 'enter_home_address'.tr,
+                            // ),
+
+                            TextFieldWidgets(
+                              readOnly: false,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: tSecondaryColor,
+                              ),
+                              controller: _homeAddressController
+                                ..text = widget.address != null ? widget.address.toString() : ''
+                                ..selection = TextSelection.fromPosition(
+                                  TextPosition(offset: _homeAddressController.text.length - 0),
+                                ),
+                              onChanged: (txt) {
+                                widget.address = txt;
+
+                                _homeAddressController.value = TextEditingValue(
+                                  text: txt,
+                                  selection: TextSelection.collapsed(offset: txt.length),
+                                );
+                              },
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return "Home address cant be empty";
+                                  return 'Address Cant Be Empty';
+                                } else if (value.length != 1 &&
+                                    value.length < 1) {
+                                  return 'Address Must Be Minimum 1 Digits';
                                 } else {
                                   return null;
                                 }
                               },
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: tSecondaryColor),
-                              controller: _homeAddressController
-                                ..text = widget.address != null
-                                    ? widget.address.toString()
-                                    : ''
-                                ..selection = TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset:
-                                            _homeAddressController.text.length -
-                                                0)),
-                              onChanged: (txt) {
-                                widget.address = txt;
-                                _homeAddressController.value = TextEditingValue(
-                                    text: txt,
-                                    selection: TextSelection.collapsed(
-                                      offset: widget.address,
-                                    ));
-                              },
                               keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 20),
-                                filled: true,
-                                fillColor: tlightGray.withOpacity(0.4),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.0),
-                                  ),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: tgreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: tgreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10)),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: tgreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: tgreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10)),
-                                hintText: 'enter_home_address'.tr,
-                                hintStyle: TextStyle(
-                                    color: tGray,
-                                    fontSize: isTab(context) ? 10.sp : 13.sp,
-                                    fontWeight: FontWeight.w400),
-                                suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      Twl.forceNavigateTo(
-                                          context,
-                                          AddressGoogleMapPage(
-                                            firstName:
-                                                _firstNameController.text,
-                                            Email: _emailaddress.text,
-                                            DateOfBirth: _selectedDate != null
-                                                ? _selectedDate
-                                                : widget.DateOfBirth != null
-                                                    ? widget.DateOfBirth
-                                                        .toString()
-                                                    : 'date_Of_Birth'.tr,
-                                            //_selectedDate.toString(),
-                                            gender: gender1,
-                                          ));
-                                    },
-                                    child: Image.asset(
-                                      Images.LOCATIONAA,
-                                      scale: 4,
-                                    )),
-                              ),
+                              hinttext: 'enter_home_address'.tr,
                             ),
+
+
+
+
+                            // TextFormField(
+                            //   readOnly: true,
+                            //   validator: (value) {
+                            //     if (value!.isEmpty) {
+                            //       return "Home address cant be empty";
+                            //     } else {
+                            //       return null;
+                            //     }
+                            //   },
+                            //   style: TextStyle(
+                            //       fontWeight: FontWeight.w600,
+                            //       color: tSecondaryColor),
+                            //   controller: _homeAddressController
+                            //     ..text = widget.address != null
+                            //         ? widget.address.toString()
+                            //         : ''
+                            //     ..selection = TextSelection.fromPosition(
+                            //         TextPosition(
+                            //             offset:
+                            //                 _homeAddressController.text.length -
+                            //                     0)),
+                            //   onChanged: (txt) {
+                            //     widget.address = txt;
+                            //     _homeAddressController.value = TextEditingValue(
+                            //         text: txt,
+                            //         selection: TextSelection.collapsed(
+                            //           offset: widget.address,
+                            //         ));
+                            //   },
+                            //   keyboardType: TextInputType.text,
+                            //   decoration: InputDecoration(
+                            //     contentPadding:
+                            //         EdgeInsets.symmetric(horizontal: 20),
+                            //     filled: true,
+                            //     fillColor: tlightGray.withOpacity(0.4),
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.all(
+                            //         Radius.circular(10.0),
+                            //       ),
+                            //     ),
+                            //     disabledBorder: OutlineInputBorder(
+                            //         borderSide:
+                            //             BorderSide(color: tgreen, width: 1),
+                            //         borderRadius: BorderRadius.circular(10)),
+                            //     focusedBorder: OutlineInputBorder(
+                            //         borderSide:
+                            //             BorderSide(color: tgreen, width: 1),
+                            //         borderRadius: BorderRadius.circular(10)),
+                            //     errorBorder: OutlineInputBorder(
+                            //         borderSide:
+                            //             BorderSide(color: tgreen, width: 1),
+                            //         borderRadius: BorderRadius.circular(10)),
+                            //     enabledBorder: OutlineInputBorder(
+                            //         borderSide:
+                            //             BorderSide(color: tgreen, width: 1),
+                            //         borderRadius: BorderRadius.circular(10)),
+                            //     hintText: 'enter_home_address'.tr,
+                            //     hintStyle: TextStyle(
+                            //         color: tGray,
+                            //         fontSize: isTab(context) ? 10.sp : 13.sp,
+                            //         fontWeight: FontWeight.w400),
+                            //     // suffixIcon: GestureDetector(
+                            //     //     onTap: () {
+                            //     //       Twl.forceNavigateTo(
+                            //     //           context,
+                            //     //           AddressGoogleMapPage(
+                            //     //             firstName:
+                            //     //                 _firstNameController.text,
+                            //     //             Email: _emailaddress.text,
+                            //     //             DateOfBirth: _selectedDate != null
+                            //     //                 ? _selectedDate
+                            //     //                 : widget.DateOfBirth != null
+                            //     //                     ? widget.DateOfBirth
+                            //     //                         .toString()
+                            //     //                     : 'date_Of_Birth'.tr,
+                            //     //             //_selectedDate.toString(),
+                            //     //             gender: gender1,
+                            //     //           ));
+                            //     //     },
+                            //     //     child: Image.asset(
+                            //     //       Images.LOCATIONAA,
+                            //     //       scale: 4,
+                            //     //     )),
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 4.h,
                             ),
@@ -531,6 +618,43 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 color: tPrimaryColor,
               ),
               onTap: (startLoading, stopLoading, btnState) async {
+                startLoading();
+                if (_selectedDate == null && widget.DateOfBirth == null) {
+                  Twl.createAlert(context, 'Oops', 'Date of birth is mandatory');
+                  return;
+                }
+
+                if (gender1 == null) {
+                  Twl.createAlert(context, 'Oops', 'Gender can\'t be empty');
+                  return;
+                }
+
+                // Validate name field
+                if (_firstNameController.text.trim().isEmpty) {
+                  Twl.createAlert(context, 'Oops', 'Name can\'t be empty');
+                  return;
+                }
+
+                // Validate email field
+                String email = _emailaddress.text.trim();
+                if (email.isEmpty) {
+                  Twl.createAlert(context, 'Oops', 'Enter a valid email address');
+                  return;
+                }
+
+                // Validate address field
+                if (_homeAddressController.text.trim().isEmpty) {
+                  Twl.createAlert(context, 'Oops', 'Address can\'t be empty');
+                  return;
+                }
+
+                bool success = await sendCurrentLocation(context);
+                if(!success){
+                  Twl.createAlert(context, 'Oops', 'Unable to fetch your location');
+                  stopLoading();
+                  return;
+                }
+                stopLoading();
                 showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -644,4 +768,72 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       ),
     );
   }
+
+
+
+  Future<bool> sendCurrentLocation(BuildContext context) async {
+    print("Getting current Location");
+    LocationPermission permission;
+
+    // Check location service status
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, handle it accordingly
+      print("Location services are disabled");
+      openLocationSettings(); // Open location settings
+      return false;
+    }
+
+    // Check and request location permission
+    var status = await Permission.locationWhenInUse.status;
+    if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+      // Location permission not granted, request it
+      status = await Permission.locationWhenInUse.request();
+      if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+        // Handle the case when the user denies the location permission permanently
+        print("Location permission denied");
+        openAppSettings(); // Open app settings for the user to grant permission
+        return false;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      String address =
+          "${placemark.name}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}";
+      print("Getting current Location " + address);
+
+      Map<String, String> param = {
+        'lat': position.latitude.toString(),
+        'lng': position.longitude.toString(),
+      };
+      var res = await UserAPI().sendLocation(context, param);
+      if (res['status'] == "OK") {
+        print('CheckBoundary is hitting here >>>>>>>>');
+        print("sent successfully");
+        return true;
+      } else {
+        print("not saved");
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  Future<void> openLocationSettings() async {
+    await openAppSettings();
+  }
+
+
 }
+

@@ -1,5 +1,6 @@
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
+import 'package:base_project_flutter/views/joiningfees/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -159,25 +160,26 @@ class _JoiningFeesState extends State<JoiningFees> {
                 onTap: (startLoading, stopLoading, btnState) async {
                   if (ischeckbox == true) {
                     startLoading();
+                    Twl.forceNavigateTo(context, QRPage());
 
-                    Map<String, String> param = {
-                      'order_amount': '500',
-                    };
-                    var res =
-                        await DriverDetailsApi().createOrderApi(context, param);
-                    if (res != null && res['status'] == 'OK') {
-                      stopLoading();
-                      cfPaymentGatewayService.setCallback(
-                        verifyPayment,
-                        onError,
-                      );
-                      pay(res['details']['order_id'].toString(),
-                          res['details']['payment_session_id']);
-                    } else {
-                      stopLoading();
-                      Twl.createAlert(context, 'Oops', res['error'].toString());
-                      stopLoading();
-                    }
+                    // Map<String, String> param = {
+                    //   'order_amount': '500',
+                    // };
+                    // var res =
+                    //     await DriverDetailsApi().createOrderApi(context, param);
+                    // if (res != null && res['status'] == 'OK') {
+                    //   stopLoading();
+                    //   cfPaymentGatewayService.setCallback(
+                    //     verifyPayment,
+                    //     onError,
+                    //   );
+                    //   pay(res['details']['order_id'].toString(),
+                    //       res['details']['payment_session_id']);
+                    // } else {
+                    //   stopLoading();
+                    //   Twl.createAlert(context, 'Oops', res['error'].toString());
+                    //   stopLoading();
+                    // }
                   } else {
                     Twl.createAlert(
                         context, 'Alert', 'Joining fee is manditory');
@@ -200,7 +202,7 @@ class _JoiningFeesState extends State<JoiningFees> {
                       ),
                     ),
                     Text(
-                      "terms_&_conditions".tr + " ",
+                      "terms_&_conditions".tr ,
                       style: GoogleFonts.mulish(
                         color: tPrimaryColor,
                         fontWeight: FontWeight.w700,

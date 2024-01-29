@@ -282,6 +282,7 @@ class _PanCardState extends State<PanCard> {
               ),
               // boxshadow: [tButtonBoxshadow],
               onTap: (startLoading, stopLoading, btnState) async {
+                if (Uri.parse(panImg).isAbsolute) {
                 startLoading();
                 if (_formKey.currentState!.validate()) {
                   Map<String, String> param = {
@@ -306,6 +307,10 @@ class _PanCardState extends State<PanCard> {
                   stopLoading();
                 }
                 stopLoading();
+                }else{
+                  Twl.createAlert(context, 'Invalid Image',
+                      'Please Upload Correct image before saving..');
+                }
               },
             ),
             SizedBox(

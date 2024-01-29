@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/main.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/wallet/walletpage.dart';
+import 'package:camera/camera.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +11,9 @@ import 'package:sizer/sizer.dart';
 import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../bookingsPage/bookingPage.dart';
-import '../dummy.dart';
 import '../homePage/homePage.dart';
 import '../profilePage/profilePage.dart';
-import '../ride_info/ride_info.dart';
+
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({
@@ -53,47 +51,58 @@ class _BottomNavigationState extends State<BottomNavigation> {
     print("Hereeee");
     // Get any messages which caused the application to open from
     // a terminated state.
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
   }
 
   @override
   void initState() {
     super.initState();
     checkBottomIndex();
-    fetchFireBaseValues();
+    //fetchFireBaseValues();
 
-    FirebaseMessaging.instance.getInitialMessage();
-    super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin!.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel!.id,
-              channel!.name,
-              importance: Importance.max,
-              priority: Priority.high,
-              icon: '@mipmap/ic_launcher',
-              enableLights: true,
-              enableVibration: true,
-              sound: RawResourceAndroidNotificationSound("noti"),
-              playSound: true,
-            ),
-          ),
-        );
-        if (message.notification != null) {
-          print('Message also contained a notification: ${message.notification}');
-          print('onMessageOpenedApp --2');
-          // Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
-        }
-        // showNotification();
-      }
-    });
+    // FirebaseMessaging.instance.getInitialMessage();
+    // super.initState();
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null && !kIsWeb) {
+    //     flutterLocalNotificationsPlugin!.show(
+    //       notification.hashCode,
+    //       notification.title,
+    //       notification.body,
+    //       NotificationDetails(
+    //         android: AndroidNotificationDetails(
+    //           channel!.id,
+    //           channel!.name,
+    //           importance: Importance.max,
+    //           priority: Priority.high,
+    //           icon: '@mipmap/ic_launcher',
+    //           enableLights: true,
+    //           enableVibration: true,
+    //           // sound: RawResourceAndroidNotificationSound('clock'),
+    //           playSound: true,
+    //           sound: RawResourceAndroidNotificationSound('noti.mp3'),
+    //
+    //         ),
+    //       ),
+    //     );
+    //     if (message.notification != null) {
+    //       print(
+    //           'Message also contained a notification: ${message.notification}');
+    //       print('onMessageOpenedApp --2');
+    //       // Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    //     }
+    //     // showNotification();
+    //   }
+    // });
+  }
+
+
+
+  loadCams() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
   }
 
   void showNotification() async {
@@ -104,9 +113,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
       enableLights: true,
+      playSound: true,
       sound: RawResourceAndroidNotificationSound("noti"),
       //// Replace with your custom sound file name
-      playSound: true,
     );
 
     // var iOSPlatformChannelSpecifics = IOSNotificationDetails();
@@ -125,44 +134,58 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    Image home(int index) => tabIndexs == index
-        ? Image.asset(
-            Images.SELECT_HOME,
-            width: isTab(context) ? 40 : 22,
-          )
-        : Image.asset(
-            Images.HOME,
-            width: isTab(context) ? 35 : 22,
-          );
-    Image nearby(int index) => tabIndexs == index
-        ? Image.asset(
-            Images.SELECT_BOOKINGS,
-            width: isTab(context) ? 38 : 25,
-          )
-        : Image.asset(
-            Images.BOOKINGS,
-            width: isTab(context) ? 38 : 25,
-          );
-    Image orders(int index) => tabIndexs == index
-        ? Image.asset(
-            Images.SELECT_WALLET,
-            width: isTab(context) ? 40 : 22,
-          )
-        : Image.asset(
-            Images.WALLET,
-            width: isTab(context) ? 40 : 22,
-          );
-    Image profile(int index) => tabIndexs == index
-        ? Image.asset(
-            Images.SELECT_PROFILE,
-            width: isTab(context) ? 36 : 18,
-          )
-        : Image.asset(
-            Images.PROFILE,
-            width: isTab(context) ? 36 : 18,
-          );
+    Image home(int index) =>
+        tabIndexs == index
+            ? Image.asset(
+          Images.SELECT_HOME,
+          width: isTab(context) ? 40 : 22,
+        )
+            : Image.asset(
+          Images.HOME,
+          width: isTab(context) ? 35 : 22,
+        );
+    Image nearby(int index) =>
+        tabIndexs == index
+            ? Image.asset(
+          Images.SELECT_BOOKINGS,
+          width: isTab(context) ? 38 : 25,
+        )
+            : Image.asset(
+          Images.BOOKINGS,
+          width: isTab(context) ? 38 : 25,
+        );
+    Image orders(int index) =>
+        tabIndexs == index
+            ? Image.asset(
+          Images.SELECT_WALLET,
+          width: isTab(context) ? 40 : 22,
+        )
+            : Image.asset(
+          Images.WALLET,
+          width: isTab(context) ? 40 : 22,
+        );
+    Image profile(int index) =>
+        tabIndexs == index
+            ? Image.asset(
+          Images.SELECT_PROFILE,
+          width: isTab(context) ? 36 : 18,
+        )
+            : Image.asset(
+          Images.PROFILE,
+          width: isTab(context) ? 36 : 18,
+        );
     return WillPopScope(
-      onWillPop: () => Twl.willpopAlert(context),
+      onWillPop: () async {
+        // Check if the current page is not the home page
+        if (tabIndexs != 0) {
+          // Switch to the home page and prevent the app from exiting
+          _onItemTapped(0);
+          return false;
+        }
+
+        // Allow the app to exit if on the home page
+        return Twl.willpopAlert(context);
+      },
       child: Scaffold(
         backgroundColor: tBackground,
         body: IndexedStack(

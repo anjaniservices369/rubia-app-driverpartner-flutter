@@ -383,129 +383,135 @@ class _ReviewsState extends State<Reviews> {
               // Reviews Section
               Expanded(
                 child: ratingList.isNotEmpty
-                    ? ListView.builder(
-                        controller: _scrollController,
-                        itemCount: ratingList.length + 1,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == ratingList.length) {
-                            if (isLoading) {
-                              return Container(
-                                padding: EdgeInsets.all(2.h),
-                                child: Center(
-                                  child: SpinKitThreeBounce(
-                                    color: tBlue,
-                                    size: 20.sp,
-                                  ),
-                                ),
-                              );
-                            } else if (errorMessage.isNotEmpty) {
-                              return Container(
-                                padding: EdgeInsets.all(2.h),
-                                child: Center(
-                                  child: Text(
-                                    errorMessage,
-                                    style: TextStyle(
-                                      fontSize: isTab(context) ? 14.sp : 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: tRed,
+                    ? RefreshIndicator(
+                      onRefresh: () {
+                        return fetchDriverReviews();
+                      },
+                  color: tAppbarColor,
+                      child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: ratingList.length + 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == ratingList.length) {
+                              if (isLoading) {
+                                return Container(
+                                  padding: EdgeInsets.all(2.h),
+                                  child: Center(
+                                    child: SpinKitThreeBounce(
+                                      color: tBlue,
+                                      size: 20.sp,
                                     ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }
-
-                          final review = ratingList[index];
-
-                          return Container(
-                            margin: EdgeInsets.only(
-                              top: 1.h,
-                              left: isTab(context) ? 5.w : 3.w,
-                              right: isTab(context) ? 5.w : 3.w,
-                            ),
-                            child: Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.all(3.h),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 4.5.h,
-                                          backgroundImage: NetworkImage(
-                                              review['user_image']),
-                                        ),
-
-                                        // AssetImage(
-                                        //           ImageConstant.profilePlaceholder,
-                                        //         ),
-                                        SizedBox(width: 2.w),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              review['user_name'],
-                                              style: TextStyle(
-                                                  fontSize: isTab(context)
-                                                      ? 16.sp
-                                                      : 18.sp,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: tSecondaryColor),
-                                            ),
-                                            SizedBox(height: 0.5.h),
-                                            Text(
-                                              DateFormat.yMMMMd().format(
-                                                DateTime.parse(
-                                                    review['created_at']),
-                                              ),
-                                              style: TextStyle(
-                                                fontSize: isTab(context)
-                                                    ? 14.sp
-                                                    : 16.sp,
-                                                color: tLightBrown,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 2.h),
-                                    Text(
-                                      review['review'],
+                                );
+                              } else if (errorMessage.isNotEmpty) {
+                                return Container(
+                                  padding: EdgeInsets.all(2.h),
+                                  child: Center(
+                                    child: Text(
+                                      errorMessage,
                                       style: TextStyle(
-                                          fontSize:
-                                              isTab(context) ? 16.sp : 18.sp,
-                                          color: tSecondaryColor),
+                                        fontSize: isTab(context) ? 14.sp : 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: tRed,
+                                      ),
                                     ),
-                                  ],
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }
+
+                            final review = ratingList[index];
+
+                            return Container(
+                              margin: EdgeInsets.only(
+                                top: 1.h,
+                                left: isTab(context) ? 5.w : 3.w,
+                                right: isTab(context) ? 5.w : 3.w,
+                              ),
+                              child: Card(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(3.h),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 4.5.h,
+                                            backgroundImage: NetworkImage(
+                                                review['user_image']),
+                                          ),
+
+                                          // AssetImage(
+                                          //           ImageConstant.profilePlaceholder,
+                                          //         ),
+                                          SizedBox(width: 2.w),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                review['user_name'],
+                                                style: TextStyle(
+                                                    fontSize: isTab(context)
+                                                        ? 16.sp
+                                                        : 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: tSecondaryColor),
+                                              ),
+                                              SizedBox(height: 0.5.h),
+                                              Text(
+                                                DateFormat.yMMMMd().format(
+                                                  DateTime.parse(
+                                                      review['created_at']),
+                                                ),
+                                                style: TextStyle(
+                                                  fontSize: isTab(context)
+                                                      ? 14.sp
+                                                      : 16.sp,
+                                                  color: tLightBrown,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      Text(
+                                        review['review'],
+                                        style: TextStyle(
+                                            fontSize:
+                                                isTab(context) ? 16.sp : 18.sp,
+                                            color: tSecondaryColor),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      )
-                    : Container(
-                        padding: EdgeInsets.all(2.h),
-                        child: Center(
-                          child: Text(
-                            'No reviews available.',
-                            style: TextStyle(
-                              fontSize: isTab(context) ? 14.sp : 16.sp,
-                              fontWeight: FontWeight.bold,
-                              color: tLightBrown,
-                            ),
-                          ),
+                            );
+                          },
                         ),
+                    )
+                    : Container(
+                  padding: EdgeInsets.all(2.0),
+                  child: Center(
+                    child: Text(
+                      'No reviews available.',
+                      style: TextStyle(
+                        fontSize: isTab(context) ? 14.0 : 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: tLightBrown,
                       ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

@@ -40,14 +40,19 @@ class _WalletPageState extends State<WalletPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            WalletCardWidget(),
-            TransactionDetailsWidget(
-              selectedType: widget.selectedType,
-            )
-          ],
+      body: WillPopScope(
+        onWillPop: (){
+          return Twl.navigateTo(context, BottomNavigation(tabIndexId: 0,));
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              WalletCardWidget(),
+              TransactionDetailsWidget(
+                selectedType: widget.selectedType,
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

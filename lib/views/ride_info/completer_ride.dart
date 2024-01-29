@@ -5,6 +5,7 @@ import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/providers/locationProvider.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/componants/rideinfo.dart';
+import 'package:base_project_flutter/views/ride_info/Car_RideEndingData/DriveEndVerification_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
@@ -36,6 +37,14 @@ class _CompleteRideState extends State<CompleteRide> {
   var status = 0;
   GoogleMapController? mapController;
   GeoLatLong.LatLng? startLocation;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
   @override
   void dispose() {
     mapController?.dispose();
@@ -371,7 +380,7 @@ class _CompleteRideState extends State<CompleteRide> {
                                         Container(
                                           child: Expanded(
                                             child: Text(
-                                              widget.bookingDetails['drop_address'],
+                                              widget.bookingDetails['drop_address'] ?? ' ',
                                               style: GoogleFonts.mulish(
                                                   color: tSecondaryColor, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 12.sp),
                                               overflow: TextOverflow.ellipsis,
@@ -429,9 +438,9 @@ class _CompleteRideState extends State<CompleteRide> {
                                       builder: (ctx) => Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              EndingOdometerDetails(
-                                                bookingDetails: widget.bookingDetails,
-                                              )
+                                              DriveEndVerificationPopUp(
+                                                  bookingDetails:
+                                                  widget.bookingDetails)
                                             ],
                                           ));
                                   await Future.delayed(const Duration(seconds: 1));

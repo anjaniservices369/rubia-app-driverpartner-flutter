@@ -98,7 +98,6 @@ class _ReferalCodeViewState extends State<ReferalCodeView> {
                             onTap: () {
                               Twl.navigateTo(context,
                                   ChooseAppLanguageView(isReferalPage: true));
-                              // Twl.navigateTo(context, ChooseAppLanguageView());
                             },
                             child: Row(
                               children: [

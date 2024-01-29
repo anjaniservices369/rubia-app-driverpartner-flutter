@@ -21,11 +21,14 @@ import '../../../responsive.dart';
 import 'package:dotted_line/dotted_line.dart';
 
 class RideHistoryList extends StatefulWidget {
-  const RideHistoryList({
+  const
+  RideHistoryList({
     Key? key,
     this.status,
+    this.selectedType,
   }) : super(key: key);
   final status;
+  final selectedType;
 
   @override
   State<RideHistoryList> createState() => _RideHistoryListState();
@@ -130,11 +133,11 @@ class _RideHistoryListState extends State<RideHistoryList> {
                         ],
                       ),
                     )
-                  : Center(
-                      // child: SpinKitRotatingCircle(
-                      //   color: tAppbarColor,
-                      // ),
-                      );
+                  : isLoading ? Center(
+                      child: SpinKitRotatingCircle(
+                        color: tAppbarColor,
+                      ),
+                      ) : Center();
             }
           }
           if (errorMessage.isNotEmpty)
@@ -184,6 +187,7 @@ class _RideHistoryListState extends State<RideHistoryList> {
                   Twl.forceNavigateTo(
                       context,
                       RideInfo(
+                        selectedType:widget.selectedType,
                         bookingDetails: booking,
                         isHistoryPage: true,
                       ));
@@ -415,9 +419,7 @@ class _RideHistoryListState extends State<RideHistoryList> {
                                             ),
                                             SizedBox(height: 1.h),
                                             Text(
-                                              booking['price_detail']
-                                                      ['estimatePrice']
-                                                  .toString(),
+                                              ((booking['price_detail']['estimatePrice'] + (booking['cancellation_charges'] ?? 0)).toStringAsFixed(0)),
                                               style: GoogleFonts.mulish(
                                                 color: tBlue,
                                                 fontWeight: FontWeight.w700,

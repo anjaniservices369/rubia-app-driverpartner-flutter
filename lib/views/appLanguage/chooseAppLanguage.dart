@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -12,6 +13,7 @@ import '../../constants/constants.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
+import '../../providers/bookingProvider.dart';
 import '../../responsive.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
 import '../rider_details/add_Details.dart';

@@ -360,6 +360,7 @@ class _AdharCardState extends State<AdharCard> {
 
               // boxshadow: [tButtonBoxshadow],
               onTap: (startLoading, stopLoading, btnState) async {
+                if (Uri.parse(aadharFrontImg).isAbsolute && Uri.parse(aadharBackImg).isAbsolute ) {
                 startLoading();
                 if (_formKey.currentState!.validate()) {
                   Map<String, String> param = {
@@ -385,6 +386,10 @@ class _AdharCardState extends State<AdharCard> {
                   stopLoading();
                 }
                 stopLoading();
+                }else{
+                  Twl.createAlert(context, 'Invalid Image',
+                      'Please Upload Correct image before saving..');
+                }
               },
             ),
             SizedBox(

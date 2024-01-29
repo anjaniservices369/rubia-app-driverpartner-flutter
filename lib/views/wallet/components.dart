@@ -5,6 +5,7 @@ import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/globalWidgets/customTextFiled.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
+import 'package:base_project_flutter/views/wallet/qr_payment.dart';
 import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
@@ -20,11 +21,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 
 import '../../../responsive.dart';
+import '../joiningfees/qr_page.dart';
 
 class WalletCardWidget extends StatefulWidget {
   const WalletCardWidget({
@@ -37,6 +41,119 @@ class WalletCardWidget extends StatefulWidget {
 
 class _WalletCardWidgetState extends State<WalletCardWidget> {
   final TextEditingController _amountController = TextEditingController();
+
+  void _launchDialer(String phoneNumber) async {
+    final url = 'tel://$phoneNumber';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _showContactInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Note : ', style: GoogleFonts.mulish(
+            color: tBlack,
+            fontSize: isTab(context) ? 16.sp : 14.sp,
+            fontWeight: FontWeight.w800,
+          ),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Please visit our office with necessary documents to complete the withdraw process.',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 16.sp : 14.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Phone: +91 78936 53899',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 16.sp : 14.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Email: rubia.services@gmail.com',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 14.sp : 12.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Address:  Rubia Services(OPC) Pvt.Ltd Lig 60/5, 4th Phase, KPHB Colony, Hyderabad, 500085' ,style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 14.sp : 12.sp,
+                fontWeight: FontWeight.w500,
+              ),),
+              SizedBox(height: 10),
+              Text('Timings:  9:00AM to 7:00PM',style: GoogleFonts.mulish(
+                color: tBlack,
+                fontSize: isTab(context) ? 15.sp : 13.sp,
+                fontWeight: FontWeight.w800,
+              ),),
+              SizedBox(height: 10),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 100,
+                    child: Button(
+                      color: tPrimaryColor,
+                      textcolor: tWhite,
+                      bottonText: 'Call'.tr,
+                      borderSide: BorderSide(color: tPrimaryColor),
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        launch(
+                          "tel://+917893653899",
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    child: Button(
+                      color: tPrimaryColor,
+                      textcolor: tWhite,
+                      bottonText: 'Location'.tr,
+                      borderSide: BorderSide(color: tPrimaryColor),
+                      onTap: (startLoading, stopLoading, btnState) async {
+                        MapsLauncher.launchCoordinates(17.4739803, 78.3886243);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
+          actions: [
+            Center(
+              child: Container(
+                child: Button(
+                  color: tPrimaryColor,
+                  textcolor: tWhite,
+                  bottonText: 'OK'.tr,
+                  borderSide: BorderSide(color: tPrimaryColor),
+                  onTap: (startLoading, stopLoading, btnState) async{
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height:2.h,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -144,7 +261,8 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                                     ? Container()
                                     : GestureDetector(
                                         onTap: () {
-                                          createAlert(context);
+                                          // createAlert(context);
+                                          Twl.forceNavigateTo(context, QRPayment());
                                         },
                                         child: Icon(
                                           Icons.add_circle,
@@ -192,8 +310,10 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                             ),
                             borderRadius: 15.0,
                             onTap: (startLoading, stopLoading, btnState) async {
-                              createAlert(context);
-                            }),
+                              // createAlert(context);
+                              Twl.forceNavigateTo(context, QRPayment());
+                            }
+                            ),
                       ),
                       Spacer(),
                       SizedBox(
@@ -226,7 +346,8 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                             ),
                             borderRadius: 15.0,
                             onTap: (startLoading, stopLoading, btnState) async {
-                              withDrawAlert(context);
+                              // withDrawAlert(context);
+                              _showContactInfoDialog(context);
                             }),
                       ),
                     ],
@@ -328,7 +449,8 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return
+          AlertDialog(
           title: Center(child: Text('Enter amount ')),
           content: TextFormFieldWidgets(
             style:

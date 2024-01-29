@@ -32,6 +32,7 @@ class TakeYourSelfie extends StatefulWidget {
 class _TakeYourSelfieState extends State<TakeYourSelfie> {
   var profileImage;
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     GlobalFunctionProvider _data = Provider.of<GlobalFunctionProvider>(
@@ -125,7 +126,9 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
                                           height: 150,
                                           width: 150,
                                           decoration: BoxDecoration(
-                                              image: profileImage == null
+                                              image: profileImage == null ||
+                                                      !Uri.parse(profileImage)
+                                                          .isAbsolute
                                                   ? DecorationImage(
                                                       image: AssetImage(
                                                         Images.PERSONALDETAILS,
@@ -288,24 +291,35 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
                     color: tPrimaryColor,
                   ),
                   onTap: (startLoading, stopLoading, btnState) async {
-                    startLoading();
-                    Map<String, String> param = {
-                      'profile_image': profileImage.toString()
-                    };
-                    print(param);
+                    if (Uri.parse(profileImage).isAbsolute) {
+                      startLoading();
+                      Map<String, String> param = {
+                        'profile_image': profileImage.toString()
+                      };
+                      print(param);
 
-                    var res = await DriverDetailsApi()
-                        .uploadProfileImageApi(context, param);
-                    if (res != null && res['status'] == 'OK') {
-                      Twl.navigateTo(context, DrivingLicense());
-                      _data.clearSecondSelectedImage();
-                      stopLoading();
+                      var res = await DriverDetailsApi().uploadProfileImageApi(
+                        context,
+                        param,
+                      );
+                      if (res != null && res['status'] == 'OK') {
+                        Twl.navigateTo(context, DrivingLicense());
+                        _data.clearSecondSelectedImage();
+                        stopLoading();
+                      } else {
+                        stopLoading();
+                        Twl.createAlert(
+                            context, 'Oops', res['error'].toString());
+                      }
                     } else {
-                      stopLoading();
-                      Twl.createAlert(context, 'Oops', res['error'].toString());
+                      // Handle the case where profileImage is not a valid URL
+                      Twl.forceNavigateTo(context, TakeYourSelfie());
+                      Twl.createAlert(context, 'Invalid URL',
+                          'Please Upload Correct image before saving.');
                     }
                     stopLoading();
-                  })
+                  },
+                )
               : Button(
                   textcolor: tWhite,
                   bottonText: 'open_camera'.tr,
@@ -332,7 +346,6 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
                               _storedData.rideDetailImagesList
                                   .add({'type': 1, 'image': profileImage});
                             }
-
                             print(_storedData.rideDetailImagesList.toString());
                           } else {
                             print('Image upload failed or no image selected.');

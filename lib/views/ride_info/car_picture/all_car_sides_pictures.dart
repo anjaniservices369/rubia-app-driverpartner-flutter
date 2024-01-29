@@ -786,9 +786,9 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
 
                   if (res != null && res['status'] == 'OK') {
                     _storedData.rideDetailImagesList.clear();
-                    if (firstImg != '' && firstImg != null ||
-                        secoundImg != '' && secoundImg != null ||
-                        thirdImg != '' && thirdImg != null ||
+                    if (firstImg != '' && firstImg != null &&
+                        secoundImg != '' && secoundImg != null &&
+                        thirdImg != '' && thirdImg != null &&
                         fourthImg != '' && fourthImg != null) {
                       _storedData.carPictureStatus = '1';
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

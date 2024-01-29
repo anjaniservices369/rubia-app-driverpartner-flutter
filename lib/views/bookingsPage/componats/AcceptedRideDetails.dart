@@ -295,7 +295,7 @@ class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
                       //   ),
                       // ),
                       Text(
-                        currencySymbol + widget.booking['estimate_price'].toString(),
+                        currencySymbol + widget.booking['driver_earnings'].toString(),
                         style: GoogleFonts.mulish(
                           color: tPrimaryColor,
                           fontWeight: FontWeight.w700,

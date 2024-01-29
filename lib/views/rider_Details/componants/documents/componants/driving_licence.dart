@@ -258,7 +258,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                                               });
                                               String imgUrl = await Twl()
                                                   .pickImage(context);
-                                              if (imgUrl != null) {
+                                              if (imgUrl != null ) {
                                                 print(
                                                     'Uploaded image URL: $imgUrl');
                                                 setState(() {
@@ -450,22 +450,34 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                               height: 1.h,
                             ),
                             TextFieldWidgets(
+                              textCapitalization:
+                              TextCapitalization.characters,
                               // style: TextStyle(fontWeight: FontWeight.w600),
                               controller: _drivingLicenseNumberController,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'driving_License_Cant_Be_Empty'.tr;
-                                } else if (value.length != 16 &&
-                                    value.length < 16) {
-                                  return 'driving_License_Must_Be_Minimum_16_Characters'
-                                      .tr;
-                                } else {
-                                  return null;
                                 }
+
+                                // Remove leading and trailing whitespaces
+                                String trimmedValue = value.trim();
+
+                                // Check if the length is not 18 after removing spaces
+                                if (trimmedValue.length>21) {
+                                  return 'driving License Must Be 21 Characters'.tr;
+                                }
+
+                                // Check if the trimmed value is equal to the original value (no extra spaces in between)
+                                if (value != trimmedValue) {
+                                  return 'driving_License_Cant_Contain_Spaces'.tr;
+                                }
+
+                                return null;
                               },
+
                               keyboardType: TextInputType.text,
                               inputFormatters: <TextInputFormatter>[
-                                LengthLimitingTextInputFormatter(16),
+                                LengthLimitingTextInputFormatter(21),
                               ],
                               readOnly: false,
                               hinttext: 'xxxxxxxxx',
@@ -549,42 +561,47 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                 ),
                 // boxshadow: [tButtonBoxshadow],
                 onTap: (startLoading, stopLoading, btnState) async {
-                  startLoading();
-                  if (_formKey.currentState!.validate()) {
-                    Map<String, String> param = {
-                      'driving_license_front': dlFrontImg.toString(),
-                      'driving_license_back': dlBackImg.toString(),
-                      'driving_license_number':
-                          _drivingLicenseNumberController.text,
-                      'issued_date':
-                          Twl.dateFormate(selectedIssueDate).toString(),
-                      'expire_date':
-                          Twl.dateFormate(selectedExpiryDate).toString()
-                    };
-                    print(param);
-                    if (selectedIssuedDate != null &&
-                        selectedExpiryDate != null) {
-                      if (dlFrontImg != null && dlBackImg != null) {
-                        var res = await DriverDetailsApi()
-                            .uploadDrivingLicenceApi(context, param);
-                        if (res != null && res['status'] == 'OK') {
-                          Twl.forceNavigateTo(context, Documents());
+                  if (Uri.parse(dlFrontImg).isAbsolute && Uri.parse(dlBackImg).isAbsolute ) {
+                    startLoading();
+                    if (_formKey.currentState!.validate()) {
+                      Map<String, String> param = {
+                        'driving_license_front': dlFrontImg.toString(),
+                        'driving_license_back': dlBackImg.toString(),
+                        'driving_license_number':
+                        _drivingLicenseNumberController.text,
+                        'issued_date':
+                        Twl.dateFormate(selectedIssueDate).toString(),
+                        'expire_date':
+                        Twl.dateFormate(selectedExpiryDate).toString()
+                      };
+                      print(param);
+                      if (selectedIssuedDate != null &&
+                          selectedExpiryDate != null) {
+                        if (dlFrontImg != null && dlBackImg != null) {
+                          var res = await DriverDetailsApi()
+                              .uploadDrivingLicenceApi(context, param);
+                          if (res != null && res['status'] == 'OK') {
+                            Twl.forceNavigateTo(context, Documents());
+                          } else {
+                            stopLoading();
+                            Twl.createAlert(
+                                context, 'Oops', res['error'].toString());
+                          }
                         } else {
                           stopLoading();
-                          Twl.createAlert(
-                              context, 'Oops', res['error'].toString());
+                          Twl.createAlert(context, 'Oops', 'upload Image');
                         }
+                        stopLoading();
                       } else {
                         stopLoading();
-                        Twl.createAlert(context, 'Oops', 'upload Image');
+                        Twl.createAlert(
+                            context, 'Oops', 'All fields are mandatory');
                       }
                       stopLoading();
-                    } else {
-                      stopLoading();
-                      Twl.createAlert(
-                          context, 'Oops', 'All fields are mandatory');
                     }
-                    stopLoading();
+                  }else{
+                    Twl.createAlert(context, 'Invalid Image',
+                        'Please Upload Correct image before saving..');
                   }
                 }),
             SizedBox(

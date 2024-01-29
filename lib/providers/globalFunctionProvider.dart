@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../api_services/userApi.dart';
+
 class GlobalFunctionProvider with ChangeNotifier {
   var firstSelectedImage;
   String get _firstSelectedImage => firstSelectedImage;
@@ -42,4 +44,5 @@ class GlobalFunctionProvider with ChangeNotifier {
     notifyListeners();
     return secondSelectedImage;
   }
+
 }

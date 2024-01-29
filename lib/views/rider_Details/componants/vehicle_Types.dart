@@ -37,10 +37,10 @@ class _VechileSelectionState extends State<VechileSelection> {
   List _entityList = [
     'Car',
     'Loader',
-    'trauck',
+    'truck',
   ];
   List<String> improveList = [
-    'Fast Delivey',
+    'Fast Delivery',
     'Customer support',
     'Speed and efficiency',
     'Overall Service',
@@ -117,7 +117,7 @@ class _VechileSelectionState extends State<VechileSelection> {
         centerTitle: false,
         title: Text('vehicle_types'.tr,
             style: TextStyle(
-                // fontFamily: 'Plus Jakarta Sans',
+              // fontFamily: 'Plus Jakarta Sans',
                 fontSize: isTab(context) ? 12.sp : 14.sp,
                 color: tSecondaryColor,
                 fontWeight: FontWeight.w700)),
@@ -155,7 +155,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                       ),
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                         decoration: BoxDecoration(
                             color: tWhite,
                             boxShadow: [tBoxShadow],
@@ -184,7 +184,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                         activeColor: tPrimaryColor,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(4),
+                                            BorderRadius.circular(4),
                                             side: BorderSide(
                                                 color: icheckbox == true
                                                     ? tPrimaryColor
@@ -204,13 +204,13 @@ class _VechileSelectionState extends State<VechileSelection> {
                                                   vehicle_types_manual
                                                       .toString());
                                             });
-                                            // if (iseckbox == true) {
-                                            //   setState(() {
-                                            //     vechileTitle.clear();
-                                            //     vechileListId.clear();
-                                            //     getVechileList('');
-                                            //   });
-                                            // }
+                                            if (iseckbox == true) {
+                                              setState(() {
+                                                vechileTitle.clear();
+                                                vechileListId.clear();
+                                                getVechileList('');
+                                              });
+                                            }
                                           } else {
                                             print('im here');
                                             setState(() {
@@ -231,7 +231,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                           color: tSecondaryColor,
                                           fontWeight: FontWeight.w600,
                                           fontSize:
-                                              isTab(context) ? 9.sp : 12.sp,
+                                          isTab(context) ? 9.sp : 12.sp,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -247,7 +247,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                           activeColor: tPrimaryColor,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(4),
+                                              BorderRadius.circular(4),
                                               side: BorderSide(
                                                   color: iseckbox == true
                                                       ? tPrimaryColor
@@ -295,7 +295,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                           color: tSecondaryColor,
                                           fontWeight: FontWeight.w600,
                                           fontSize:
-                                              isTab(context) ? 9.sp : 12.sp,
+                                          isTab(context) ? 9.sp : 12.sp,
                                         ),
                                       ),
                                     ),
@@ -349,8 +349,8 @@ class _VechileSelectionState extends State<VechileSelection> {
                                       vechileNewList.isEmpty
                                           ? 'Select vechile type'
                                           : vechileNewList
-                                              .join(', ')
-                                              .toString(),
+                                          .join(', ')
+                                          .toString(),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -359,11 +359,11 @@ class _VechileSelectionState extends State<VechileSelection> {
                                   ),
                                   // Spacer(),
                                   Icon(
-                                      // isdropdownOpwn
-                                      //     ?
+                                    // isdropdownOpwn
+                                    //     ?
                                       Icons.keyboard_arrow_up
-                                      // : Icons.keyboard_arrow_down,
-                                      )
+                                    // : Icons.keyboard_arrow_down,
+                                  )
                                 ],
                               ),
                             ),
@@ -375,14 +375,14 @@ class _VechileSelectionState extends State<VechileSelection> {
                                 child: StatefulBuilder(
                                   builder: (context, menuSetState) {
                                     final _isSelected =
-                                        vechilListselectedItems.contains(item);
+                                    vechilListselectedItems.contains(item);
                                     return InkWell(
                                       onTap: () async {
                                         if (icheckbox == true ||
                                             iseckbox == true) {
                                           setState(() {
                                             langTitle = vechileTitle[
-                                                vechileListId.indexOf(item)];
+                                            vechileListId.indexOf(item)];
                                             if (vechileNewList.contains(
                                                 vechileTitle[vechileListId
                                                     .indexOf(item)])) {
@@ -395,7 +395,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                                       .indexOf(item)]);
                                             } else {
                                               vechileNewList.add(vechileTitle[
-                                                  vechileListId.indexOf(item)]);
+                                              vechileListId.indexOf(item)]);
                                               vechileNewListId.add(
                                                   vechileListId[vechileListId
                                                       .indexOf(item)]);
@@ -408,12 +408,12 @@ class _VechileSelectionState extends State<VechileSelection> {
                                           });
                                           _isSelected
                                               ? vechilListselectedItems
-                                                  .remove(item)
+                                              .remove(item)
                                               : vechilListselectedItems
-                                                  .add(item);
+                                              .add(item);
                                           setState(() {
                                             selectedlangId = vechileListId[
-                                                vechileListId.indexOf(item)];
+                                            vechileListId.indexOf(item)];
                                             print('object:' +
                                                 selectedlangId.toString());
                                           });
@@ -432,18 +432,18 @@ class _VechileSelectionState extends State<VechileSelection> {
                                           children: [
                                             _isSelected
                                                 ? Icon(
-                                                    Icons.check_box_outlined,
-                                                    color: tPrimaryColor,
-                                                  )
+                                              Icons.check_box_outlined,
+                                              color: tPrimaryColor,
+                                            )
                                                 : Icon(
-                                                    Icons
-                                                        .check_box_outline_blank,
-                                                    color: tGray,
-                                                  ),
+                                              Icons
+                                                  .check_box_outline_blank,
+                                              color: tGray,
+                                            ),
                                             const SizedBox(width: 16),
                                             Text(
                                               vechileTitle[
-                                                  vechileListId.indexOf(item)],
+                                              vechileListId.indexOf(item)],
                                               style: const TextStyle(
                                                   fontSize: 14, color: tBlue),
                                             ),
@@ -464,7 +464,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                             // buttonWidth: 140,
                             selectedItemBuilder: (context) {
                               return vechileTitle.map(
-                                (item) {
+                                    (item) {
                                   return Container(
                                     alignment: AlignmentDirectional.center,
                                     padding: const EdgeInsets.symmetric(
@@ -517,7 +517,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                   };
                   print(param);
                   var res =
-                      await DriverDetailsApi().addVehicleType(context, param);
+                  await DriverDetailsApi().addVehicleType(context, param);
                   if (res != null && res['status'] == 'OK') {
                     Twl.forceNavigateTo(context, AddDetailsView());
                   } else {

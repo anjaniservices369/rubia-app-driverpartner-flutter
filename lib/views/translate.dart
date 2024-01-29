@@ -143,7 +143,7 @@ class LanguageTranslations extends Translations {
           'submit': 'Submit',
           'Yes': 'Yes',
           'Estimate_fare': 'Estimate fare',
-          'subscription_plan': 'Subscribtion Plan',
+          'subscription_plan': 'Subscription Plan',
           'Submit_your_rating': 'Submit your rating',
           'driver_ prime _membership': 'Driver Prime Membership',
           'Give_Rating': 'Give Rating',
@@ -527,8 +527,8 @@ class LanguageTranslations extends Translations {
 //ReferAndEarnView
           "refer_&_earn": "Refer & Earn",
           "refer_friends": "Refer Friends",
-          "earn_Upto_₹100_Per_Friend_You_Invite":
-              "Earn upto ₹100 per friend you invite",
+          "earn_Upto_₹50_Per_Friend_You_Invite":
+              "Earn upto ₹50 per friend you invite",
           "my_rewards": "My Rewards",
           "share_Your_Invite_Code": "Share your invite code",
           "When_your_friends_sign_up_this_referral_code_you_can_received_a_free_ride":
@@ -721,7 +721,7 @@ class LanguageTranslations extends Translations {
           'Emergency': 'Emergency Contact',
           //estimated fare
           'beyond_1km':
-              'If the trip extends beyond 1KM,extra charges as $currencySymbol 9 per KM is applicable',
+              'If the trip extends beyond 1KM,extra charges as $currencySymbol 9 per KM is applicableee',
           '1min_extra':
               'If the trip extends time,extra charges as $currencySymbol 2 per extra min applicable',
           'night_charge':
@@ -966,8 +966,8 @@ class LanguageTranslations extends Translations {
 //ReferAndEarnView
           "refer_&_earn": "उद्घृत करो और कमाएँ",
           "refer_friends": "मित्र को उद्घृत करे",
-          "earn_Upto_₹100_Per_Friend_You_Invite":
-              "आप जिस दोस्त को बुलाते हैं उससे ₹100 तक कमाएं",
+          "earn_Upto_₹50_Per_Friend_You_Invite":
+              "आप जिस दोस्त को बुलाते हैं उससे ₹50 तक कमाएं",
           "my_rewards": "मेरे पुरस्कार",
           "share_Your_Invite_Code": "अपना आमंत्रण कोड साझा करें",
           "when_Your_Friends_Sign_Up_This_Referral":

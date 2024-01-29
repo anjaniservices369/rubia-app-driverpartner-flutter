@@ -10,6 +10,7 @@ import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/providers/locationProvider.dart';
 import 'package:base_project_flutter/providers/notifactionProvider.dart';
 import 'package:base_project_flutter/providers/themeProvider.dart';
+import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/joiningfees/joining%20_fees.dart';
 import 'package:base_project_flutter/views/locationError/locationError.dart';
 import 'package:base_project_flutter/views/onBoardingpage/onBoardingPage.dart';
@@ -17,6 +18,7 @@ import 'package:base_project_flutter/views/profile_review/profile_review.dart';
 import 'package:base_project_flutter/views/rider_Details/add_Details.dart';
 import 'package:base_project_flutter/views/translate.dart';
 import 'package:camera/camera.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -29,11 +31,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'constants/imageConstant.dart';
+import 'globalFuctions/globalFunctions.dart';
 import 'views/rider_details/componants/bank_details.dart';
 import 'views/rider_details/componants/documents/documents.dart';
 import 'views/rider_details/componants/emergency_Contacts.dart';
 import 'views/rider_details/componants/personal_Details.dart';
 import 'views/rider_details/componants/vehicle_Types.dart';
+import 'dart:io';
 
 //
 bool personalDetails = false;
@@ -45,39 +49,162 @@ bool isAllDetailsFilled = false;
 bool isPaidJoiningFee = false;
 var isProfileVerified;
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.notification} ');
+  try {
+    print('Handling a background message ${message.notification} ');
+
+    void handleNewBookingNotification(RemoteMessage message) async {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+
+      if (notification != null && android != null && !kIsWeb) {
+        String soundName = 'noti6x';
+        print('Sound name : $soundName');
+        print("channel1 id : ${channel1?.id}");
+
+        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+          channel1?.id ?? 'new_booking_alert', // Use a default ID if channel1 is null
+          // channel1?.id, // Use a default ID if channel1 is null
+          channel1?.name ?? 'New Booking Alert', // Use a default name if channel1 is null channel1?.id ?? 'default_channel_id', // Use a default ID if channel1 is null
+          // channel1?.name, // Use a default name if channel1 is null
+          channelDescription: 'your other channel description',
+          icon: '@mipmap/ic_launcher',
+          importance: Importance.max,
+          enableLights: true,
+          enableVibration: true,
+          playSound: true,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound('noti6x'),
+        );
+
+        final NotificationDetails notificationDetails = NotificationDetails(
+          android: androidNotificationDetails,
+        );
+
+        await FlutterLocalNotificationsPlugin().show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          notificationDetails,
+        );
+
+        print('Message data: ${message.data}');
+      }
+    }
+
+    void handleOtherNotifications(RemoteMessage message) async {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+
+      if (notification != null && android != null && !kIsWeb) {
+        String soundName = 'music';
+        print('Sound name : $soundName');
+        print("channel2 id : ${channel2?.id}");
+
+        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+          channel2?.id ?? 'other_high_importance_channel', // Use a default ID if channel2 is null
+          channel2?.name ?? 'Other High Importance Notifications', // Use a default name if channel2 is null
+          channelDescription: 'your other channel description',
+          icon: '@mipmap/ic_launcher',
+          importance: Importance.max,
+          enableLights: true,
+          enableVibration: true,
+          playSound: true,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound('music'),
+        );
+
+        final NotificationDetails notificationDetails = NotificationDetails(
+          android: androidNotificationDetails,
+        );
+
+        await FlutterLocalNotificationsPlugin().show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          notificationDetails,
+        );
+
+        print('Message data: ${message.data}');
+      }
+    }
+
+    RemoteNotification notification = message.notification;
+
+    if (notification != null && !kIsWeb) {
+      if (notification.title == 'New Booking') {
+        print("notification $notification");
+        handleNewBookingNotification(message);
+      } else {
+        handleOtherNotifications(message);
+      }
+    }
+  } catch (e, stackTrace) {
+    print('Error in background handler: $e\n$stackTrace');
+  }
 }
 
+
+
 AndroidNotificationChannel channel;
+AndroidNotificationChannel channel1;
+AndroidNotificationChannel channel2;
 
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initialize(); // Ensure you have defined or imported the 'initialize' function
+  HttpOverrides.global = MyHttpOverrides();
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  if (!kIsWeb) {
-    channel = const AndroidNotificationChannel(
+
+
+
+  if (!kIsWeb && Platform.isAndroid) {
+    channel = AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
+      importance: Importance.none,
+    );
+
+    channel1 = AndroidNotificationChannel(
+      'new_booking_alert', // id
+      'New Booking Alert', // title
+      sound: RawResourceAndroidNotificationSound('noti6x'),
       importance: Importance.high,
     );
+
+    channel2 = AndroidNotificationChannel(
+      'other_high_importance_channel', // id
+      'Other High Importance Notifications', // title
+      sound: RawResourceAndroidNotificationSound('music'),
+      importance: Importance.high,
+    );
+
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    final AndroidFlutterLocalNotificationsPlugin androidPlugin =
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+
+    await androidPlugin.createNotificationChannel(channel);
+    await androidPlugin.createNotificationChannel(channel1);
+    await androidPlugin.createNotificationChannel(channel2);
+    await Firebase.initializeApp();
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
+
 
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -94,31 +221,34 @@ void main() async {
   var checkMail;
 
   if (authCode != null) {
-    var check = await UserAPI().checkApi(authCode);
-    print("authCode>>>>> " + authCode);
-    print(check);
-    print("CheckAuthcode");
-    if (check != null && check['status'] == 'OK') {
-      if (check['detail']['email'] != null) {
-        checkMail = '2';
-        checkAuth = '1';
-        personalDetails = check['detail']['personal_details'];
-        isEmergencyContactDetails = check['detail']['driver_emergency_contacts'];
-        isVehicleTypes = check['detail']['driver_vehicle_types'];
-        isDocumentsVerification = check['detail']['document_verification'];
-        isBankDetails = check['detail']['driver_bank_details'];
-        isAllDetailsFilled = check['detail']['all_submit'];
-        isPaidJoiningFee = check['detail']['is_paid_joining_fee'];
-        isProfileVerified = check['detail']['profile_verified'];
-        print("CheckMail");
-        print(checkMail);
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      var check = await UserAPI().checkApi(authCode);
+      print("authCode>>>>> " + authCode);
+      if (check != null && check['status'] == 'OK') {
+        if (check['detail']['email'] != null) {
+          checkMail = '2';
+          checkAuth = '1';
+          personalDetails = check['detail']['personal_details'];
+          isEmergencyContactDetails =
+          check['detail']['driver_emergency_contacts'];
+          isVehicleTypes = check['detail']['driver_vehicle_types'];
+          isDocumentsVerification = check['detail']['document_verification'];
+          isBankDetails = check['detail']['driver_bank_details'];
+          isAllDetailsFilled = check['detail']['all_submit'];
+          isPaidJoiningFee = check['detail']['is_paid_joining_fee'];
+          isProfileVerified = check['detail']['profile_verified'];
+          print("CheckMail");
+          print(checkMail);
+        } else {
+          checkMail = null;
+          print("CheckMail");
+          print(checkMail);
+        }
       } else {
-        checkMail = null;
-        print("CheckMail");
-        print(checkMail);
+        checkAuth = '';
       }
-    } else {
-      checkAuth = '';
     }
   } else {
     checkAuth = '';
@@ -169,7 +299,8 @@ class MyApp extends StatefulWidget {
   final isPaidJoiningFee;
   final isProfileVerified;
 
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -218,31 +349,34 @@ class _MyAppState extends State<MyApp> {
             ),
             primarySwatch: Colors.blue,
           ),
-          home: AnimatedSplashScreen(
-            duration: 1000,
-            splash: Image.asset(Images.DRIVERLOGO),
-            splashIconSize: 300,
-            nextScreen: widget.checkAuth == null || widget.checkAuth == ''
-                ? OnboardingPage()
-                : personalDetails == false
-                    ? PersonalDetails()
-                    : isEmergencyContactDetails == false
-                        ? EmergencyContact()
-                        : isVehicleTypes == false
-                            ? VechileSelection()
-                            : isDocumentsVerification == false
-                                ? Documents()
-                                : isBankDetails == false
-                                    ? BankDetails()
-                                    : isAllDetailsFilled == false
-                                        ? AddDetailsView()
-                                        : isPaidJoiningFee == false
-                                            ? JoiningFees()
-                                            : isProfileVerified != profile_verified_yes
-                                                ? ProfileReview()
-                                                : LocationErrorScreen(),
-            splashTransition: SplashTransition.scaleTransition,
-            backgroundColor: Colors.white,
+          home: ConnectivityWrapper(
+            child: AnimatedSplashScreen(
+              duration: 1000,
+              splash: Image.asset(Images.DRIVERLOGO),
+              splashIconSize: 300,
+              nextScreen: widget.checkAuth == null || widget.checkAuth == ''
+                  ? OnboardingPage()
+                  : personalDetails == false
+                  ? PersonalDetails()
+                  : isEmergencyContactDetails == false
+                  ? EmergencyContact()
+                  : isVehicleTypes == false
+                  ? VechileSelection()
+                  : isDocumentsVerification == false
+                  ? Documents()
+                  : isBankDetails == false
+                  ? BankDetails()
+                  : isAllDetailsFilled == false
+                  ? AddDetailsView()
+                  : isPaidJoiningFee == false
+                  ? JoiningFees()
+                  : isProfileVerified !=
+                  profile_verified_yes
+                  ? ProfileReview()
+                  : LocationErrorScreen(),
+              splashTransition: SplashTransition.scaleTransition,
+              backgroundColor: Colors.white,
+            ),
           ),
           // localizationsDelegates:  [
           //   GlobalMaterialLocalizations.delegate,
@@ -255,5 +389,123 @@ class _MyAppState extends State<MyApp> {
         );
       }),
     );
+  }
+}
+
+class ConnectivityWrapper extends StatefulWidget {
+  final Widget child;
+
+  const ConnectivityWrapper({Key key, this.child}) : super(key: key);
+
+  @override
+  _ConnectivityWrapperState createState() => _ConnectivityWrapperState();
+}
+
+class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
+  ConnectivityResult _connectivityResult;
+
+  @override
+  void initState() {
+    super.initState();
+    checkConnectivity();
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() {
+        _connectivityResult = result;
+      });
+    });
+  }
+
+  void checkConnectivity() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      _connectivityResult = connectivityResult;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _connectivityResult == ConnectivityResult.none
+        ? NoInternetDialog()
+    : widget.child;
+  }
+}
+
+class NoInternetDialog extends StatelessWidget {
+
+  const NoInternetDialog({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: tBlue,
+      body: WillPopScope(
+        onWillPop: () {
+          return Twl.willpopAlert(context);
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.only(top:25.0),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      Images.Logo,
+                      scale: 2,
+                    ),
+                  ],
+
+                ),
+              ),
+            ),
+            // Alert Dialog
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Center(
+                child: AlertDialog(
+                  backgroundColor: tWhite,
+                  insetPadding: EdgeInsets.symmetric(horizontal: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  title: Text(
+                    'No Internet Connection',
+                    style: GoogleFonts.mulish(
+                      color: tSecondaryColor,
+                      fontWeight: FontWeight.w800,
+                      fontSize: isTab(context) ? 14.sp : 16.sp,
+                    ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Turn on mobile data or Wi-Fi to access the app.',
+                        style: GoogleFonts.mulish(
+                          fontSize: isTab(context) ? 9.sp : 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: tbrown,
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    // You can add actions if needed
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

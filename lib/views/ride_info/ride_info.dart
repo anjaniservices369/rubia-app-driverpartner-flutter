@@ -6,28 +6,37 @@ import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/componants/rideinfo.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../constants/imageConstant.dart';
 import '../../../../../responsive.dart';
+import '../../globalWidgets/button.dart';
 import '../../globalWidgets/emergency_widget.dart';
 import 'enter_otp_ride.dart';
+// import 'package:intl/intl.dart';
+
+
 
 class RideInfoPage extends StatefulWidget {
   const RideInfoPage({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
+
   @override
   State<RideInfoPage> createState() => _RideInfoPageState();
 }
 
 class _RideInfoPageState extends State<RideInfoPage> {
+
   @override
   void initState() {
     fetchBookingDetails();
@@ -36,11 +45,31 @@ class _RideInfoPageState extends State<RideInfoPage> {
 
   var bookingDetails;
   var resNOK;
+  var txt='';
+  var pickUpTime ='';
+
   fetchBookingDetails() async {
     var res = await RideBookingsApi().fetchBookigDetails(context, widget.bookingDetails['id'].toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('trip_type');
+    await prefs.remove('booking_id');
     if (res != null && res['status'] == 'OK') {
       setState(() {
         bookingDetails = res['details'];
+        print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+        print(bookingDetails);
+        print(bookingDetails['pickup_date']);
+        print(bookingDetails['pickup_time']);
+        // print(DateFormat('hh:mm a').format(DateTime.now()));
+        // print(DateTime.now()
+        //     .toString()
+        //     .substring(0,10)
+        // );
+
+        print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+
+        prefs.setString('trip_type', bookingDetails['trip_type'].toString());
+        prefs.setString('booking_id', bookingDetails['id'].toString());
       });
     } else {
       setState(() {
@@ -108,6 +137,58 @@ class _RideInfoPageState extends State<RideInfoPage> {
         print('Could not launch $url');
       }
     }
+
+
+
+    // DateTime currentTime = DateTime.now();
+    // Duration timeDifference = pickUpTime.difference(DateFormat('hh:mm a').parse(time));
+    // (bookingDetails['pickup_time']== (timeDifference.inHours <= 1 && timeDifference.inHours >= 0 && timeDifference.inHours <= 0) )
+
+    // print("time difference $timeDifference");
+    // bool isOnTime(){
+    //   if(bookingDetails['pickup_date'] == DateTime.now().toString().substring(0,10)){
+    //    print("date matched");
+    //    // print("time difference $timeDifference");
+    //     return true;
+    //   }else{
+    //     print("date do not matched");
+    //     // print("time difference $timeDifference");
+    //     return false;
+    //   }
+    //
+    // }
+
+    // void showTimeAlert(BuildContext context) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title: const Text(
+    //           'Warning!!',
+    //           style: TextStyle(fontSize: 24,fontWeight: FontWeight.w900, color: Colors.red),
+    //         ),
+    //         content: const Text(
+    //           "Can't start the ride before scheduled time",
+    //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0XFFFF8F0C)),
+    //         ),
+    //         actions: <Widget>[
+    //           TextButton(
+    //             onPressed: () => Navigator.pop(context, 'OK'),
+    //             child: const Text(
+    //               'OK',
+    //               style: TextStyle(fontSize: 20, color: Color(0XFF144272)),
+    //             ),
+    //           ),
+    //         ],
+    //         shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(15.0),
+    //         ),
+    //       );
+    //     },
+    //   );
+    // }
+
+
 
     final homePageProvider = Provider.of<HomePageProvider>(context);
     return Scaffold(
@@ -211,7 +292,9 @@ class _RideInfoPageState extends State<RideInfoPage> {
                       children: [
                         homePageProvider.status == '2'
                             ? Container()
-                            : Row(
+                            :
+                        Text(txt,style: TextStyle(fontSize: 30),),
+                        Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   GestureDetector(
@@ -223,9 +306,12 @@ class _RideInfoPageState extends State<RideInfoPage> {
                                       padding: EdgeInsets.symmetric(horizontal: 1.2.w, vertical: 0.4.h),
                                       decoration:
                                           BoxDecoration(color: tAppbarColor, boxShadow: [tBoxShadow], borderRadius: BorderRadius.circular(60)),
+
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
+
                                         children: [
+
                                           Container(
                                             padding: EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(color: tPink, shape: BoxShape.circle, boxShadow: [tBoxShadow]),
@@ -249,6 +335,9 @@ class _RideInfoPageState extends State<RideInfoPage> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
+                                      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+                                      print(bookingDetails['driver_earnings'].toString());
+                                      print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
                                       Twl.forceNavigateTo(context, RideInfo(bookingDetails: bookingDetails, isHistoryPage: false));
                                     },
                                     child: Container(
@@ -335,12 +424,12 @@ class _RideInfoPageState extends State<RideInfoPage> {
                                                     SizedBox(
                                                       width: 3.w,
                                                     ),
-                                                    Text(bookingDetails['user_details']['first_name'] + ' ',
+                                                    Text(bookingDetails['user_details']['first_name'] ?? "N/A",
                                                         style: GoogleFonts.mulish(
                                                             color: tSecondaryColor,
                                                             fontWeight: FontWeight.w700,
                                                             fontSize: isTab(context) ? 10.sp : 12.sp)),
-                                                    Text(bookingDetails['user_details']['last_name'],
+                                                    Text(bookingDetails['user_details']['last_name'] ?? "N/A",
                                                         style: GoogleFonts.mulish(
                                                             color: tSecondaryColor,
                                                             fontWeight: FontWeight.w700,
@@ -494,16 +583,40 @@ class _RideInfoPageState extends State<RideInfoPage> {
                                                               child: child!)),
                                                       backgroundBorderRadius: BorderRadius.circular(12),
                                                       action: (controller) async {
-                                                        controller.loading();
-                                                        await Future.delayed(const Duration(seconds: 1));
-                                                        controller.success();
-                                                        await Future.delayed(const Duration(seconds: 1));
-                                                        controller.reset();
-                                                        setState(() {
-                                                          status = 1;
-                                                          homePageProvider.status = '2';
-                                                        });
+                                                        try {
+
+                                                          controller.loading();
+
+                                                          Position driverLocation = await Geolocator.getCurrentPosition();
+
+                                                          double distanceInMeters = await Geolocator.distanceBetween(
+                                                            driverLocation.latitude,
+                                                            driverLocation.longitude,
+                                                            double.parse(bookingDetails['pickup_latitude']),
+                                                            double.parse(bookingDetails['pickup_longitude']),
+                                                          );
+
+                                                          if (distanceInMeters <= 300) {
+                                                            await Future.delayed(const Duration(seconds: 1));
+                                                            controller.success();
+                                                            await Future.delayed(const Duration(seconds: 1));
+                                                            controller.reset();
+                                                            setState(() {
+                                                              status = 1;
+                                                              homePageProvider.status = '2';
+                                                            });
+                                                          } else {
+                                                            showRadiusError();
+                                                          }
+                                                        } catch (e) {
+                                                          showErrorDialog();
+                                                          print('Error fetching location: $e');
+
+                                                        }finally{
+                                                          controller.reset();
+                                                        }
                                                       },
+
                                                     ),
                                                   )
                                                 : Container()
@@ -523,4 +636,105 @@ class _RideInfoPageState extends State<RideInfoPage> {
             ),
     );
   }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Alert',
+            style: GoogleFonts.mulish(
+              color: tBlack,
+              fontSize: isTab(context) ? 16.sp : 14.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Text(
+            'Please Enable location Services or please check your internet',
+            style: GoogleFonts.mulish(
+              color: tBlack,
+              fontSize: isTab(context) ? 16.sp : 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Center(
+              child: Container(
+                child: Button(
+                  color: tPrimaryColor,
+                  textcolor: tWhite,
+                  bottonText: 'OK'.tr,
+                  borderSide: BorderSide(color: tPrimaryColor),
+                  onTap: (startLoading, stopLoading, btnState) async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showRadiusError() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Alert',
+            style: GoogleFonts.mulish(
+              color: tBlack,
+              fontSize: isTab(context) ? 16.sp : 14.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Text(
+            'You are not within 300 meters of the pickup location.',
+            style: GoogleFonts.mulish(
+              color: tBlack,
+              fontSize: isTab(context) ? 16.sp : 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Center(
+              child: Container(
+                child: Button(
+                  color: tPrimaryColor,
+                  textcolor: tWhite,
+                  bottonText: 'OK'.tr,
+                  borderSide: BorderSide(color: tPrimaryColor),
+                  onTap: (startLoading, stopLoading, btnState) async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
+
+//var time = bookingDetails['pickup_time'];
+//DateTime fullpickupTime = DateFormat('hh:mm a').parse(time);
+//pickUpTime = DateFormat('hh:mm a').format(fullpickupTime);
+//print("pick up time object >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> :$pickUpTime");
+// if(isOnTime()){
+// // if(false){
+//   status = 1;
+//   homePageProvider.status = '2';
+// }else{
+//   showTimeAlert(context);
+// }

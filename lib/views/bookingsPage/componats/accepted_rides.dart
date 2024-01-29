@@ -116,7 +116,15 @@ class _AcceptedRidesState extends State<AcceptedRides> {
   @override
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
-    return ListView.builder(
+    return isLoading?
+    Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(
+          color: tPrimaryColor,
+        ),
+      ),
+    )
+    :ListView.builder(
         scrollDirection: Axis.vertical,
         controller: _scrollController,
         physics: BouncingScrollPhysics(),
@@ -434,7 +442,7 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                                   ),
                             booking['status'] == STATUS_RIDE_COMPLETED
                                 ? Text(
-                                    currencySymbol + booking['price_detail']['estimatePrice'].toString(),
+                                    currencySymbol + booking['driver_earnings'].toString(),
                                     style: GoogleFonts.mulish(
                                       color: tPrimaryColor,
                                       fontWeight: FontWeight.w700,
@@ -442,7 +450,7 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                                     ),
                                   )
                                 : Text(
-                                    currencySymbol + booking['estimate_price'].toString(),
+                                    currencySymbol + booking['driver_earnings'].toString(),
                                     style: GoogleFonts.mulish(
                                       color: tPrimaryColor,
                                       fontWeight: FontWeight.w700,
@@ -619,7 +627,7 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                         height: 1.h,
                       ),
                       Text(
-                        'Click here to view more details --->>>',
+                        'Click here to view more  than details --->>>',
                         style: GoogleFonts.mulish(
                           color: tPrimaryColor,
                           fontWeight: FontWeight.w700,

@@ -7,8 +7,7 @@ import 'dart:convert';
 
 class DriverDetailsApi {
   //driver/vehicle-types
-  Future<dynamic> getDriverVehicleTypes(
-      BuildContext context, String type) async {
+  Future<dynamic> getDriverVehicleTypes(BuildContext context, String type) async {
     var jsonMap;
     var headers = await ApiHelper().getHeader(context);
     var uri = VEHICLE_TYPES + headers['auth_code'];
@@ -167,6 +166,7 @@ class DriverDetailsApi {
   getDriverPlans(BuildContext context) async {
     var headers = await ApiHelper().getHeader(context);
     var url = DRIVER_PLAN_DETAILS + headers['auth_code'];
+    print(url);
     var response = await ApiHelper().getTypeGet(context, url);
     print(response);
     return response;

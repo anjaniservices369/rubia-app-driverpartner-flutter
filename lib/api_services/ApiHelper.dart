@@ -15,7 +15,7 @@ class ApiHelper {
     String jsonResponse;
     var url = apiBaseUrl + uri;
     print(url);
-    print("params>>>>>"+params.toString());
+    print("params>>>>>" + params.toString());
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields.addAll(params);
@@ -24,11 +24,11 @@ class ApiHelper {
 
       if (response.statusCode == 200) {
         var value = await response.stream.bytesToString();
-       
+
         jsonResponse = value.toString();
 
         var jsonMap = json.decode(jsonResponse);
-        // print(jsonMap);
+         print(jsonMap);
 
         return jsonMap;
       } else {
@@ -36,12 +36,11 @@ class ApiHelper {
         print(response.reasonPhrase);
       }
     } on SocketException {
-      print("error");
+      //print("error");
       throw ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Check Internet'),
       ));
       // Twl.createAlert(context,'dfd','dfdfd');
-
     }
   }
 
@@ -70,7 +69,7 @@ class ApiHelper {
     }
   }
 
-   getHeader(BuildContext context) async {
+  getHeader(BuildContext context) async {
     late String authCode;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -82,11 +81,12 @@ class ApiHelper {
     }
     try {
       var res = await UserAPI().checkApi(authCode);
-      print('API Authcode');
-      print(authCode);
-      print(res);
+      //print('API Authcode');
+      //print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      //print(authCode);
+      //print(res);
       if (res != null || res['status'] == "OK") {
-        // print(res);
+        // //print(res);
         return {
           'Content-Type': 'application/json; charset=UTF-8',
           'Connection': 'keep-alive',
@@ -108,11 +108,8 @@ class ApiHelper {
         content: Text('Check Internet'),
       ));
       // Twl.createAlert(context,'dfd','dfdfd');
-
     }
   }
-
- 
 
   static checkLogin(BuildContext context, authCode) async {
     late String authCode;
@@ -126,8 +123,8 @@ class ApiHelper {
     }
     var res = await UserAPI().checkApi(authCode);
 
-    print(authCode);
-    print(res);
+    //print(authCode);
+    //print(res);
     if (res != null && res['status'] == "OK") {
       return 1;
     } else {

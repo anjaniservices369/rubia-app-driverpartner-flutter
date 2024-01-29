@@ -30,6 +30,7 @@ class UserAPI {
   checkApi(String authCode) async {
     var client = http.Client();
     var url = apiBaseUrl + CHECK_API + authCode;
+    print(url);
     var jsonMap;
     try {
       var response = await client.get(Uri.parse(url));
@@ -48,10 +49,10 @@ class UserAPI {
     }
   }
 
-  getUpdateLatLong(BuildContext context, String latitude, String longitude) async {
+  getUpdateLatLong(BuildContext context, String latitude, String longitude, String locality) async {
     var headers = await ApiHelper().getHeader(context);
     var url = UPDATE_LAT_LONG + headers['auth_code'];
-    Map<String, String> params = {'latitude': latitude, 'longitude': longitude};
+    Map<String, String> params = {'latitude': latitude, 'longitude': longitude, 'locality':locality};
     var response = await ApiHelper().getTypePost(context, url, params);
     print(response);
     return response;
@@ -118,7 +119,7 @@ class UserAPI {
       context,
       uri,
     );
-    print(response);
+    //print(response);
     return response;
   }
 
@@ -128,6 +129,19 @@ class UserAPI {
     var uri = NOTIFICATION_CLEAR + headers['auth_code'];
     jsonMap = await ApiHelper().getTypeGet(context, uri);
     var response = jsonMap;
+    print(response);
+    return response;
+  }
+
+  sendLocation(
+      BuildContext context,
+      Map<String, String> param,
+      ) async {
+    var headers = await ApiHelper().getHeader(context);
+    var url = CURRENT_CITY + headers['auth_code'];
+
+    Map<String, String> params = param;
+    var response = await ApiHelper().getTypePost(context, url, params);
     print(response);
     return response;
   }

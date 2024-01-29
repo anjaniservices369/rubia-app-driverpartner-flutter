@@ -1,7 +1,11 @@
 // const String apiBaseUrl = 'http://hyperstorz.anxion.co.in/api/';
 
 //Base Url
-const String apiBaseUrl = 'http://rubia.anxion.co.in/api/';
+//const String apiBaseUrl = 'http://rubia.anxion.co.in/api/';
+
+// const String apiBaseUrl = 'https://system.rubia.services/api/';
+ const String apiBaseUrl = 'https://rubiaservices.org/app/api/';
+// const String apiBaseUrl = 'http://167.99.120.178/app/api/'; //latest
 
 //Login Apis
 const String SEND_OTP = 'driver/send-otp';
@@ -39,6 +43,7 @@ const String MY_ADDRESS_LIST = 'driver/all-address-list?auth_code=';
 const String ADD_UPDATE_ADDRESS = 'driver/add-delivery-address?auth_code=';
 const String CHECK_DELIVERY_ADDRESS = 'driver/check-delivery?auth_code=';
 const String DELETE_ADDRESS = 'driver/delete-address?auth_code=';
+const String CURRENT_CITY = 'driver/current-city?auth_code=';
 
 //Driver Booking Apis
 const String DRIVER_BOOKINGS = 'driver/bookings?auth_code=';
@@ -47,6 +52,7 @@ const String ACCEPT_RIDE = 'driver/accept-ride?auth_code=';
 const String REJECT_RIDE = 'driver/reject-ride?auth_code=';
 const String COMPLETE_RIDE = 'driver/complete-ride?auth_code=';
 const String RIDE_PICK_UP = 'driver/go-for-pickup?auth_code=';
+const String NOTIFY_ARRIVED_LOCATION = 'driver/notify-arrived?auth_code=';
 const String DRIVER_ARRIVED_LOCATION = 'driver/arrived-location?auth_code=';
 const String VEHICLE_VERIRIFICATION = 'driver/vehicle-verification?auth_code=';
 const String START_RIDE = 'driver/start-ride?auth_code=';

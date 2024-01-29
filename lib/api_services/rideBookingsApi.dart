@@ -1,15 +1,12 @@
 import 'package:base_project_flutter/api_services/ApiHelper.dart';
 import 'package:base_project_flutter/constants/apiConstants.dart';
-import 'package:base_project_flutter/models/TransactionListModel.dart';
-import 'package:base_project_flutter/views/bookings/bookings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class RideBookingsApi {
   //Driver Booking Apis
-  Future<dynamic> fetchBookingsList(
-      BuildContext context, String page, String status) async {
+  Future<dynamic> fetchBookingsList(BuildContext context, String page, String status) async {
     var jsonMap;
     var headers = await ApiHelper().getHeader(context);
     var uri = DRIVER_BOOKINGS + headers['auth_code'] + '&page=' + page;
@@ -18,7 +15,9 @@ class RideBookingsApi {
     print(params);
     jsonMap = await ApiHelper().getTypePost(context, uri, params);
     var response = jsonMap;
+    print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
     print(response);
+    print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
     return response;
   }
   // Driver Earnings Api
@@ -43,13 +42,17 @@ class RideBookingsApi {
     var endFormatter = new DateFormat('yyyy-MM-dd 23:59:59');
     var jsonMap;
     var headers = await ApiHelper().getHeader(context);
-    var url = DRIVER_EARNINGS + headers['auth_code'] + '&page=' + page;
+    var url =
+
+        DRIVER_EARNINGS + headers['auth_code'] + '&page=' + page;
     Map<String, String> params = {
       'start_date': startDate.toString(),
       'end_date': endFormatter.format(DateTime.parse(endDate)).toString(),
     };
     var response = await ApiHelper().getTypePost(context, url, params);
+    print("-----------------------------------------------------------");
     print(response);
+    print("-----------------------------------------------------------");
     return response;
   }
 
@@ -94,6 +97,7 @@ class RideBookingsApi {
     };
     print(params);
     jsonMap = await ApiHelper().getTypePost(context, uri, params);
+    print(jsonMap);
     return jsonMap;
   }
 
@@ -128,6 +132,18 @@ class RideBookingsApi {
   }
 
 //Arrived Location
+  notifyArrivedLocation(
+      BuildContext context, String bookingId) async {
+    var headers = await ApiHelper().getHeader(context);
+    var url = NOTIFY_ARRIVED_LOCATION + headers['auth_code'];
+    print(url);
+    Map<String, String> params = {'booking_id': bookingId};
+    var response = await ApiHelper().getTypePost(context, url, params);
+    print(response);
+    return response;
+  }
+
+
   getDriverArrivedLocation(
       BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -188,6 +204,9 @@ class RideBookingsApi {
     var headers = await ApiHelper().getHeader(context);
     var url = COMPLETE_RIDE + headers['auth_code'];
     Map<String, String> params = param;
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    print(param);
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     var response = await ApiHelper().getTypePost(context, url, params);
     print(response);
     return response;
@@ -222,6 +241,9 @@ class RideBookingsApi {
       'end_date': endFormatter.format(DateTime.parse(endDate)).toString(),
     };
     var response = await ApiHelper().getTypePost(context, url, params);
+    print('<<<<<<<<<<<<<<<<<<<<<<<<ride booking history>>>>>>>>>>>>>>>>>>>>>>');
+    print('&page=' + page);
+    print(headers['auth_code']);
     print(response);
     return response;
   }
@@ -320,10 +342,10 @@ class RideBookingsApi {
     return response;
   }
 
-  fetchCollectCashApi(BuildContext context, String bookingId) async {
+  fetchCollectCashApi(BuildContext context, String bookingId, String userId) async {
     var headers = await ApiHelper().getHeader(context);
     var url = COLLECT_CASH + headers['auth_code'];
-    Map<String, String> params = {'booking_id': bookingId};
+    Map<String, String> params = {'booking_id': bookingId,'user_id':userId};
     var response = await ApiHelper().getTypePost(context, url, params);
     print("response");
     print(response);

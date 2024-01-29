@@ -162,9 +162,9 @@ class _MyRidesViewState extends State<MyRidesView> {
               Expanded(
                 child: Container(
                   child: TabBarView(children: [
-                    RideHistoryList(status: ''),
-                    RideHistoryList(status: STATUS_RIDE_COMPLETED),
-                    RideHistoryList(status: STATUS_CANCELLED),
+                    RideHistoryList(status: '',selectedType:widget.selectedType),
+                    RideHistoryList(status: STATUS_RIDE_COMPLETED,selectedType:widget.selectedType),
+                    RideHistoryList(status: STATUS_CANCELLED,selectedType:widget.selectedType),
                   ]),
                 ),
               )

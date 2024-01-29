@@ -199,6 +199,8 @@ class _BankDetailsState extends State<BankDetails> {
                                   height: 1.5.h,
                                 ),
                                 TextFieldWidgets(
+                                  textCapitalization:
+                                  TextCapitalization.characters,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: tSecondaryColor),
@@ -331,6 +333,7 @@ class _BankDetailsState extends State<BankDetails> {
                       'account_number': _accountNumberController.text,
                       'ifsc_code': _IFSCController.text,
                       'upi_id': _UPIController.text,
+                      'date_of_joining' : DateTime.now().toString(),
                     };
                     var res = await DriverDetailsApi()
                         .addDriverBankDetails(context, param);
