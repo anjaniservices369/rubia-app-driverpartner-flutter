@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoder2/geocoder2.dart'
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

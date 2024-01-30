@@ -3,7 +3,7 @@ import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/rider_details/componants/personal_Details.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,30 +73,31 @@ class _AddressGoogleMapPageState extends State<AddressGoogleMapPage> {
           print(formattedAddress);
           print(lat);
           print(lng);
-          final coordinates = new Coordinates(lat, lng);
+          final place = await Geocoder2.getDataFromCoordinates(
+              latitude: lat,
+              longitude: lng,
+              googleMapApiKey: mapKey);
           try {
-            var addresses = await Geocoder.google(mapKey)
-                .findAddressesFromQuery(selectedPlace!.formattedAddress!);
-            print(addresses);
+            print(place.address);
             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             //   content: Text(addresses.first.postalCode.toString()),
             // ));
-            var first = addresses.first;
+            var first = place;
             SharedPreferences sharedPreferences =
                 await SharedPreferences.getInstance();
             sharedPreferences.setDouble('lattitude', lat);
             // var lat = sharedPreferences.getDouble('lattitude');
             sharedPreferences.setDouble('longitude', lng);
             // var long = sharedPreferences.getDouble('longitude');
-            sharedPreferences.setString('FeatureName', first.featureName);
+            sharedPreferences.setString('FeatureName', first.city);
             var featureName = sharedPreferences.getString('FeatureName');
-            sharedPreferences.setString('AddressLine', first.addressLine);
+            sharedPreferences.setString('AddressLine', first.address);
             var addressLine = sharedPreferences.getString('AddressLine');
-            sharedPreferences.setString('Locality', first.locality);
+            sharedPreferences.setString('Locality', first.streetNumber);
             var locality = sharedPreferences.getString('Locality');
             sharedPreferences.setString('PinCode', first.postalCode);
             var pinCode = sharedPreferences.getString('PinCode');
-            if (addresses.first.postalCode != null) {
+            if (first.postalCode != null) {
               // var res =
               //     await UserAPI().checkDelivery(context, pinCode.toString());
               // print("ress>>>>>>>>>>>>>");

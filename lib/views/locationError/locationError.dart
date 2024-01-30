@@ -12,7 +12,7 @@ import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:geocoding/geocoding.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:geolocator/geolocator.dart' as locater;
@@ -410,7 +410,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
                                       child: Text(
-                                        "Please allow to use your location to see nearby store on the map.",
+                                        "Please allow to use your location to see nearby bookings.",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: isDesktop(context) ? 3.sp : 10.sp, color: tSecondaryColor, fontWeight: FontWeight.w500),

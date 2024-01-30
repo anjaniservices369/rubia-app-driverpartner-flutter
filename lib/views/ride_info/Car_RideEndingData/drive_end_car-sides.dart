@@ -8,7 +8,7 @@ import 'package:background_locator_2/location_dto.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/ride_info/file_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -1103,20 +1103,20 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                     loct.LocationData _locationData =
                     await location.getLocation();
                     print('addresses;;sdfdsf;');
-                    final coordinates = new Coordinates(
-                        _locationData.latitude, _locationData.longitude);
+                    GeoData data = await Geocoder2.getDataFromCoordinates(
+                        latitude: _locationData.latitude ?? 0.0,
+                        longitude: _locationData.longitude ?? 0.0,
+                        googleMapApiKey: "GOOGLE_MAP_API_KEY");
                     print('coordinates'.toString());
-                    print(coordinates.toString());
+                    print(data.toString());
                     print('coordinates'.toString());
-                    var addresses = await Geocoder.local
-                        .findAddressesFromCoordinates(coordinates);
                     print('addresses');
-                    print(addresses);
+                    print(data.address);
                     print('addresses');
-                    var first = addresses.first;
+                    var first = data;
                     setState(() {
                       _locationAddress =
-                      "${first.locality}, ${first.featureName},${first.postalCode}, ${first.addressLine},";
+                      "${first.address}, ${first.city},${first.postalCode}, ${first.state},";
                     });
                     //check delivery
                     print('first');

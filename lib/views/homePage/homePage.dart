@@ -131,9 +131,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (notification != null && android != null && !kIsWeb) {
         String soundName = 'noti6x';
         print('Sound name : $soundName');
-        print("channel1 id home : ${channel1.id}");
+        print("channel1 id home : ${channel1?.id}");
         AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel1.id,
+          channel1!.id,
           channel1!.name,
           channelDescription: 'your other channel description',
           icon: '@mipmap/ic_launcher',
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           android: androidNotificationDetails,
         );
 
-        await flutterLocalNotificationsPlugin.show(
+        await flutterLocalNotificationsPlugin?.show(
           notification.hashCode,
           notification.title,
           notification.body,
@@ -171,10 +171,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (notification != null && android != null && !kIsWeb) {
         String soundName = 'music';
         print('Sound name : $soundName');
-        print("channel2 id home: ${channel2.id}");
+        print("channel2 id home: ${channel2?.id}");
 
         AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel2.id,
+          channel2!.id,
           channel2!.name,
           channelDescription: 'your other channel description',
           icon: '@mipmap/ic_launcher',
@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           android: androidNotificationDetails,
         );
 
-        await flutterLocalNotificationsPlugin.show(
+        await flutterLocalNotificationsPlugin?.show(
           notification.hashCode,
           notification.title,
           notification.body,
@@ -344,7 +344,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       android: androidPlatformChannelSpecifics,
     );
 
-    await flutterLocalNotificationsPlugin.show(
+    await flutterLocalNotificationsPlugin?.show(
       0,
       'Notification Title',
       'Notification Body',

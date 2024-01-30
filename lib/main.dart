@@ -1,4 +1,4 @@
-// @dart=2.9
+// @dart=3.2.6
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
@@ -56,8 +56,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     print('Handling a background message ${message.notification} ');
 
     void handleNewBookingNotification(RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null && !kIsWeb) {
         String soundName = 'noti6x';
@@ -95,8 +95,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     }
 
     void handleOtherNotifications(RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null && !kIsWeb) {
         String soundName = 'music';
@@ -131,7 +131,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       }
     }
 
-    RemoteNotification notification = message.notification;
+    RemoteNotification? notification = message.notification;
 
     if (notification != null && !kIsWeb) {
       if (notification.title == 'New Booking') {
@@ -148,12 +148,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 
 
-AndroidNotificationChannel channel;
-AndroidNotificationChannel channel1;
-AndroidNotificationChannel channel2;
+AndroidNotificationChannel? channel;
+AndroidNotificationChannel? channel1;
+AndroidNotificationChannel? channel2;
 
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -186,14 +186,14 @@ void main() async {
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final AndroidFlutterLocalNotificationsPlugin androidPlugin =
+    final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
+        ?.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
 
-    await androidPlugin.createNotificationChannel(channel);
-    await androidPlugin.createNotificationChannel(channel1);
-    await androidPlugin.createNotificationChannel(channel2);
+    await androidPlugin?.createNotificationChannel(channel!);
+    await androidPlugin?.createNotificationChannel(channel1!);
+    await androidPlugin?.createNotificationChannel(channel2!);
     await Firebase.initializeApp();
 
     await FirebaseMessaging.instance
@@ -269,6 +269,7 @@ void main() async {
       isAllDetailsFilled: isAllDetailsFilled,
       isPaidJoiningFee: isPaidJoiningFee,
       isProfileVerified: isProfileVerified,
+      key: MyApp.navigatorKey,
     ),
   );
 }
@@ -277,7 +278,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
   const MyApp({
-    Key key,
+    required Key key,
     this.checkAuth,
     this.personalDetails,
     this.isEmergencyContactDetails,
@@ -344,12 +345,13 @@ class _MyAppState extends State<MyApp> {
           locale: const Locale('en', "US"),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            textTheme: GoogleFonts.muliTextTheme(
+            textTheme: GoogleFonts.mulishTextTheme(
               Theme.of(context).textTheme,
             ),
             primarySwatch: Colors.blue,
           ),
           home: ConnectivityWrapper(
+            key: MyApp.navigatorKey,
             child: AnimatedSplashScreen(
               duration: 1000,
               splash: Image.asset(Images.DRIVERLOGO),
@@ -395,14 +397,14 @@ class _MyAppState extends State<MyApp> {
 class ConnectivityWrapper extends StatefulWidget {
   final Widget child;
 
-  const ConnectivityWrapper({Key key, this.child}) : super(key: key);
+  const ConnectivityWrapper({required Key key, required this.child}) : super(key: key);
 
   @override
   _ConnectivityWrapperState createState() => _ConnectivityWrapperState();
 }
 
 class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
-  ConnectivityResult _connectivityResult;
+  late ConnectivityResult _connectivityResult;
 
   @override
   void initState() {
@@ -425,14 +427,14 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   @override
   Widget build(BuildContext context) {
     return _connectivityResult == ConnectivityResult.none
-        ? NoInternetDialog()
+        ? NoInternetDialog(key: MyApp.navigatorKey,)
     : widget.child;
   }
 }
 
 class NoInternetDialog extends StatelessWidget {
 
-  const NoInternetDialog({Key key}) : super(key: key);
+  const NoInternetDialog({required Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -503,7 +505,7 @@ class NoInternetDialog extends StatelessWidget {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;

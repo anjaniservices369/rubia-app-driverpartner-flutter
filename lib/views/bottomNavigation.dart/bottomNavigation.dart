@@ -123,7 +123,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       android: androidPlatformChannelSpecifics,
     );
 
-    await flutterLocalNotificationsPlugin.show(
+    await flutterLocalNotificationsPlugin?.show(
       0,
       'Notification Title',
       'Notification Body',
