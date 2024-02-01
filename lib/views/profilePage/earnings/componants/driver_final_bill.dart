@@ -112,7 +112,7 @@ class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            height: MediaQuery.of(context).size.height / 1.1,
+            height: MediaQuery.of(context).size.height / 0.9,
             child: Column(
               children: [
                 GestureDetector(

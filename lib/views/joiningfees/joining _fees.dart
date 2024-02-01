@@ -201,14 +201,6 @@ class _JoiningFeesState extends State<JoiningFees> {
                         fontSize: isTab(context) ? 8.sp : 10.sp,
                       ),
                     ),
-                    Text(
-                      "terms_&_conditions".tr ,
-                      style: GoogleFonts.mulish(
-                        color: tPrimaryColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: isTab(context) ? 8.sp : 10.sp,
-                      ),
-                    ),
                   ]),
             ),
             Center(
@@ -216,6 +208,14 @@ class _JoiningFeesState extends State<JoiningFees> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  "terms_&_conditions".tr ,
+                  style: GoogleFonts.mulish(
+                    color: tPrimaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: isTab(context) ? 8.sp : 10.sp,
+                  ),
+                ),
                 Text(
                   "and".tr + " ",
                   style: GoogleFonts.mulish(

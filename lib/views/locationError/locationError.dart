@@ -5,6 +5,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 
 import 'package:base_project_flutter/constants/constants.dart';
+import 'package:get/get.dart';
 import 'package:location_permissions/location_permissions.dart' as locPermission;
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/globalFuctions/googleMaps.dart';
@@ -121,11 +122,14 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
     print('addresses;;dsfdf;');
     loct.LocationData _locationData = await location.getLocation();
     print('addresses;;sdfdsf;');
+    print('_locationData.latitude ${_locationData.latitude}');
+    print('_locationData.longitude ${_locationData.longitude}');
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: _locationData.latitude ?? 0.0,
         longitude: _locationData.longitude ?? 0.0,
         googleMapApiKey: mapKey);
-    print(data.toString());
+
+    print(data.address.toString());
     try {
       // var addresses = await Geocoder.google(mapKey)
       //     .findAddressesFromCoordinates(coordinates);
@@ -134,7 +138,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       print('addresses');
       var first = data;
       setState(() {
-        _currentAddress = "${first.address}, ${first.city},${first.postalCode}, ${first.streetNumber}";
+        _currentAddress = "${first.address}";
         // ${first.subLocality}";
       });
       //check delivery

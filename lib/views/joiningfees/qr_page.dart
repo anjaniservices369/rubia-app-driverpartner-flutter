@@ -145,7 +145,9 @@ class _QRPageState extends State<QRPage> {
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(
-                      vertical: 4, horizontal: 10),
+                    vertical: 1,
+                    horizontal: 2,
+                  ),
                   decoration: BoxDecoration(
                     // gradient: tPrimaryGradientColor,
                       border: Border.all(
@@ -164,7 +166,7 @@ class _QRPageState extends State<QRPage> {
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(
-                      vertical: 4, horizontal: 10),
+                      vertical: 1, horizontal: 2),
                   decoration: BoxDecoration(
                     // gradient: tPrimaryGradientColor,
                       border: Border.all(

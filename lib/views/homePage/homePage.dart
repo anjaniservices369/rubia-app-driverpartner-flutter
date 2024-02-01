@@ -471,7 +471,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           ? Container()
                           : FlutterSwitch(
                               width: 30.w,
-                              height: 35.0,
+                              height: 40.0,
                               valueFontSize: 12.sp,
                               toggleSize: 45.0,
                               value: true,

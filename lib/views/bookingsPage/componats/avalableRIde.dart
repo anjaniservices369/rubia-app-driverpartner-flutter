@@ -586,36 +586,38 @@ class _AvalableRideState extends State<AvalableRide> {
         ],
       )
      :  AlertDialog(
-                title: const Text('Alert! \nYour subscription is not active. Please subscribe to get rides.'),
+                title: Text("Alert!",style: GoogleFonts.mulish(
+                  color: tBlack,
+                  fontSize: isTab(context) ? 16.sp : 14.sp,
+                  fontWeight: FontWeight.w800,
+                ),),
+                content: Text("Your subscription is not active. Please subscribe to get rides."),
                 actions: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 10),
-                          decoration: BoxDecoration(
-                            // gradient: tPrimaryGradientColor,
-                              border: Border.all(
-                                  width: 1, color: tPrimaryColor),
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(color: tPrimaryColor),
+                      Container(
+                        width: 90,
+                        height: 40,
+                        child: PopupButton(
+                          color: tWhite,
+                          borderSide: BorderSide(
+                            color: tPrimaryColor,
                           ),
+                          textcolor: tPrimaryColor,
+                          bottonText: 'cancel',
+                          onTap: (startLoading, stopLoading,
+                              btnState) async {
+                            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+                          },
                         ),
                       ),
                       SizedBox(
                         width: 30,
                       ),
                       Container(
-                        height: 27,
-                        width: 70,
+                        width: 90,
+                        height: 40,
                         child: PopupButton(
                           color: tWhite,
                           borderSide: BorderSide(

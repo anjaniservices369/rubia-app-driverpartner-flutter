@@ -155,7 +155,6 @@ AndroidNotificationChannel? channel2;
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
 FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
@@ -269,7 +268,6 @@ void main() async {
       isAllDetailsFilled: isAllDetailsFilled,
       isPaidJoiningFee: isPaidJoiningFee,
       isProfileVerified: isProfileVerified,
-      key: MyApp.navigatorKey,
     ),
   );
 }
@@ -278,7 +276,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
   const MyApp({
-    required Key key,
+    Key? key,
     this.checkAuth,
     this.personalDetails,
     this.isEmergencyContactDetails,
@@ -351,7 +349,6 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.blue,
           ),
           home: ConnectivityWrapper(
-            key: MyApp.navigatorKey,
             child: AnimatedSplashScreen(
               duration: 1000,
               splash: Image.asset(Images.DRIVERLOGO),
@@ -397,15 +394,14 @@ class _MyAppState extends State<MyApp> {
 class ConnectivityWrapper extends StatefulWidget {
   final Widget child;
 
-  const ConnectivityWrapper({required Key key, required this.child}) : super(key: key);
+  const ConnectivityWrapper({Key? key, required this.child}) : super(key: key);
 
   @override
   _ConnectivityWrapperState createState() => _ConnectivityWrapperState();
 }
 
 class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
-  late ConnectivityResult _connectivityResult;
-
+  late ConnectivityResult _connectivityResult = ConnectivityResult.none;
   @override
   void initState() {
     super.initState();
@@ -427,14 +423,14 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   @override
   Widget build(BuildContext context) {
     return _connectivityResult == ConnectivityResult.none
-        ? NoInternetDialog(key: MyApp.navigatorKey,)
+        ? NoInternetDialog()
     : widget.child;
   }
 }
 
 class NoInternetDialog extends StatelessWidget {
 
-  const NoInternetDialog({required Key key}) : super(key: key);
+  const NoInternetDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

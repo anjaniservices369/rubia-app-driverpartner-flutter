@@ -87,8 +87,8 @@ class _RideInfoPageState extends State<RideInfoPage> {
   Widget build(BuildContext context) {
     String pickupLatitude = widget.bookingDetails['pickup_latitude'];
     String pickupLongitude = widget.bookingDetails['pickup_longitude'];
-    String dropLatitude = widget.bookingDetails['drop_latitude'];
-    String dropLongitude = widget.bookingDetails['drop_longitude'];
+    String dropLatitude = widget.bookingDetails['drop_latitude'] ?? '';
+    String dropLongitude = widget.bookingDetails['drop_longitude'] ?? '';
     Set<Marker> markers = {};
     LatLng dropLatLng;
     // Create LatLng objects for pickup and drop coordinates

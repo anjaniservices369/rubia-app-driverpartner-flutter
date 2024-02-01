@@ -101,7 +101,7 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
             width: 200,
-            height: 450,
+            height: 470,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(

@@ -1106,7 +1106,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                     GeoData data = await Geocoder2.getDataFromCoordinates(
                         latitude: _locationData.latitude ?? 0.0,
                         longitude: _locationData.longitude ?? 0.0,
-                        googleMapApiKey: "GOOGLE_MAP_API_KEY");
+                        googleMapApiKey: mapKey);
                     print('coordinates'.toString());
                     print(data.toString());
                     print('coordinates'.toString());
@@ -1116,7 +1116,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                     var first = data;
                     setState(() {
                       _locationAddress =
-                      "${first.address}, ${first.city},${first.postalCode}, ${first.state},";
+                      "${first.address}";
                     });
                     //check delivery
                     print('first');
