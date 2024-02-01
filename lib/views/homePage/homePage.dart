@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+// import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,7 +26,7 @@ import '../../providers/notifactionProvider.dart';
 import '../profile_review/profile_block.dart';
 import 'componats/earning_card.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, this.status}) : super(key: key);
@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Geoflutterfire geo = Geoflutterfire();
+  // Geoflutterfire geo = Geoflutterfire();
   // PermissionStatus? _permissionGranted;
 
   Location location = new Location();

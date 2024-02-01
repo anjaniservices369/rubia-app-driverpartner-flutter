@@ -121,18 +121,20 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
     print('addresses;;dsfdf;');
     loct.LocationData _locationData = await location.getLocation();
     print('addresses;;sdfdsf;');
-    final coordinates = new Coordinates(_locationData.latitude, _locationData.longitude);
-    print(coordinates.toString());
+    GeoData data = await Geocoder2.getDataFromCoordinates(
+        latitude: _locationData.latitude ?? 0.0,
+        longitude: _locationData.longitude ?? 0.0,
+        googleMapApiKey: mapKey);
+    print(data.toString());
     try {
       // var addresses = await Geocoder.google(mapKey)
       //     .findAddressesFromCoordinates(coordinates);
-      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
       print('addresses');
-      print(addresses);
+      print(data);
       print('addresses');
-      var first = addresses.first;
+      var first = data;
       setState(() {
-        _currentAddress = "${first.locality}, ${first.featureName},${first.postalCode}, ${first.addressLine}";
+        _currentAddress = "${first.address}, ${first.city},${first.postalCode}, ${first.streetNumber}";
         // ${first.subLocality}";
       });
       //check delivery
@@ -144,11 +146,11 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       var lat = sharedPreferences.getDouble('lattitude');
       sharedPreferences.setDouble('longitude', double.parse(_locationData.longitude.toString()));
       var long = sharedPreferences.getDouble('longitude');
-      sharedPreferences.setString('FeatureName', first.featureName);
+      sharedPreferences.setString('FeatureName', first.city);
       var featureName = sharedPreferences.getString('FeatureName');
-      sharedPreferences.setString('AddressLine', first.addressLine);
+      sharedPreferences.setString('AddressLine', first.streetNumber);
       var addressLine = sharedPreferences.getString('AddressLine');
-      sharedPreferences.setString('Locality', first.locality);
+      sharedPreferences.setString('Locality', first.address);
       var locality = sharedPreferences.getString('Locality');
       // sharedPreferences.setString('subLocality', first.subLocality);
       // var subLocality = sharedPreferences.getString('subLocality');
@@ -307,6 +309,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var openLocationSettings;
     return WillPopScope(
       onWillPop: () {
         return Twl.willpopAlert(context);
@@ -317,141 +320,141 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
             Center(
               child: isLoading
                   ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        if (currentLocation != null)
-                          //Text(currentLocation.toString()),
-                          Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
-                        if (_currentAddress != null)
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: tDefaultPadding * 2),
-                                decoration: BoxDecoration(color: tWhite, borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  children: [
-                                    // Image.asset(
-                                    //   'Images.LocationenableIcon',
-                                    //   width: 30.w,
-                                    // ),
-                                    Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
-                                    SizedBox(
-                                      height: tDefaultPadding,
-                                    ),
-                                    Text(
-                                      deliveryAddress ? "We Got Your Location" : "Unable to fetch this address",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: isDesktop(context) ? 3.sp : 14.sp, fontWeight: FontWeight.w700),
-                                    ),
-                                    SizedBox(height: tDefaultPadding),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
-                                      child: Text(
-                                        _currentAddress!,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: isDesktop(context) ? 3.sp : 10.sp, color: tSecondaryColor, fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: tDefaultPadding,
-                                    ),
-                                    deliveryAddress
-                                        ? Container()
-                                        : GestureDetector(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: tDefaultPadding * 2, vertical: tDefaultPadding / 2),
-                                              decoration: BoxDecoration(
-                                                  // gradient: tPrimaryGradientColor,
-                                                  borderRadius: BorderRadius.circular(50)),
-                                              child: Text(
-                                                'Change Location',
-                                                style: TextStyle(
-                                                  color: tWhite,
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              // Twl.navigateTo(
-                                              //     context, GoogleMapPage());
-                                            },
-                                          )
-                                  ],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  if (currentLocation != null)
+                  //Text(currentLocation.toString()),
+                    Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
+                  if (_currentAddress != null)
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: tDefaultPadding * 2),
+                          decoration: BoxDecoration(color: tWhite, borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            children: [
+                              // Image.asset(
+                              //   'Images.LocationenableIcon',
+                              //   width: 30.w,
+                              // ),
+                              Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
+                              SizedBox(
+                                height: tDefaultPadding,
+                              ),
+                              Text(
+                                deliveryAddress ? "We Got Your Location" : "Unable to fetch this address",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: isDesktop(context) ? 3.sp : 14.sp, fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(height: tDefaultPadding),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
+                                child: Text(
+                                  _currentAddress!,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: isDesktop(context) ? 3.sp : 10.sp, color: tSecondaryColor, fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            ),
-                          )
-                        else
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: tDefaultPadding * 2),
-                                decoration: BoxDecoration(color: tWhite, borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  children: [
-                                    // Image.asset(
-                                    //   'Images.LocationenableIcon',
-                                    //   width: 30.w,
-                                    // ),
-                                    Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
-                                    SizedBox(
-                                      height: tDefaultPadding,
-                                    ),
-                                    Text(
-                                      "Enable your location to ",
-                                      style:
-                                          TextStyle(fontSize: isDesktop(context) ? 3.sp : 14.sp, color: tSecondaryColor, fontWeight: FontWeight.w700),
-                                    ),
-                                    SizedBox(
-                                      height: tDefaultPadding,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
-                                      child: Text(
-                                        "Please allow to use your location to see nearby bookings.",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: isDesktop(context) ? 3.sp : 10.sp, color: tSecondaryColor, fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: tDefaultPadding,
-                                    ),
-                                    GestureDetector(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: tDefaultPadding * 2, vertical: tDefaultPadding / 1.5),
-                                        decoration: BoxDecoration(color: tPrimaryColor, borderRadius: BorderRadius.circular(5)),
-                                        child: Text(
-                                          'Enable Location',
-                                          style: TextStyle(
-                                            color: tWhite,
-                                          ),
-                                        ),
-                                      ),
-                                      onTap: () async {
-                                        print('location enable >>>>');
-                                        await determinePosition();
-                                        //  await  _getCurrentLocation();
-                                      },
-                                    )
-                                  ],
-                                ),
+                              SizedBox(
+                                height: tDefaultPadding,
                               ),
-                            ),
-                          ),
-                        isLocationEnabled != null
-                            ? Container()
-                            : TextButton(
-                                style: TextButton.styleFrom(
-                                  primary: tPrimaryColor,
+                              deliveryAddress
+                                  ? Container()
+                                  : GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: tDefaultPadding * 2, vertical: tDefaultPadding / 2),
+                                  decoration: BoxDecoration(
+                                    // gradient: tPrimaryGradientColor,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Text(
+                                    'Change Location',
+                                    style: TextStyle(
+                                      color: tWhite,
+                                    ),
+                                  ),
                                 ),
-                                onPressed: AppSettings.openLocationSettings,
-                                child: Text('app_settings'),
+                                onTap: () async {
+                                  // Twl.navigateTo(
+                                  //     context, GoogleMapPage());
+                                },
                               )
-                      ],
+                            ],
+                          ),
+                        ),
+                      ),
                     )
+                  else
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: tDefaultPadding * 2),
+                          decoration: BoxDecoration(color: tWhite, borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            children: [
+                              // Image.asset(
+                              //   'Images.LocationenableIcon',
+                              //   width: 30.w,
+                              // ),
+                              Center(child: Container(height: 30.h, width: 60.w, child: Lottie.asset('assets/lottie/LocationLottie.json'))),
+                              SizedBox(
+                                height: tDefaultPadding,
+                              ),
+                              Text(
+                                "Enable your location to ",
+                                style:
+                                TextStyle(fontSize: isDesktop(context) ? 3.sp : 14.sp, color: tSecondaryColor, fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                height: tDefaultPadding,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: tDefaultPadding * 2),
+                                child: Text(
+                                  "Please allow to use your location to see nearby bookings.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: isDesktop(context) ? 3.sp : 10.sp, color: tSecondaryColor, fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              SizedBox(
+                                height: tDefaultPadding,
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: tDefaultPadding * 2, vertical: tDefaultPadding / 1.5),
+                                  decoration: BoxDecoration(color: tPrimaryColor, borderRadius: BorderRadius.circular(5)),
+                                  child: Text(
+                                    'Enable Location',
+                                    style: TextStyle(
+                                      color: tWhite,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () async {
+                                  print('location enable >>>>');
+                                  await determinePosition();
+                                  //  await  _getCurrentLocation();
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  isLocationEnabled != null
+                      ? Container()
+                      : TextButton(
+                    style: TextButton.styleFrom(
+                      primary: tPrimaryColor,
+                    ),
+                    onPressed: () => AppSettings.openAppSettings(type: AppSettingsType.location),
+                    child: Text('app_settings'),
+                  )
+                ],
+              )
                   : CircularProgressIndicator(),
             ),
             if (kIsWeb)

@@ -27,23 +27,15 @@ class Twl {
   late String deviceToken;
   late String authCode;
 
+  static get androidUiSettings => null;
+  static get iosUiSettings => null;
+
+
+
 //getDynamiclink Start
   Future<void> getDynamiclink() async {
     //  Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-      final Uri? deepLink = dynamicLink?.link;
-      print(deepLink);
-      final postID = deepLink!.queryParameters['storeId'];
-      print(postID); //will print "123"
-      if (postID != null) {
-        // Navigator.pushNamed(context, deepLink.path);
-        // Get.to(() => StoreviewPage(storeId: int.parse(postID)));
-      }
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
+    FirebaseDynamicLinks.instance.onLink;
 
     final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
@@ -74,26 +66,30 @@ class Twl {
       pickedFile =
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     }
-    File? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [CropAspectRatioPreset.ratio16x9],
-        androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: tPrimaryColor,
-            toolbarWidgetColor: tWhite,
-            initAspectRatio: CropAspectRatioPreset.ratio16x9,
-            lockAspectRatio: true),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ));
+    File? croppedFile = (await ImageCropper().cropImage(
+      sourcePath: pickedFile.path,
+      aspectRatioPresets: Platform.isAndroid
+          ? [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ]
+          : [CropAspectRatioPreset.ratio16x9],
+        uiSettings :
+      androidUiSettings( AndroidUiSettings(
+        toolbarTitle: 'Crop Image',
+        toolbarColor: tPrimaryColor,
+        toolbarWidgetColor: tWhite,
+        initAspectRatio: CropAspectRatioPreset.ratio16x9,
+        lockAspectRatio: true,
+      ),
+        uiSettings :
+      iosUiSettings( IOSUiSettings(
+        minimumAspectRatio: 1.0,
+      ),
+    )))) as File?;
     // setState(() {
     _loading = false;
     if (croppedFile != null) {

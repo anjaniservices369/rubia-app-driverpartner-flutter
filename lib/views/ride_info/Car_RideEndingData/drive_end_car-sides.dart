@@ -1132,8 +1132,8 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                       stopLoading();
                       AwesomeDialog(
                           context: context,
-                          dialogType: DialogType.INFO,
-                          animType: AnimType.RIGHSLIDE,
+                          dialogType: DialogType.info,
+                          animType: AnimType.rightSlide,
                           headerAnimationLoop: true,
                           title:
                           'Are you sure you want to complete ride with this location',

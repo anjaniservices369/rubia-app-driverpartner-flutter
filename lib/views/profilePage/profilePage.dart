@@ -751,8 +751,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     } else {
                                       AwesomeDialog(
                                           context: context,
-                                          dialogType: DialogType.ERROR,
-                                          animType: AnimType.RIGHSLIDE,
+                                          dialogType: DialogType.error,
+                                          animType: AnimType.rightSlide,
                                           headerAnimationLoop: true,
                                           title: 'Logout Failed',
                                           desc: 'Please retry',

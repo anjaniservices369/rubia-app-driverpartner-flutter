@@ -192,8 +192,8 @@ class _StartingOdometerDetailsState extends State<StartingOdometerDetails> {
                           stopLoading();
                           AwesomeDialog(
                               context: context,
-                              dialogType: DialogType.INFO,
-                              animType: AnimType.RIGHSLIDE,
+                              dialogType: DialogType.info,
+                              animType: AnimType.rightSlide,
                               headerAnimationLoop: true,
                               title: 'Start odometer',
                               desc: 'This is a confirmation of start odometer reading',
