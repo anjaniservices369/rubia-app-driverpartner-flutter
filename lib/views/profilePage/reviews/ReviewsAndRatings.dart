@@ -54,7 +54,6 @@ class _ReviewsState extends State<Reviews> {
         context,
         page.toString(),
       );
-
       final List<dynamic> newBookings = data['details'];
       final paginationData = data['pagination'];
       final ratingsList = data['rating'];

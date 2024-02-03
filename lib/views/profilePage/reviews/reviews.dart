@@ -8,6 +8,7 @@ import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigatio
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -49,30 +50,34 @@ class _ReviewsState extends State<Reviews> {
         context,
         page.toString(),
       );
-
-      final List<dynamic> newBookings = data['details'];
-      print('newBookings');
-      print('nnnnnnnnnnneeeeeeeee${newBookings.toString()}');
-      print('newBookings');
       setState(() {
         resNOK = data['status'];
+        print("Resnok : $resNOK");
       });
-      final paginationData = data['pagination'];
-      final ratingsList = data['rating'];
+        final List<dynamic> newBookings = data['details'];
+        print('newBookings');
+        print('nnnnnnnnnnneeeeeeeee${newBookings.toString()}');
+        print('newBookings');
 
-      setState(() {
-        ratingList.addAll(newBookings);
-        totalPages = paginationData['total_pages'];
-        totalCount = paginationData['total_count'];
-        reviewDetails = ratingsList;
-        resNOK = data['status'];
 
-        page++;
-        isLoading = false;
-        errorMessage = '';
+        final paginationData = data['pagination'];
+        final ratingsList = data['rating'];
 
-        print('hjkhkjhkjhkjhkjh${reviewDetails}');
-      });
+        setState(() {
+          ratingList.addAll(newBookings);
+          totalPages = paginationData['total_pages'];
+          totalCount = paginationData['total_count'];
+          reviewDetails = ratingsList;
+          resNOK = data['status'];
+
+          page++;
+          isLoading = false;
+          errorMessage = '';
+
+          print('hjkhkjhkjhkjhkjh${reviewDetails}');
+        });
+
+
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -117,7 +122,17 @@ class _ReviewsState extends State<Reviews> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
+      body: resNOK == 'NOK' ? Container(
+        child: Center(
+          child : Text(
+            "No Ratings Found",style: GoogleFonts.mulish(
+            color: tBlack,
+            fontSize: isTab(context) ? 18.sp : 16.sp,
+            fontWeight: FontWeight.w700,
+          ),
+          ),
+        ),
+      ) : WillPopScope(
         onWillPop: () {
           return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
         },

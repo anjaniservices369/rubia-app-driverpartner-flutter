@@ -77,8 +77,8 @@ class _CompleteRideState extends State<CompleteRide> {
     LocationProvider locationProvider = Provider.of<LocationProvider>(context);
     String pickupLatitude = widget.bookingDetails['pickup_latitude'];
     String pickupLongitude = widget.bookingDetails['pickup_longitude'];
-    String dropLatitude = widget.bookingDetails['drop_latitude'];
-    String dropLongitude = widget.bookingDetails['drop_longitude'];
+    String dropLatitude = widget.bookingDetails['drop_latitude'] ?? '';
+    String dropLongitude = widget.bookingDetails['drop_longitude'] ?? '';
     Set<Marker> markers = {};
     LatLng dropLatLng;
     // Create LatLng objects for pickup and drop coordinates
@@ -380,7 +380,7 @@ class _CompleteRideState extends State<CompleteRide> {
                                         Container(
                                           child: Expanded(
                                             child: Text(
-                                              widget.bookingDetails['drop_address'] ?? ' ',
+                                              widget.bookingDetails['drop_address'] == '' ? widget.bookingDetails['pickup_address'] : widget.bookingDetails['drop_address'],
                                               style: GoogleFonts.mulish(
                                                   color: tSecondaryColor, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 12.sp),
                                               overflow: TextOverflow.ellipsis,

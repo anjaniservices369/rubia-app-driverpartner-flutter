@@ -4,9 +4,9 @@
 //const String apiBaseUrl = 'http://rubia.anxion.co.in/api/';
 
 // const String apiBaseUrl = 'https://system.rubia.services/api/';
-//  const String apiBaseUrl = 'https://rubiaservices.org/app/api/';
-const String apiBaseUrl = 'http://167.99.120.178/app/api/'; //latest
-
+ const String apiBaseUrl = 'https://rubiaservices.org/app/api/';
+// const String apiBaseUrl = 'http://167.99.120.178/app/api/'; //latest
+//
 //Login Apis
 const String SEND_OTP = 'driver/send-otp';
 const String VERIFY_OTP = 'driver/verify-otp';
