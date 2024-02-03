@@ -194,7 +194,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               index: tabIndexs,
               children: [
                 HomePage(),
-                MyBookingHistory(tabIndexType: widget.tabIndexType),
+                MyBookingHistory(tabIndexType: widget.tabIndexType,index : tabIndexs),
                 WalletPage(
                   selectedType: widget.selectedType,
                 ),

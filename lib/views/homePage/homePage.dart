@@ -422,7 +422,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     print('hi');
 
                     Twl.forceNavigateTo(context, Notifactionpage(boolnotificationPage: true));
-                    _showNotificationCustomSound();
+                    // _showNotificationCustomSound();
                   },
                   child:
                       //  Container(

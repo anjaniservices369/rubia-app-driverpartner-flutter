@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -164,7 +165,16 @@ class Twl {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure you want to exit?'),
+          title: Text("Alert!",style: GoogleFonts.mulish(
+            color: tBlack,
+            fontSize: isTab(context) ? 16.sp : 14.sp,
+            fontWeight: FontWeight.w800,
+          ),),
+          content: Text('Are you sure you want to exit?',style: GoogleFonts.mulish(
+            color: tBlack,
+            fontSize: isTab(context) ? 14.sp : 12.sp,
+            fontWeight: FontWeight.w400,
+          ),),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -217,7 +217,8 @@ class _NotifactionpageState extends State<Notifactionpage> {
                           page: '${myNotificationProvider.currentPage}',
                         );
                       },
-                    color: tAppbarColor,
+                    color: tWhite,
+                    backgroundColor: tAppbarColor ,
                     child: ListView.builder(
                         itemCount: provider.myNotificationList.length,
                         physics: ScrollPhysics(),

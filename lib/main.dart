@@ -220,9 +220,6 @@ void main() async {
   var checkMail;
 
   if (authCode != null) {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
       var check = await UserAPI().checkApi(authCode);
       print("authCode>>>>> " + authCode);
       if (check != null && check['status'] == 'OK') {
@@ -248,7 +245,6 @@ void main() async {
       } else {
         checkAuth = '';
       }
-    }
   } else {
     checkAuth = '';
   }
@@ -424,7 +420,7 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   Widget build(BuildContext context) {
     return _connectivityResult == ConnectivityResult.none
         ? NoInternetDialog()
-    : widget.child;
+        : widget.child;
   }
 }
 

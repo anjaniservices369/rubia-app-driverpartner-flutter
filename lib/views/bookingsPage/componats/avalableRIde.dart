@@ -34,8 +34,10 @@ class AvalableRide extends StatefulWidget {
   const AvalableRide({
     Key? key,
     this.status,
+    this.index,
   }) : super(key: key);
   final status;
+  final index;
 
   @override
   State<AvalableRide> createState() => _AvalableRideState();
@@ -165,7 +167,10 @@ class _AvalableRideState extends State<AvalableRide> {
           Twl.navigateTo(context, ProfileBlock());
         }
         if(checkRes['detail']['online_status']==2){
-          goOnlinealert();
+          print("widget.index : ${widget.index}");
+          if(widget.index == 1){
+            goOnlinealert();
+          }
         }
 
         setState(() {
@@ -600,7 +605,6 @@ class _AvalableRideState extends State<AvalableRide> {
                         width: 90,
                         height: 40,
                         child: PopupButton(
-                          color: tWhite,
                           borderSide: BorderSide(
                             color: tPrimaryColor,
                           ),
@@ -619,7 +623,6 @@ class _AvalableRideState extends State<AvalableRide> {
                         width: 90,
                         height: 40,
                         child: PopupButton(
-                          color: tWhite,
                           borderSide: BorderSide(
                             color: tPrimaryColor,
                           ),

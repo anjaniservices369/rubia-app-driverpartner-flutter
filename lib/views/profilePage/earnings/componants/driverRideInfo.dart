@@ -160,7 +160,7 @@ class _driverRideInfoState extends State<driverRideInfo> {
                                   ),
                                   child: CachedNetworkImage(
                                     imageUrl: widget.bookingDetails[
-                                    'user_details']['selfie'],
+                                    'user_details']['selfie'] ?? '',
                                     height: 10.h,
                                     width: 20.w,
                                     fit: BoxFit.fill,

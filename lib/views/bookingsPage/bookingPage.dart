@@ -11,9 +11,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../../api_services/userApi.dart';
 import '../../constants/constants.dart';
 import '../../globalFuctions/globalFunctions.dart';
+import '../../globalWidgets/button.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
 import 'componats/accepted_rides.dart';
 import 'package:http/http.dart' as http;
@@ -21,8 +24,9 @@ import 'package:http/http.dart' as http;
 import 'componats/avalableRIde.dart';
 
 class MyBookingHistory extends StatefulWidget {
-  const MyBookingHistory({Key? key, this.tabIndexType}) : super(key: key);
+  const MyBookingHistory({Key? key, this.tabIndexType, this.index,}) : super(key: key);
   final tabIndexType;
+  final index;
   @override
   State<MyBookingHistory> createState() => _MyBookingHistoryState();
 }
@@ -133,7 +137,7 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
               Expanded(
                 child: Container(
                   child: TabBarView(children: [
-                    AvalableRide(status: STATUS_WAITING_FOR_DRIVER),
+                    AvalableRide(status: STATUS_WAITING_FOR_DRIVER,index:widget.index),
                     AcceptedRides(status: STATUS_ACCEPTED_RIDES),
                   ]),
                 ),
@@ -145,20 +149,15 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
                Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
                String apiUrl = 'http://rubiaservices.org/app/api/user/assign-booking-to-driver';
 
-               // Make the GET request
                try {
                  var response = await http.get(Uri.parse(apiUrl));
-
-                 // Check if the request was successful (status code 200)
                  if (response.statusCode == 200) {
                    // Handle the response here, if needed
                    print('Request successful: ${response.body}');
                  } else {
-                   // Handle errors, e.g., status code other than 200
                    print('Request failed with status: ${response.statusCode}');
                  }
                } catch (error) {
-                 // Handle network-related errors
                  print('Error: $error');
                }
             // var path = await getApplicationDocumentsDirectory();

@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (check != null && check['status'] == 'OK') {
       setState(() {
         checkDetails = check['detail'];
-        print('checkDetailsgggggggggg');
+        // print('checkDetailsgggggggggg');
         print(checkDetails);
       });
     }
@@ -502,6 +502,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
               Card(
+                color: tWhite,
                 shadowColor: tBoxShadow.color,
                 elevation: 5,
                 child: Container(
@@ -700,38 +701,43 @@ class _ProfilePageState extends State<ProfilePage> {
                     barrierDismissible: false,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Are you sure you want to Logout'),
+                        title: Text("Logout",style: GoogleFonts.mulish(
+                          color: tBlack,
+                          fontSize: isTab(context) ? 16.sp : 14.sp,
+                          fontWeight: FontWeight.w800,
+                        ),),
+                        content: Text("Are you sure you want to logout?",style: GoogleFonts.mulish(
+                        color: tBlack,
+                            fontSize: isTab(context) ? 14.sp : 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),),
                         actions: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Twl.navigateBack(context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 4, horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      // gradient: tPrimaryGradientColor,
-                                      border: Border.all(
-                                          width: 1, color: tPrimaryColor),
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(color: tPrimaryColor),
+                              Container(
+                                height: 35,
+                                width: 75,
+                                child: PopupButton(
+                                  borderSide: BorderSide(
+                                    color: tPrimaryColor,
                                   ),
+                                  textcolor: tPrimaryColor,
+                                  bottonText: 'cancel',
+                                  onTap: (startLoading, stopLoading,
+                                      btnState) async {
+                                       Twl.navigateBack(context);
+                                  },
                                 ),
                               ),
                               SizedBox(
-                                width: 30,
+                                width: 25,
                               ),
+
                               Container(
-                                height: 27,
-                                width: 70,
+                                height: 35,
+                                width: 75,
                                 child: PopupButton(
-                                  color: tWhite,
                                   borderSide: BorderSide(
                                     color: tPrimaryColor,
                                   ),
