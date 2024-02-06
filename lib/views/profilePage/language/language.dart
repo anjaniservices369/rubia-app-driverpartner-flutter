@@ -93,9 +93,6 @@ class _ChooseLanguageViewState extends State<ChooseLanguageView> {
         case 'gu_in':
           lang = 5;
           break;
-        case 'gu_in':
-          lang = 5;
-          break;
         default:
           lang = 0;
       }

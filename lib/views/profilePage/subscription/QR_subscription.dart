@@ -139,7 +139,7 @@ class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
             fontSize: isTab(context) ? 16.sp : 14.sp,
             fontWeight: FontWeight.w800,
           ),),
-          content: Text("Are you sure you want to continue?"),
+          content: Text("Are_you_sure".tr),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -249,7 +249,7 @@ class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Text(
-                    "Please Send the Screenshot of the completed payment to this whatsapp number: +91 7893653899",
+                    "Send_Screenshot".tr,
                     style: GoogleFonts.mulish(
                       color: tBlack,
                       fontSize: isTab(context) ? 16.sp : 14.sp,

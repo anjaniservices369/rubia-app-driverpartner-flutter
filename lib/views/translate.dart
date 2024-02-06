@@ -5,6 +5,7 @@ import '../constants/constants.dart';
 class LanguageTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
+        // English Starts Here Z
         'en_us': {
           //carnumberscrren
           'enter_car_number': 'Enter Car Number',
@@ -338,6 +339,10 @@ class LanguageTranslations extends Translations {
           'gujarati': 'Gujarati',
           'app_language': 'App Language',
           'set_language': 'Set Language',
+
+          'Privacy' : 'Privacy Policy',
+          'Terms' : 'Terms & Conditions',
+          'Cancellation' : 'Cancellation & Refund Policy',
           //AddDetailsView
           'add_details': 'Add Details',
           'full_name_Cant_Be_Empty': 'Full Name Cant Be Empty',
@@ -730,11 +735,265 @@ class LanguageTranslations extends Translations {
               'Final Fare will be Charged basis actual distance and time',
           'cancellation_fee':
               'According to our Cancellation Policy,Charge of  $currencySymbol 300 on Cancellation ',
+
+          //QR
+          'Are_you_sure': 'Are you sure you want to continue?',
+          'Recharge_with_QR':
+              'Recharge your Wallet using below QR Code or UPI id',
+          'Send_Screenshot':
+              'Please Send the Screenshot of the completed payment to this whatsapp number: +91 7893653899',
+          'Once_Confirmed': 'Once Payment is confirmed',
+          'Subscription_Active': 'Your Subscription plan will be active',
+
+          // Alert
+          'Subscription_NotActive':
+              'Alert! \nYour subscription is not active. Please subscribe to get rides',
         },
+
+        // Hindi Language Starts Here
         'hi_in': {
+          //carnumberscrren
+          "enter_car_number": "कार नंबर दर्ज करें",
+          "subscribe_now": "अब सदस्यता लें",
+          "vehicle_gear_type": "वाहन गियर प्रकार",
+          "manual": "मैनुअल",
+          "automatic": "स्वचालित",
+          "view_bill": "बिल देखें",
+          "write_a_review_to_driver": "ड्राइवर के लिए समीक्षा लिखें",
+          "Before_you_start_ride_please_selfie_along":
+              "राइड शुरू करने से पहले कृपया सेल्फी लें",
+          "with_car_number_plate": "कार नंबर प्लेट के साथ",
+          "Please_be_ready_with_your_camera_and_clean_your_lens":
+              "कृपया अपने कैमरे के साथ तैयार रहें और अपने लेंस को साफ करें",
+          "take_photos_of_car": "कार की फोटो लें",
+          "before_you_start_ride_please_take_selfies_&":
+              "राइड शुरू करने से पहले कृपया सेल्फी लें",
+          "verification": "सत्यापन",
+          "car_number_Cant_Be_Empty": "कार नंबर खाली नहीं हो सकता",
+          "your_Profile_Is_Under_Reviewing\nprocess._Please_Wait_2_To_4_Days":
+              "आपकी प्रोफाइल की समीक्षा प्रक्रिया में है। कृपया 2 से 4 दिनों तक प्रतीक्षा करें",
+          "accepted_rides": "स्वीकृत राइड",
+          "available_rides": "उपलब्ध राइड",
+          "prices_may_vary":
+              "कृपया ध्यान दें कि मूल्य संरचना यात्रित हुए दूरी और समय से प्रभावित होती है।",
+          "and_privacy_policy.": "चित्र स्पष्ट करें",
+          "take_selfie": "सेल्फी लें",
+          "from_the_front_angle.": "सामने की ओर से",
+          "take_front_picture.": "सामने की ओर से तस्वीर लें",
+          "before_you_start_ride_please_images_of_car":
+              "राइड शुरू करने से पहले कृपया कार की तस्वीरें",
+          "make_sure_that_picture_should_be_clear_and_detail.":
+              "यह सुनिश्चित करें कि चित्र स्पष्ट और विवरण हों",
+          "make_picture_clear.": "और गोपनीयता नीति।",
+          "Pay_₹500_Joining_fees": "₹500 ज्वाइनिंग फीस भुगतान करें",
+          "Joining_fees": "ज्वाइनिंग फीस",
+          "by_submission_you_agree_to_our":
+              "जमा करके आप हमारे से सहमत होते हैं",
+          "terms_&_condition": "नियम और शर्तें",
+          "by_submission_you_agree_to_our_terms_&_condition":
+              "जमा करके आप हमारे से सहमत होते हैं नियम और शर्तें",
+          "the_joining_fees _for_drivers_is_collected_to_cover_any_potential_damages,_violations,_orvunpaid_fees.":
+              "ड्राइवर्स के लिए ज्वाइनिंग फीस किसी भी संभावित क्षति, उल्लंघन या अवैतनिक शुल्क को कवर करने के लिए वसूली जाती है।",
+//EMERGENCY CONTACT
+
+          "emergency_contact_details": "आपातकालीन संपर्क विवरण",
+          "emergency_contacts": "आपातकालीन संपर्क",
+          "upload_your_driving_license": "अपना ड्राइविंग लाइसेंस अपलोड करें",
+          "Person": "व्यक्ति",
+          "vehicle_types": "वाहन प्रकार",
+          "relation_ship_can_not_be_empty": "संबंध खाली नहीं हो सकता",
+          "name": "नाम",
+          "name_can_not_be_empty": "नाम खाली नहीं हो सकता",
+          "phone_number": "फोन नंबर",
+          "relation_ship": "संबंध",
+          "aadhar_number": "आधार नंबर",
+          "next": "आगे",
+          "Resend_Code": "कोड पुनः भेजें?",
+          "earnings_by_orders": "आर्डर्स द्वारा कमाई",
+          "Choose_your_ride": "अपनी राइड चुनें",
+          "Choose_your_service": "अपनी सेवा चुनें",
+          "Home": "होम",
+          "confirm_your_cancellation": "अपनी रद्दीकरण की पुष्टि करें",
+          "Once_you_cancel_your_ride_you_will_be_pay_fee_Rs_500_for_cancellations_as_per_our_policy":
+              "अगर आप अपनी यात्रा रद्द करते हैं, तो हमारी नीति के अनुसार आपको रद्दीकरण के लिए रु. 500 शुल्क देना होगा।",
+          "support": "सहायता",
+          "app_language": "ऐप भाषा",
+          "Driver_details": "ड्राइवर विवरण",
+          "Address_details": "पता विवरण",
+          "bill_details": "बिल विवरण",
+          "Ride_status": "राइड स्थिति",
+          "Ride": "राइड",
+          "Loads": "भार",
+          "Ride_now": "अब राइड करें",
+          "Outstation": "आउटस्टेशन",
+          "Confirm_Ride": "राइड की पुष्टि करें",
+          "Rentals": "किराया",
+          "Loads": "भार",
+          "Ride_now": "अब राइड करें",
+          "Outstation": "बाहरी क्षेत्र",
+          "Confirm_Ride": "राइड की पुष्टि करें",
+          "Rentals": "किराया",
+          "Bike_Car_Auto": "बाइक, कार, ऑटो",
+          "Load_now": "अब लोड करें",
+          "Outstation_service": "बाहरी क्षेत्र सेवा",
+          "Rentals_service": "किराया सेवा",
+          "More_with_Taxi_Go": "टैक्सी गो के साथ और अधिक!",
+          "Pickup_point": "पिकअप प्वाइंट",
+          "Dropping_point": "ड्रॉपिंग प्वाइंट",
+          "Search_Destination": "गंतव्य खोजें",
+          "Pick_Up_Date": "पिक अप तिथि",
+          "Pick_Up_Time": "पिक अप समय",
+          "Return_Date": "वापसी की तारीख",
+          "Return_Time": "वापसी का समय",
+          "Later": "बाद में",
+          "Now": "अब",
+          "Book_Ride": "राइड बुक करें",
+          "Select_destination_location": "गंतव्य स्थान का चयन करें",
+          "Select_Location": "स्थान चुनें",
+          "My_favourite_locations": "मेरे पसंदीदा स्थान",
+          "Find_a_place": "एक स्थान ढूँढें...",
+          "Check_Location": "स्थान की जाँच करें",
+          "we_are_unable_to_find_your_pincode_please_drag_the_place_picker":
+              "हम आपके पिनकोड को खोजने में असमर्थ हैं, कृपया स्थान पिकर को खींचें",
+          "Place_not_in_area": "स्थान क्षेत्र में नहीं है",
+          "Select_Vehicle": "वाहन चुनें",
+          "Select_Package": "पैकेज चुनें",
+          "Please_wait": "कृपया प्रतीक्षा करें...",
+          "Please_hold_we_are_searching_for":
+              "कृपया प्रतीक्षा करें! हम आपके लिए खोज रहे हैं",
+          "nearby_skipper_for_you": "आपके लिए निकटवर्ती स्किपर",
+          "Cancel_Ride": "राइड रद्द करें",
+          "Apply_Coupon_Code": "कूपन कोड लागू करें",
+          "Pay_At_Drop": "ड्रॉप पर भुगतान करें",
+          "Change_payment_Method": "भुगतान का तरीका बदलें",
+          "Your_skipper_is_arriving": "आपका स्किपर आ रहा है",
+          "Your_skipper_is_arrived": "आपका स्किपर पहुंच गया है",
+          "Price": "कीमत",
+          "Pay_now": "अभी भुगतान करें",
+          "Don't_press_back_until_the_payment_is_completed":
+              "भुगतान पूरा होने तक पीछे न जाएं",
+          "i_agree_to_The": "मैं सहमत हूँ",
+          "Contact_driver": "ड्राइवर से संपर्क करें",
+          "Your_ride_is_started": "आपकी राइड शुरू हो गई है",
+          "Skipper": "स्किपर",
+          "Online_mode": "ऑनलाइन मोड",
+          "Wallet_pay": "वॉलेट भुगतान",
+          "Cash_mode": "नकद मोड",
+          "OTP": "ओटीपी",
+          "No": "नहीं",
+          "submit": "प्रस्तुत",
+          "Yes": "हाँ",
+          "Estimate_fare": "अनुमान भाड़ा",
+          "subscription_plan": "सदस्यता योजना",
+          "Submit_your_rating": "अपनी रेटिंग सबमिट करें",
+          "driver_prime_membership": "ड्राइवर प्राइम सदस्यता",
+          "Give_Rating": "रेटिंग दें",
+          "You_rated": "आपने रेटिंग दी है",
+          "Are_you_sure_you_want_to_sign_out": "क्या आप निकासी करना चाहते हैं?",
+          "Cancel": "रद्द करें",
+          "OK": "ठीक है",
+          "Logout_Failed": "लॉगआउट विफल रहा",
+          "Please_retry": "कृपया पुनः प्रयास करें",
+          "Favorites_Location": "पसंदीदा स्थान",
+          "Choose_Language": "भाषा चुनें",
+          "Emergency_Contact": "आपातकालीन संपर्क",
+          "Logout": "लॉगआउट",
+          "Amount": "रकम",
+          "Ride_Status": "राइड स्थिति",
+          "New_Request": "नया अनुरोध",
+          "Ride_Booked": "राइड बुक किया गया",
+          "Complete_Totally": "पूर्णत: पूर्ण",
+          "Payment_Type": "भुगतान प्रकार",
+          "email_cant_be_empty": "ईमेल खाली नहीं हो सकता",
+          "please_enter_a_valid_email_address":
+              "कृपया एक वैध ईमेल पता दर्ज करें",
+          "Privacy_Policy": "गोपनीयता नीति",
+          "Terms_&Conditions": "शर्तें और नियम",
+          "Add_New": "नया जोड़ें",
+          "TaxiGo": "टैक्सीगो",
+          "Customer_Support": "ग्राहक सहायता",
+          "Edit_Profile": "प्रोफ़ाइल संपादित करें",
+          "collect_bill": "बिल जमा करें",
+          "Full_name": "पूरा नाम",
+          "Phone_Number": "फ़ोन नंबर",
+          "email": "ईमेल",
+          "Error_of_coupons": "कूपन त्रुटि",
+          "No_rides_found": "कोई राइड नहीं मिली",
+          "Select_Title": "शीर्षक चुनें",
+          "Save_as_Favorites": "पसंदीदा के रूप में सहेजें",
+          "Replace": "प्रतिस्थापित करें",
+          "Please_choose_a_title_for_selected_address":
+              "चयनित पते के लिए एक शीर्षक चुनें",
+          "Title": "शीर्षक",
+          "enter_title": "शीर्षक दर्ज करें",
+          "Save": "सहेजें",
+          "Delete": "हटाएँ",
+          "Delete_Address": "पता हटाएँ",
+          "Are_you_sure_you_want_to_delete_this_address":
+              "क्या आप इस पते को हटाना चाहते हैं?",
+          "Apply_Coupons": "कूपन लागू करें",
+          "Date": "तारीख",
+          "Ride_Id": "राइड आईडी",
+          "Total_Amount": "कुल रकम",
+          "Duration": "अवधि",
+          "mins": "मिनट",
+          "km": "किमी",
+          "amount_cant_be_empty": "राशि खाली नहीं हो सकती",
+          "Enter_amount": "राशि दर्ज करें",
+          "Minimum_200_required_to_unlock_withdraw":
+              "निकालने को अनलॉक करने के लिए कम से कम ₹200 की आवश्यकता है",
+          "Submit": "प्रस्तुत",
+          "Terms&_Condition": "शर्तें और नियम",
+          "By_login_you_agree_to_our": "लॉगिन करके आप हमारे से सहमत होते हैं",
+          "Date_of_birth": "जन्म तिथि",
+          "Enter_valid_date": "वैध तारीख दर्ज करें",
+          "Enter_date_in_valid_range": "वैध सीमा में तारीख दर्ज करें",
+          "OTP_Verification": "ओटीपी सत्यापन",
+          "Enter_the_4_digit_code_we_sent_you_to_verify_your_phone_number":
+              "हमने आपको आपके फोन नंबर को सत्यापित करने के लिए भेजा हमारा 4 अंकों का कोड दर्ज करें",
+          "send_to": "भेजें",
+          "We_unable_to_get_your_Pincode":
+              "हम आपके पिनकोड को प्राप्त करने में असमर्थ हैं",
+          // Wallet
+          "Wallet": "बटुआ",
+          "All_Transactions": "सभी लेन-देन",
+          "Select_Date": "तारीख चुनें",
+          "Available_Balance": "उपलब्ध शेष",
+          "select_location": "स्थान चुनें",
+          "Active_Rides": "सक्रिय यात्राएँ",
+          "Completed": "पूरा हुआ",
+          "Cancelled": "रद्द किया गया",
+          "Track_Rider": "राइडर का पता लगाएं",
+          "Contact_Rider": "राइडर से संपर्क करें",
+          "Payment_paid_from_wallet": "भुगतान बटुआ से किया गया",
+          "Wait_for_payment": "भुगतान के लिए प्रतीक्षा करें",
+          "your_uPI": "आपका UPI",
+          "Also_notify_when_receiving_invites":
+              "आमंत्रण प्राप्त करते समय सूचित भी करें",
+          "Left_from_school": "स्कूल से निकल गया",
+          "Hangouts_video_call": "हैंगआउट्स वीडियो कॉल",
+          "Reached_at_school": "स्कूल पर पहुंचा",
+          "When_bus_reached_at_pickup_remainder_spot":
+              "जब बस पिकअप बची हुई स्थान पर पहुंची",
+          "Drop_Notifications": "नोटिफिकेशन ड्रॉप करें",
+          "Pick_up_Notifications": "नोटिफिकेशन पिकअप करें",
+          "When_bus_started_at_starting_point_remainder_spot":
+              "जब बस प्रारंभिक बिंदु बची हुई स्थान पर शुरू हुई",
+          "Bus_trip_start_Notifications": "बस यात्रा शुरू नोटिफिकेशन",
+          "Settings": "सेटिंग्स",
+          "privacy_policy": "गोपनीयता नीति",
+          "terms_&_Condition": "नियम और शर्तें",
+          "and": "और",
+          "by_login_you_agree_to_our": "लॉग इन करके आप हमारे से सहमत होते हैं",
+          "resend(30s)": "पुनः भेजें (30 सेकंड)",
+          "don't_receive_the_code?": "कोड प्राप्त नहीं हो रहा है?",
+          "Log_in": "लॉग इन करें",
+          "OTP_length_did_not_match": "OTP लंबाई मेल नहीं खाती",
+          "please_enter_OTP": "कृपया OTP दर्ज करें",
+          "sent_to": "भेजा गया",
+
           //suport
           "support": "सहारा",
-
           "customer_support": "ग्राहक सहायता",
           "chat": "बात करना",
           //ride info
@@ -799,6 +1058,10 @@ class LanguageTranslations extends Translations {
           'gujarati': 'गुजराती',
           'app_language': 'ऐप भाषा',
           'set_language': 'भाषा सेट करें',
+
+  'Privacy': 'गोपनीयता नीति',
+  'Terms': 'शर्तें और नियम',
+  'Cancellation': 'रद्दीकरण और वापसी नीति',
           //AddDetailsView
           'add_details': 'विवरण जोड़ें',
           'personal_Details': 'व्यक्तिगत विवरण',
@@ -988,6 +1251,7 @@ class LanguageTranslations extends Translations {
 
 //RideHistoryView
           'ride_history': 'सवारी इतिहास',
+          'training_tutorials': 'प्रशिक्षण ट्यूटोरियल्स',
           'today': 'आज',
           "all": "सभी",
           "completed": "पूरा हुआ",
@@ -1002,6 +1266,7 @@ class LanguageTranslations extends Translations {
           'Personal_Details': 'व्यक्तिगत विवरण',
           //homepage drawer
           'earnings': 'आय',
+          'subscription': 'सदस्यता',
           'order_history': 'आदेश इतिहास',
           'rating_reviews': 'रेटिंग और समीक्षा',
           'notifications': 'सूचनाएं',
@@ -1085,7 +1350,6 @@ class LanguageTranslations extends Translations {
           'amount_pay_to_company': 'कंपनी को राशि का भुगतान',
           //profile
           'profile': 'प्रोफ़ाइल',
-
           'vehicle': 'वाहन',
           'bank_details': 'बैंक विवरण',
           //profile- personaldetails
@@ -1121,6 +1385,678 @@ class LanguageTranslations extends Translations {
           'please_enter_valid_ifsc_number': 'कृपया मान्य IFSC नंबर दर्ज करें',
           'please_enter_upi_number': 'कृपया यूपीआई नंबर दर्ज करें',
           'Please_enter_valid_upi_number': 'कृपया मान्य यूपीआई नंबर दर्ज करें',
+
+          // QR
+          "Are_you_sure": "क्या आप निश्चित हैं कि आप जारी रखना चाहते हैं?",
+          "Recharge_with_QR":
+              "नीचे QR कोड या UPI आईडी का उपयोग करके अपना वॉलेट रिचार्ज करें",
+          "Send_Screenshot":
+              "कृपया पूर्ण भुगतान की स्क्रीनशॉट को इस व्हाट्सएप नंबर पर भेजें: +91 7893653899",
+          "Once_Confirmed": "एक बार भुगतान पुष्टि होने के बाद",
+          "Subscription_Active": "आपकी सब्सक्रिप्शन योजना सक्रिय हो जाएगी",
+
+          // Alert
+          'Subscription_NotActive':
+              'Alert! \nआपकी सदस्यता सक्रिय नहीं है। कृपया राइड प्राप्त करने के लिए सदस्यता लें।'
+        },
+
+        // Telegu Language Starts Here
+        'tl_in': {
+          //carnumberscrren
+          "enter_car_number": "కారు సంఖ్య ఎంటర్ చేయండి",
+          "subscribe_now": "ఇప్పుడు చందాను చేరుకోండి",
+          "vehicle_gear_type": "వాహన గేర్ రకం",
+          "manual": "మేన్యువల్",
+          "automatic": "స్వయంచాలక",
+          "view_bill": "బిల్ వీక్షించు",
+          "write_a_review_to_driver": "డ్రైవర్‌కు సమీక్ష రాయండి",
+          "Before_you_start_ride_please_selfie_along":
+              "రైడ్ ప్రారంభించుటకు ముందుగా సెల్ఫీ తీసుకోండి",
+          "with_car_number_plate": "కారు నంబర్ ప్లేట్‌తో",
+          "Please_be_ready_with_your_camera_and_clean_your_lens":
+              "దయచేసి మీ కెమెరా తయారు చేసుకోండి మరియు మీ లెన్స్‌ను శుభ్రం చేయండి",
+          "take_photos_of_car": "కారు చిత్రాలు తీసుకోండి",
+          "before_you_start_ride_please_take_selfies_&":
+              "రైడ్ ప్రారంభించుటకు ముందుగా సెల్ఫీలను తీసుకోండి &",
+          "verification": "ధృవీకరణ",
+          "car_number_Cant_Be_Empty": "కారు సంఖ్య ఖాళీ ఉండకూడదు",
+          "your_Profile_Is_Under_Reviewing\nprocess.Please_Wait_2_To_4_Days":
+              "మీ ప్రొఫైల్ రివ్యూ ప్రాసెస్ కంప్లీట్ అయ్యేలా ఉంది. దయచేసి 2 నుండి 4 రోజుల సమయం ప్రతీక్షించండి",
+          "accepted_rides": "అంగీకృత రైడ్‌లు",
+          "available_rides": "అందుబాటులో రైడ్‌లు",
+          "prices_may_vary":
+              "దయచేసి గమనించండి మూల్య వర్గీకరణం దూరం మరియు సమయం ఆధారంగా ప్రభావితం కావచ్చు",
+          "and_privacy_policy.": "చిత్రం స్పష్టం చేయండి",
+          "take_selfie": "సెల్ఫీ తీసుకొను",
+          "from_the_front_angle.": "ముందు కోణం నుండి",
+          "take_front_picture.": "ముందు చిత్రం తీసుకొను",
+          "before_you_start_ride_please_images_of_car":
+              "రైడ్ ప్రారంభించుటకు కారు చిత్రాలు తీసుకొను",
+          "make_sure_that_picture_should_be_clear_and_detail.":
+              "దయచేసి చిత్రం స్పష్టం మరియు వివరాలు ఉండాలని ఖచ్చితం చేయండి",
+          "make_picture_clear.": "మరియు గోప్యతా విధానం.",
+          "Pay_₹500_Joining_fees": "₹500 చేరడానికి ఫీజు చెల్లించండి",
+          "Joining_fees": "చేరడానికి ఫీజు",
+          "by_submission_you_agree_to_our":
+              "మార్గదర్శకాలు & నిబంధనలు తప్పక గొట్టించినట్లుగా అంగీకరిస్తారు",
+          "terms&condition": "నిబంధనలు & షరతులు",
+          "by_submission_you_agree_to_our_terms&_condition":
+              "మార్గదర్శకాలు & నిబంధనలు తప్పక గొట్టించినట్లుగా అంగీకరిస్తారు",
+          "the_joining_fees _for_drivers_is_collected_to_cover_any_potential_damages,_violations,_orvunpaid_fees.":
+              "డ్రైవర్‌ల కోసం జోడింపు శుల్కాలు ఏదైనా సంభవితంగా కొట్టడానికి, ఉల్లంఘనాలని కవర్ చేయడానికి లక్షిస్తారు.",
+
+          //EMERGENCY CONTACT
+
+          "emergency_contact_details": "ఎమర్జెన్సీ సంప్రదించండి వివరాలు",
+          "emergency_contacts": "ఎమర్జెన్సీ కాంటాక్ట్‌లు",
+          "upload_your_driving_license":
+              "మీ డ్రైవింగ్ లైసెన్స్ అప్‌లోడ్ చేయండి",
+          "Person": "వ్యక్తి",
+          "vehicle_types": "వాహన రకాలు",
+          "relation_ship_can_not_be_empty": "సంబంధం ఖాళీ ఉండకూడదు",
+          "name": "పేరు",
+          "name_can_not_be_empty": "పేరు ఖాళీ ఉండకూడదు",
+          "phone_number": "ఫోన్ నంబర్",
+          "relation_ship": "సంబంధం",
+          "aadhar_number": "ఆధార్ సంఖ్య",
+          "next": "తరువాయి",
+          "Resend_Code": "కోడ్‌ను రీసెండ్ చేయండి?",
+          "earnings_by_orders": "ఆర్డర్ల ద్వారా ఆదాయం",
+          "Choose_your_ride": "మీ రైడ్‌ను ఎంచుకోండి",
+          "Choose_your_service": "మీ సేవను ఎంచుకోండి",
+          "Home": "హోమ్",
+          "confirm_your_cancellation": "మీ రద్దు ధృడీకరణను నిర్ధారించండి",
+          "Once_you_cancel_your_ride_you_will_be_pay_fee_Rs_500_for_cancellations_as_per_our_policy":
+              "మీ రైడ్ రద్దు చేసినా, మేము మీరు మా విధివతికి సరిపోయేందుకు రూ. 500 ఫీజు చెల్లించవచ్చు.",
+          "support": "మద్దతు",
+          "app_language": "యాప్ భాష",
+          "Driver_details": "డ్రైవర్ వివరాలు",
+          "Address_details": "చిరునామా వివరాలు",
+          "bill_details": "బిల్ వివరాలు",
+          "Ride_status": "రైడ్ స్థితి",
+          "Ride": "రైడ్",
+          "Loads": "లోడ్స్",
+          "Ride_now": "ఇప్పుడు రైడ్",
+          "Outstation": "ఔట్‌స్టేషన్",
+          "Confirm_Ride": "రైడ్ నిర్ధారించండి",
+          "Rentals": "రెంటల్‌లు",
+          "Bike_Car_Auto": "బైక్, కార్, ఆటో",
+          "Load_now": "ఇప్పుడు లోడ్",
+          "Outstation_service": "ఔట్‌స్టేషన్ సేవ",
+          "Rentals_service": "రెంటల్‌ల సేవ",
+          "More_with_Taxi_Go": "టాక్సీ గోతో మరిన్ని!",
+          "Pickup_point": "పికప్ పాయింట్",
+          "Dropping_point": "డ్రాపింగ్ పాయింట్",
+          "Search_Destination": "గమనిక సేర్చ్ చేయండి",
+          "Pick_Up_Date": "పిక్ అప్ తేదీ",
+          "Pick_Up_Time": "పిక్ అప్ సమయం",
+          "Return_Date": "రిటర్న్ తేదీ",
+          "Return_Time": "రిటర్న్ సమయం",
+          "Later": "తరువాత",
+          "Now": "ఇప్పుడు",
+          "Book_Ride": "బుక్ రైడ్",
+          "Select_destination_location": "గమనిక స్థలాన్ని ఎంచుకోండి",
+          "Select_Location": "స్థానాన్ని ఎంచుకోండి",
+          "My_favourite_locations": "నా ఇష్టమైన స్థలాలు",
+          "Find_a_place": "ఒక స్థానం కనుగొనండి ...",
+          "Check_Location": "స్థానం తనిఖీ చేయండి",
+          "we_are_unable_to_find_your_pincode_please_drag_the_place_picker":
+              "మేము మీ పిన్‌కోడ్ కనుగొనలేము, దయచేసి స్థలం పిక్‌అప్ చేయండి",
+          "Place_not_in_area": "స్థలం ప్రాంతంలో లేదు",
+          "Select_Vehicle": "వాహనాన్ని ఎంచుకోండి",
+          "Select_Package": "పాకేజీని ఎంచుకోండి",
+          "Please_wait": "దయచేసి ఎదురుచూస్తుండం ...",
+          "Please_hold_we_are_searching_for":
+              "దయచేసి ఉండండి! మేము మీకు సమీపంలో స్కిప్‌పర్ కోసం శోధిస్తున్నాం",
+          "nearby_skipper_for_you": "మీకు సమీపంలో స్కిప్‌పర్",
+          "Cancel_Ride": "రైడ్ రద్దు",
+          "Apply_Coupon_Code": "కూపన్ కోడ్ వాడుక",
+          "Pay_At_Drop": "డ్రాప్‌లో చెల్లించండి",
+          "Change_payment_Method": "చెల్లించడానికి చెల్లించండి పద్దతి",
+          "Your_skipper_is_arriving": "మీ స్కిప్‌పర్ వస్తున్నాడు",
+          "Your_skipper_is_arrived": "మీ స్కిప్‌పర్ వచ్చింది",
+          "Price": "మొత్తం ధర",
+          "Pay_now": "ఇప్పుడు చెల్లించండి",
+          "Don't_press_back_until_the_payment_is_completed":
+              "చెల్లింపు పూర్తి అయ్యింది వరకూ బ్యాక్ నొక్కడానికి ప్రత్యేకంగా నొక్కండి.",
+          "i_agree_to_The": "నేను అంగీకరిస్తున్నాను",
+          "Contact_driver": "డ్రైవర్‌ను సంప్రదించండి",
+          "Your_ride_is_started": "మీ రైడ్ ప్రారంభించబడింది",
+          "Skipper": "స్కిప్‌పర్",
+          "Online_mode": "ఆన్‌లైన్ మోడ్",
+          "Wallet_pay": "వాలెట్ చెల్లించు",
+          "Cash_mode": "నగదు మోడ్",
+          "OTP": "ఓటిపి",
+          "No": "లేదు",
+          "submit": "సమర్పించు",
+          "Yes": "అవును",
+          "Estimate_fare": "అంచనా ధర",
+          "subscription_plan": "చందా ప్రణాళిక",
+          "Submit_your_rating": "మీ రేటింగ్‌ను సమర్పించండి",
+          "driver_prime_membership": "డ్రైవర్ ప్రధాన సభ్యత",
+          "Give_Rating": "రేటింగ్ ఇస్తుంది",
+          "You_rated": "మీరు రేట్ చేసారు",
+          "Are_you_sure_you_want_to_sign_out": "మీరు నిష్క్రమణ చేయాలా?",
+          "Cancel": "రద్దు",
+          "OK": "సరే",
+          "Logout_Failed": "లాగ్ఔట్ విఫలమైంది",
+          "Please_retry": "దయచేసి మళ్ళి ప్రయత్నించండి",
+          "Favorites_Location": "ఇష్టమైన స్థానం",
+          "Choose_Language": "భాషను ఎంచుకోండి",
+          "Emergency_Contact": "ఎమర్జెన్సీ సంప్రదించండి",
+          "Logout": "లాగ్‌అవుట్",
+          "Amount": "మొత్తం",
+          "Ride_Status": "రైడ్ స్థితి",
+          "New_Request": "కొత్త అభ్యర్థన",
+          "Ride_Booked": "రైడ్ బుక్ చేయబడింది",
+          "Complete_Totally": "పూర్తిగా పూర్తి చేయండి",
+          "Payment_Type": "చెల్లింపు రకం",
+          "email_cant_be_empty": "ఇమెయిల్ ఖాళీ ఉండకూడదు",
+          "please_enter_a_valid_email_address":
+              "దయచేసి చెల్లని ఇమెయిల్ చిరునామా నమోదు చేయండి",
+          "Privacy_Policy": "గోప్యతా విధానం",
+          "Terms_&_Conditions": "షరతులు మరియు పన్నులు",
+          "Add_New": "కొత్తది జోడించు",
+          "TaxiGo": "టాక్సీగో",
+          "Customer_Support": "గ్రాహక మద్దతు",
+          "Edit_Profile": "ప్రొఫైల్‌ను సవరించండి",
+          "collect_bill": "బిల్‌ను సేకరించు",
+          "Full_name": "పూర్తి పేరు",
+          "Phone_Number": "ఫోన్ నంబర్",
+          "email": "ఇమెయిల్",
+          "Error_of_coupons": "కూపన్‌ల దోషం",
+          "No_rides_found": "రైడ్‌లు కనుగొనబడలేదు",
+          "Select_Title": "శీర్షికను ఎంచుకోండి",
+          "Save_as_Favorites": "అనుకూలంగా భద్రపరచండి",
+          "Replace": "మార్పు",
+          "Please_choose_a_title_for_selected_address":
+              "ఎంచుకున్న చిరునామాకు శీర్షికను ఎంచుకోండి",
+          "Title": "శీర్షిక",
+          "enter_title": "శీర్షిక నమోదు చేయండి",
+          "Save": "భద్రపరచు",
+          "Delete": "తొలగించు",
+          "Delete_Address": "చిరునామా తొలగించు",
+          "Are_you_sure_you_want_to_delete_this_address":
+              "మీరు ఈ చిరునామాను తొలగించాలా?",
+          "Apply_Coupons": "కూపన్‌లను వాడుక",
+          "Date": "తేదీ",
+          "Ride_Id": "రైడ్ ఐడి",
+          "Total_Amount": "మొత్తం మొత్తం",
+          "Duration": "అవధి",
+          "mins": "నిమి",
+          "km": "కి.మీ",
+          "amount_cant_be_empty": "మొత్తం ఖాళీ ఉండకూడదు",
+          "Enter_amount": "మొత్తం నమోదు చేయండి",
+          "Minimum_200_required_to_unlock_withdraw":
+              "విడ్డండికి అన్‌లాక్ చేయడానికి కనీసం ₹200 అవసరం",
+          "Submit": "సమర్పించు",
+          "Terms_&_Condition": "షరతులు మరియు పన్నులు",
+          "By_login_you_agree_to_our":
+              "లాగిన్ చేస్తే మీరు మాకు అంగీకరిస్తున్నారు",
+          "Date_of_birth": "పుట్టిన తేదీ",
+          "Enter_valid_date": "చెల్లని తేదీ నమోదు చేయండి",
+          "Enter_date_in_valid_range": "చెల్లని పరిమితిలో తేదీ నమోదు చేయండి",
+          "OTP_Verification": "ఓటిపి పరిశీలన",
+          "Enter_the_4_digit_code_we_sent_you_to_verify_your_phone_number":
+              "మీ ఫోన్ నంబర్ ధ్రువీకరించడానికి మేము మీకు పంపిన 4 అంకి కోడ్‌ను నమోదు చేయండి",
+          "send_to": "పంపించు",
+          "We_unable_to_get_your_Pincode": "మేము మీ పిన్‌కోడ్‌ను పొందలేము",
+          "Wallet": "వాలెట్",
+          "All_Transactions": "అన్నీ లావాదేవీలు",
+          "Select_Date": "తేదీ ఎంచుకోండి",
+          "Available_Balance": "అందుబాటులో సంతోషం",
+
+          "select_location": "స్థానం ఎంచుకోండి",
+
+          "Active_Rides": "సక్రియ ప్రయాణాలు",
+          "Completed": "పూర్తి",
+          "Cancelled": "రద్దు చేయబడింది",
+          "Track_Rider": "రైడర్ ట్రాక్",
+          "Contact_Rider": "రైడర్ తో సంప్రదించండి",
+
+          "Payment_paid_from_wallet": "వాలెట్ నుండి చెల్లించిన చెల్లించింది",
+          "Wait_for_payment": "చెల్లించడానికి ఎదురు",
+          "your_uPI": "మీ UPI",
+
+          "Also_notify_when_receiving_invites":
+              "ఆమంత్రణలను స్వీకరిస్తున్నప్పుడు సమాచారం ఇవ్వండి",
+
+          "Left_from_school": "పాఠశాలను నుండి వద్దు",
+          "Hangouts_video_call": "హాంగ్ అవుట్స్ వీడియో కాల్",
+          "Reached_at_school": "పాఠశాలకు చేరాను",
+          "When_bus_reached_at_pickup_remainder_spot":
+              "బస్ పికప్ రిమెండర్ స్పాట్ కి చేరుటప్పుడు",
+          "Drop_Notifications": "డ్రాప్ నోటిఫికేషన్‌లు",
+          "When_bus_reached_at_pickup_remainder_spot":
+              "బస్ పికప్ రిమెండర్ స్పాట్‌కి ఎప్పుడు చేరుకోవడం",
+          "Pick_up_Notifications": "పిక్ అప్ నోటిఫికేషన్‌లు",
+          "When_bus_started_at_starting_point_remainder_spot":
+              "బస్ ప్రారంభ పాయింట్ రిమెండర్ స్పాట్ లో ఎప్పుడు ప్రారంభించింది",
+          "Bus_trip_start_Notifications": "బస్ ట్రిప్ స్టార్ట్ నోటిఫికేషన్‌లు",
+          "Settings": "సెట్టింగులు",
+
+          "privacy_policy": "గోప్యతా విధానం",
+          "terms_&_Condition": "షరతులు & పన్నులు",
+          "and": "మరియు",
+          "by_login_you_agree_to_our":
+              "లాగిన్ చేస్తే మీరు మాకు అంగీకరిస్తున్నారు",
+          "resend(30s)": "మళ్లీ పంపు (30 సెకన్లు)",
+          "don't_receive_the_code?": "కోడ్ అందుకోలేదా?",
+          "Log_in": "లాగిన్",
+          "OTP_length_did_not_match": "OTP పొడవు సరిచూ లేదు",
+          "please_enter_OTP": "దయచేసి OTP నమోదు చేయండి",
+          "sent_to": "పంపబడింది",
+
+          //suport
+          "support": "మద్దతు",
+
+          "customer_support": "गవినియోగదారుని మద్దతు",
+          "chat": "చాట్",
+          //ride info
+          "ride_info": "రైడ్ సమాచారం",
+          'ride_id: ': 'రైడ్ ID',
+          //rideDetails
+          'cancel_ride': 'రైడ్ రద్దు',
+          //payNow
+          'please_Pay_The_Amount\nBefore_Contuning':
+              'దయచేసి_మొత్తం_చెల్లించండి\nకొనసాగడానికి ముందు',
+          'payout_details': 'చెల్లింపు వివరాలు',
+          'pay_now': 'ఇప్పుడు చెల్లించండి',
+          'skip': 'దాటవేయండి',
+          'payment_under_process': 'చెల్లింపు ప్రక్రియలో ఉంది',
+          'please_Don’t_Go_Back_Or_Refresh_The_Page\nas_We_Are_Processing_Your_Payment':
+              'దయచేసి_వెనుక_వెళ్లి_లేదా_పేజీ_రిఫ్రెష్_ చేయవద్దు\nమేము_మీ_చెల్లింపును_ప్రాసెస్ చేస్తున్నాముं',
+          //customerSupport
+          'please_Select_Reason_For_Cancel_ride':
+              'దయచేసి రైడ్_రద్దుకు_కారణాన్ని_ఎంచుకోండి',
+          'unsafe_Pickup_area': 'అసురక్షిత_పికప్_ఏరియా',
+          'unable_To_Swipe_Arrived': 'స్వైప్ చేయడం అసమర్థం',
+          'wrong_Pickup_Location': 'చెల్లించబడిన పికప్ స్థానం',
+          'long_Pickup': 'అంతా దూరం పికప్',
+          'heavy_Traffic': 'భారీ ట్రాఫిక్',
+//BackCollectedButton
+          'back': 'వెనక్కి',
+//RateCard
+          'rate_card': 'రేట్ కార్డ్',
+          'monday_To_sunday': 'సోమవార నుండి ఆదివారం',
+          'maximum_Payout_Limit_Is_₹500': 'అత్యంత పొడవు పొడవు లిమిట్ ₹500',
+          "bike": "బైక్",
+          "auto": "ఆటో",
+          //BikeInfo
+          'base_Fare': 'బేస్ ఫేర్',
+          'minimum_Fare': 'కనిష్ఠ రేటు',
+          'earning_Per_km': 'కిలోమీటరు కొలచాడు',
+          'price_Per_Minute': 'ప్రతి నిమిషం ధర',
+          'platform_Charge': 'ప్లాట్‌ఫారం ఛార్జీ',
+          'outstation_rides': 'అవాఉట్‌స్టేషన్ సవారీలు',
+          'pickup_extra_km_Fare_Post_2km':
+              '2 కిమీ తర్వాత పికప్ అదనపు కిలోమీటరు ధర',
+          '(Max_10)': '(గరిష్టం 10)',
+          'every_Km_Till_8km': '8 కిమీ లో ప్రతి కిమీ',
+          'Per_Km ': 'ప్రతి కిమీ ',
+          'every_Km_Above_8km': '8 కిమీ కంటే మీరి ప్రతి కిమీ',
+//CollectPaymentView
+          'collect_payment': 'చెల్లించండి',
+          'ride_iD: ': 'సైకిల్ ఐడి: ',
+          "collect_amount": "మొత్తం సేకరించండి",
+          'generate_qR_code': 'QR కోడ్ రూపొందించండి',
+          'or': 'లేదా',
+          'collect_cash': 'నగదు సేకరించండి',
+//CollectCash
+          'collect_Cash_Form_The_Customer.': 'గ్రాహకి నుండి నగదు సేకరించండి.',
+          'collected': 'సేకరించబడింది.',
+          //ChooseAppLanguageView
+          'english': 'ఆంగ్లం',
+          'hindi': 'హిందీ',
+          'kannada': 'కన్నడ',
+          'telugu': 'తెలుగు',
+          'tamil': 'తమిళ',
+          'gujarati': 'గుజరాతి',
+          'app_language': 'యాప్ భాష',
+          'set_language': 'భాష సెట్ చేయండి',
+
+          'Privacy': 'గోప్యత',
+          'Terms': 'షరతులు & ప్రమాణాలు',
+          'Cancellation': 'రద్దు & రిఫండ్ విధానం',
+//AddDetailsView
+          'add_details': 'వివరాలు జోడించండి',
+          'personal_Details': 'వ్యక్తిగత వివరాలు',
+          'vehicle_Details': 'వాహన వివరాలు',
+          'documents': 'పత్రాలు',
+          'bank_Details': 'బ్యాంక్ వివరాలు',
+          'i_Agree_to_The ': 'నాకు అంగీకారం ',
+          'terms_&_conditions': 'నిబంధనలు మరియు షరతులు',
+          'next': 'తరువాయి',
+//VehicleRegistration
+          'vehicle_registration_card_(RC)': 'వాహన నమోదు కార్డ్ (ఆర్సీ)',
+          'Vehile_numberVechile_number':
+              'మీ వాహన నమోదు కార్డ్ (ఆర్సీ) అప్‌లోడ్ చేయండి',
+          'front_side': 'ముందు భాగం',
+          "camera": "కెమెరా",
+          "gallery": "గ్యాలరీ",
+          'back_side': 'తిరస్కరించిన భాగం',
+          'rC_number': 'ఆర్సీ సంఖ్య',
+          'rC_Number_Cant_Be_Empty': 'ఆర్సీ సంఖ్య ఖాళీ ఉండలేదు',
+          'rC_Number_Must_be_Minimum_10_Characters':
+              'ఆర్సీ సంఖ్య 10 అక్షరాల కంటే కమ్మి ఉండాలి',
+          'enter_rC_number': 'ఆర్సీ సంఖ్యను ఎంటర్ చేయండి',
+          'save': 'భద్రపరచు',
+          //TakeYourSelfie
+          'add_your_selfie': 'మీ సెల్ఫీని జోడించండి',
+          'take_your_selfie': 'మీ సెల్ఫీ తీసుకోండి',
+          'we_Use_Your_Selfie_To_Compare_With_Your_id':
+              'మేము మీ ID తో తులనం చేయడానికి మీ సెల్ఫీని ఉపయోగిస్తాము',
+          'good_Lighting': 'మంచి లైటింగ్',
+          'make_Sure_You_Are_In_A_Well_Lit_Area_And_Both_Ears_Are_Uncovered ':
+              'మీరు ఒక మంచి లైటింగ్ ఉన్న ప్రదేశంలో ఉన్నారు మరియు రెండు చెవిలు ఆవరించబడకలేదు',
+          'look_Straight': 'సీధా చూస్కోండి',
+          'hold_Your_Phone_At_Eye_Level_And_Looks_Straight_To_The_Camera':
+              'మీ ఫోన్‌ను కణ్ణీరు స్థాయిలో ఉంచి మరియు కెమెరాకు సీధా చూస్కోండి',
+          'open_camera': 'కెమెరా తెరువు',
+          'male': 'పురుషుడు',
+          'female': 'మహిళ',
+          'Others': 'ఇతరాలు',
+          'month/date/year': 'నెల/తేది/సంవత్సరం',
+          'enter_Valid_Date': 'చెందినండి చెందిన తేది',
+          'enter_Date_In_Valid_Range': 'చెందినండి చెందిన శ్రేణిలో ఉండండి',
+          'personal_details': 'వ్యక్తిగత వివరాలు',
+          'first_name': 'మొదటి పేరు',
+          'firstName_Cant_Be_Empty': 'మొదటి పేరు ఖాళీ ఉండకండి',
+          'firstName_Must_Be_Minimum_1_Digits':
+              'మొదటి పేరు కనిష్టమే 1 అంకోసం ఉండాలి',
+          'full_name': 'పూర్తి పేరు',
+          'last_name': 'చివరి పేరు',
+          'lastName_Cant_Be_Empty': 'చివరి పేరు ఖాళీ ఉండకండి',
+          'lastName_Must_Be_Minimum_1_Digits':
+              'చివరి పేరు కనిష్టమే 1 అంకోసం ఉండాలి',
+          'enter_mail_id': 'మెయిల్ ఐడి నమోదు చేయండి',
+          'e-mail_Address': 'ఇ-మెయిల్ చిరునామా',
+          "invalid_email": "చెల్లింపులో ఉన్న ఇమెయిల్",
+          'enter_date_Of_birth': 'జన్మ తేది నమోదు చేయండి',
+          'date_Of_Birth': 'పుట్టిన తేది',
+          'home_address': 'ఇంటి చిరునామా',
+          'home_addres_Cant_Be_Empty': 'ఇంటి చిరునామా ఖాళీ ఉండకండి',
+          'home_addres_Must_Be_Minimum_1_Digits':
+              'ఇంటి చిరునామా కనిష్టమే 1 అంకోసం ఉండాలి',
+          'enter_home_address': 'ఇంటి చిరునామా నమోదు చేయండి',
+          'city': 'నగరం',
+          'city_Cant_Be_Empty': 'నగరం ఖాళీ ఉండకండి',
+          'city_Must_Be_Minimum_1_Digits': 'నగరం కనిష్టమే 1 అంకోసం ఉండాలి',
+          'enter_City': 'నగరం నమోదు చేయండి',
+          'state ': 'రాష్ట్రం',
+          'state_Cant_Be_Empty': 'రాష్ట్రం ఖాళీ ఉండకండి',
+          'state_Must_Be_Minimum_1_Digits': 'రాష్ట్రం కనిష్టమే 1 అంకోసం ఉండాలి',
+          'enter_State': 'రాష్ట్రం నమోదు చేయండి',
+          'pincode': 'పిన్‌కోడ్',
+          'pincode_Cant_Be_Empty': 'పిన్‌కోడ్ ఖాళీ ఉండకండి',
+          'pincode_Must_Be_Minimum_6_Digits':
+              'పిన్‌కోడ్ కనిష్టమే 6 అంకోసం ఉండాలి',
+          'enter_Pincode': 'పిన్‌కోడ్ నమోదు చేయండి',
+          //PanCard
+          'pAN_card': 'పాన్ కార్డ్',
+          'upload_your_pAN_card': 'మీ పాన్ కార్డ్‌ను అప్‌లోడ్ చేయండి',
+          'pAN_number': 'PAN నంబర్',
+          'pAN_Number_Can_Not_Be_Empty.': 'PAN నంబర్ ఖాళీ ఉండకండి.',
+          'enter_pAN_number': 'PAN నంబర్‌ను నమోదు చేయండి',
+//VechileSelection
+          'job_details': 'ఉద్యోగ వివరాలు',
+          'which_Vehicle_Will_You_Use?':
+              'మీరు ఎంచుకోవడానికి ఎంత వాహనం ఉపయోగించిపోతారు?',
+          'vehicle_type': 'వాహనం రకం',
+          'electric': 'విద్యుత్',
+          'non-electric': 'అవిద్యుత్',
+          //DrivingLicense
+          'driving_license': 'డ్రైవింగ్ లైసెన్స్',
+          'upload_your_driving_license':
+              'మీ డ్రైవింగ్ లైసెన్స్ అప్‌లోడ్ చేయండి',
+          'learner’s_License_Not_Allowed.': 'నేరాలు లైసెన్స్ అనుమతి లేదు.',
+          'driving_license_number': 'డ్రైవింగ్ లైసెన్స్ నంబర్',
+          'driving_License_Cant_Be_Empty': 'డ్రైవింగ్ లైసెన్స్ ఖాళీ ఉండకూడదు',
+          'driving_License_Must_Be_Minimum_16_Characters':
+              'డ్రైవింగ్ లైసెన్స్ కనీసం 16 అక్షరాలు ఉండాలి',
+          'expiry_date': 'కాలాంతర తేదీ',
+          //Documents
+          'upload_All_documents,_required_For_Your_Verification.':
+              'మీ ధృవీకరణకు అవసరమైన అన్ని పత్రాలను అప్‌లోడ్ చేయండి.',
+          'aadhar_card': 'ఆధార్ కార్డు',
+          //Demo
+          'membership_For_45_Days': '45 రోజుల సభ్యత',
+          'free': 'ఉచితం',
+          '10_Days_Left': '10 రోజులు ముగిసినవి',
+          //BankDetails
+          'enter_A_Valid_iFSC_Number.':
+              'ఒక చెల్లించబడిన iFSC సంఖ్య నమోదు చేయండి.',
+          'add_your_bank_details': 'మీ బ్యాంక్ వివరాలను చేర్చండి',
+          'account_holder_name': 'ఖాతా హోల్డర్ పేరు',
+          'enter_bankholder_name_Cant_Be_Empty':
+              'బ్యాంక్‌హోల్డర్ పేరు ఖాళీ ఉండకూడదు',
+          'enter_bankholder_name_Must_Be_Minimum_3_Characters':
+              'బ్యాంక్‌హోల్డర్ పేరు కనీసం 3 అక్షరాలు ఉండాలి',
+          'enter_Bank_Holder_Name': 'బ్యాంక్ హోల్డర్ పేరు నమోదు చేయండి',
+          'account_Number': 'ఖాతా సంఖ్య',
+          'account_Number_Cant_Be_Empty': 'ఖాతా సంఖ్య ఖాళీ ఉండకూడదు',
+          'account_Number_Must_Be_9_To_17_Digits':
+              'ఖాతా సంఖ్య 9 నుండి 17 అంకెల మధ్య ఉండాలి',
+          'iFSC_Code': 'iFSC కోడ్',
+          'ifsc_Code_Can_Not_Be_Empty.': 'iFSC కోడ్ ఖాళీ ఉండకూడదు.',
+          'enter_Valid_Ifsc_Code': 'చెల్లని iFSC కోడ్ నమోదు చేయండి',
+          'enter_Ifsc_Code': 'iFSC కోడ్ నమోదు చేయండి',
+          'bank_name': 'బ్యాంక్ పేరు',
+          'bank_Name_Can_Not_Be_Empty.': 'బ్యాంక్ పేరు ఖాళీ ఉండకూడదు.',
+          'enter_bank_Name': 'బ్యాంక్ పేరు నమోదు చేయండి',
+          'add_your_uPI': 'మీ UPI జోడించండి',
+          'uPI': 'UPI',
+          'uPI_Id_Can_Not_Be_Empty.': 'UPI ID ఖాళీ ఉండకండి.',
+          //AdharCard
+          'upload_Your_Aadhar_Card': 'మీ ఆధార్ కార్డును అప్‌లోడ్ చేయండి',
+          'aadhar_Number': 'ఆధార్ నంబర్',
+          'aadhar_number_Cant_Be_Empty': 'ఆధార్ నంబర్ ఖాళీ ఉండకండి',
+          'aadhar_number_Must_Be_12_Digits': 'ఆధార్ నంబర్ 12 అంకెల ఉండాలి',
+//LoginPageView
+          "login ": "లాగిన్ చేయండి ",
+          "mobile_number ": "మొబైల్ నంబర్ ",
+          "mobile_Number_Can't_Be_Empty": "మొబైల్ నంబర్ ఖాళీ ఉండకండి",
+          "mobile_Number_Must_Be_10_Digits": "మొబైల్ నంబర్ 10 అంకెల ఉండాలి",
+          'enter_Mobile_Number': 'మొబైల్ నంబర్ నమోదు చేయండి',
+          'login': 'లాగిన్',
+//NotificationView
+          'notifications': 'నోటిఫికేషన్లు',
+          "clear": "తిరిగి నివేదించండి",
+          "start_your_first_ride_with_winter_Offers.":
+              "వింటర్ ఆఫర్లతో మీ మొదటి రైడ్‌ను ప్రారంభించండి.",
+          "happy_winter_offer_On_Your_first_ride,_enjoy_ride_With_best_offers._check_It_Now":
+              "మీ మొదటి రైడ్‌పై హ్యాపీ వింటర్ ఆఫర్, బెస్ట్ ఆఫర్లతో రైడ్ చేస్తే ఆనందించండి. ఇప్పుడే తనిఖీ చేయండి",
+          "2_Days_Ago": "2 రోజుల క్రితం",
+//OrderCompletedView
+          'ride_completed': 'రైడ్ పూర్తి',
+          'great_job': 'బాగా చేసారు!',
+          'ride_successfully_completed': 'రైడ్ యశస్వినిచ్చింది',
+          'total_Distance : ': 'మొత్తం దూరం : ',
+          'total_Ride_Time : ': 'మొత్తం రైడ్ సమయం : ',
+          'amount : ': 'మొత్తం : ',
+          'ready_for_next_order': 'తదుపరి ఆర్డర్ కోసం సిద్ధం',
+//ProfileReview
+          ' rejected': ' తిరస్కరించబడింది',
+          'please_Contact_Admin_Support':
+              'దయచేసి అడ్మిన్ మద్దతుకు సంప్రదించండి',
+          "  your_Profile_Is_Under_Reviewing\nprocess._Please_Wait_2_To_4_Days":
+              "  మీ ప్రొఫైల్ సమీక్షించబడుతోంది\nప్రక్రియలోనిది. దయచేసి 2 నుండి 4 రోజులకం వేచి ఉండండి",
+          //ReferAndEarnView
+          "refer_&_earn": "రిఫర్ అండ్ ఎర్న్",
+          "refer_friends": "స్నేహితుని రిఫర్ చేయండి",
+          "earn_Upto_₹50_Per_Friend_You_Invite":
+              "మీరు ఆమంత్రిత చేసే ప్రతి స్నేహితుకు ₹50 వరకు సంపాదించవచ్చు",
+          "my_rewards": "నా ప్రతిఫలాలు",
+          "share_Your_Invite_Code": "మీ ఆమంత్రణ కోడ్‌ను భాగస్వామ్యం చేయండి",
+          "when_Your_Friends_Sign_Up_This_Referral":
+              "మీ స్నేహితులు ఈ రిఫరల్ ను సైన్ అప్ చేస్తే",
+          "Code,_You_Can_Received_A_Free_Ride":
+              "కోడ్, మీరు ఉచిత రైడ్ అంగీకరిస్తారు",
+          'refer': 'సూచించండి',
+//ReferalCodeView
+          'hello,_skipper': 'హలో, స్కిపర్',
+          'your_Account_Will_Be_Registered_With_This_Mobile_Number':
+              'మీ ఖాతా ఈ మొబైల్ నంబర్‌తో నమోదు అవుతుంది',
+          "have_a_referral_code?": "రిఫరల్ కోడ్ ఉందా?",
+          'enter_referral_code': 'రిఫరల్ కోడ్ నమోదు చేయండి',
+          'referal_Code_Must_Be_5_Digits': 'రిఫరల్ కోడ్ 5 అంకెల ఉండాలి',
+//ReviewsView
+          'rating_&_reviews': 'రేటింగ్ & సమీక్షలు',
+          "rating": "రేటింగ్",
+//RideHistoryView
+          'training_tutorials': 'శిక్షణ ట్యుటోరియల్స్',
+          'ride_history': 'రైడ్ చరిత్ర',
+          'today': 'ఈ రోజు',
+          "all": "అందరూ",
+          "completed": "పూర్తయింది",
+          "rejected": "తిరస్కరించబడింది",
+
+          //RideHistoryCard
+          'online_paid ': 'ఆన్ లైన్ చెల్లింపు',
+          'yesterday': 'నిన్న',
+          'week': 'వారం',
+          'custom': 'ఆచారం',
+          'Personal_Details': 'వ్యక్తిగత వివరాలు',
+//homepage drawer
+          'subscription': 'చందాదారిక',
+          'earnings': 'సంపాదించడం',
+          'order_history': 'క్రమ చరిత్ర',
+          'rating_reviews': 'రేటింగ్ మరియు సమీక్ష',
+          'notifications': 'ప్రకటన',
+          'refer_earn': 'సంపాదించడాన్ని రిఫర్ చేయండి',
+          //homepage earningcard
+          'enable_location_to_get_nearby_rides':
+              'స్థానాన్ని చేసుకొనడానికి స్థానాన్ని అనుమతించండి',
+          'enable_location': 'లొకేషన్ ఎనేబుల్ చేయండి',
+          'todays_earnings': 'ఈ రోజు ఆదాయం',
+          'cash_collected': 'నగదు సంగ్రహించబడింది',
+//homepage flutterripplewidget
+          'go_online': 'ఆన్‌లైన్‌కి వెళ్ళండి',
+          //homepage currentlyofflinecard
+          'offine_message':
+              'మీరు ప్రస్తుతం ఆఫ్ లైన్ లో ఉన్నారు, దయతో\nసంపాదన కోసం ఆన్ లైన్ కు వెళ్లండి',
+          //homepage RoutingBooking
+          'my_route_booking': 'నా రూట్ బుకింగ్',
+          //riplepage widget
+          'offline': 'ఆఫ్ లైన్',
+          'online': 'ఆన్‌లైన్',
+          //riplepage widget AccetedOrderCard
+          'pickup': 'పికప్',
+          'min_away': 'కనిష్టమిషం దూరం',
+          'reject': 'నిరాకరించు',
+          "accept_ride": 'ప్రయాణాన్ని అంగీకరించండి',
+          'arrived': 'వచ్చేసింది',
+          'complete_ride': 'పూర్తి రైడ్',
+          'ride_id:': 'రైడ్ ఐడి:',
+          'enter_otp': 'ఓటిపి ఎంటర్ చేయండి',
+          'please_ask_otp_to_the_Customer': 'దయచేసి కస్టమర్ కు -OTP అడగండి',
+          'otp_length_didn\'t_match': 'oTP సరిపోలలేదు',
+          'start_ride': 'రైడ్ ప్రారంభించండి',
+          'Go_to_drop_Location': 'లొకేషన్ డ్రాప్ చేయడానికి వెళ్లండి',
+          'go_to_pick_up': 'పికప్ కు వెళ్లండి',
+          //earningpage
+          'today’s_earning': 'నేటి సంపాదన',
+          'payout': 'చెల్లింపు',
+          'history': 'చరిత్ర',
+
+          //today earning
+          'rides': 'సవారులు',
+          'Km': 'కి.మీ.',
+          'hours': 'గంటలు',
+          'avg_rating': 'సగటు రేటింగ్',
+          'reject_rides': 'సవారిలను తిరస్కరించు',
+          'today\'s_earning': 'ఈ రోజు సంపాదించిన ధనం',
+          "order_id :": 'ఆర్డర్ ID :',
+//payout
+          'online_collection': 'ఆన్‌లైన్ కలెక్షన్',
+          'amount_to_Pay': 'చెల్లింపు మొత్తం',
+          'total_collected_cash': 'మొత్తం కలెక్టెడ్ క్యాష్',
+          'tax_charges': 'పన్ను ధరలు',
+          'gst_payable_to_the_government.': 'ప్రభుత్వానికి చెల్లింపు చేయవచ్చు.',
+          'platform_charge': 'ప్లాట్‌ఫారం ఛార్జీ',
+          'outstation_rides': 'అవాస్తవ సవారులు',
+          'Daily_one_time_fee.': 'డేలీ ఒక సమయం ఫీ.',
+          'transaction_fees': 'లావాదేవీ ధరలు',
+          'Towards_unavoidable_costs_for\noperating_the_app':
+              'యాప్ యాపరేటింగ్ కోసం అటువంటి ఖర్చులకు',
+          'payable_amount': 'చెల్లింపు చేయవచ్చే మొత్తం',
+          'maximum_payout_limit_is ': 'అధికంగా చెల్లింపు పరిమితి ',
+          'please_pay_below-charges': 'దయచేసి క్రింద చెల్లింపులను చెల్లించండి',
+          'Immediately': 'తక్షణమే',
+          'total_earnings': 'మొత్తం ఆదాయం',
+          'rides)': 'సవారులు)',
+//ride earning details
+          'ride_details': 'సవారి వివరాలు',
+          'time_fare ': 'సమయ కిరాయ',
+          'distance_fare ': 'దూరం కిరాయ',
+          'surge': 'తరంగా',
+          'your_earnings': 'మీ ఆదాయం',
+// ride details
+          'ride_id': 'సవారి ID',
+          'date': 'తేదీ',
+          'distance': 'దూరం',
+          'Mins': 'నిమిషాలు',
+          'duration': 'వర్తన',
+          'pickup_location': 'పికప్ స్థానం',
+          'drop_location': 'డ్రాప్ స్థానం',
+//ride details-total rechargrcard
+          'ride_amount': 'సవారి మొత్తం',
+          'amount_pay_to_company': 'కంపెనీకి చెల్లించే మొత్తం',
+          //profile
+          'profile': 'ప్రొఫైల్',
+
+          'vehicle': 'వాహనం',
+          'bank_details': 'బ్యాంకు వివరాలు',
+          //profile- personaldetails
+          'FirstName_cant_be_empty': 'పొరపాటు పేరు ఖాళీ ఉండకూడదు',
+          'FirstName_must_be_minimum_1_digits':
+              'పొరపాటు పేరు కనిష్ఠమైన 1 అంకం ఉండాలి',
+          'mobile_number': 'మొబైల్ నంబర్',
+          'mobile_number_cant_be_empty': 'మొబైల్ నంబర్ ఖాళీ ఉండకూడదు',
+          'mobile_number_must_be_minimum_10_digits':
+              'మొబైల్ నంబర్ కనిష్ఠమైన 10 అంకాలు ఉండాలి',
+          'email': 'ఇమెయిల్',
+          'gender': 'లింగం',
+          'others': 'ఇతర',
+//profile-liceience
+          'upload_rc_back_side': 'ఆర్సీ బ్యాక్ సైడ్ అప్‌లోడ్ చేయండి',
+          'please_enter_license_number': 'దయచేసి లైసెన్స్ నంబర్ నమోదు చేయండి',
+          'please_enter_valid_driving_license':
+              'దయచేసి మాన్యమైన డ్రైవింగ్ లైసెన్స్ నమోదు చేయండి',
+          'update': 'నవీకరించు',
+
+          'please_enter_rc_number': 'దయచేసి ఆర్సీ సంఖ్య నమోదు చేయండి',
+          'please_enter_valid_rc_number':
+              'దయచేసి మాన్యమైన ఆర్సీ సంఖ్య నమోదు చేయండి',
+//profile-aadharcard
+
+//profile-pancard
+          'please_enter_pancard_number':
+              'దయచేసి పాన్‌కార్డ్ నంబర్ నమోదు చేయండి',
+          'please_enter_valid_pancard_number':
+              'దయచేసి మాన్యమైన పాన్‌కార్డ్ నంబర్ నమోదు చేయండి',
+
+//profile-bandetails
+          'ifsc': 'ఐఎఫ్‌ఎస్సి',
+          'please_enter_ifsc_number': 'దయచేసి IFSC నంబర్ నమోదు చేయండి',
+          'please_enter_valid_ifsc_number':
+              'దయచేసి మాన్యమైన IFSC నంబర్ నమోదు చేయండి',
+          'please_enter_upi_number': 'దయచేసి UPI నంబర్ నమోదు చేయండి',
+          'Please_enter_valid_upi_number':
+              'దయచేసి మాన్యమైన UPI నంబర్ నమోదు చేయండి',
+
+          // QR
+          "Are_you_sure": "మీరు ఖచ్చితంగా కొనసాగాలనుకుంటున్నారా?",
+          "Recharge_with_QR":
+              "క్రింద ఉన్న QR కోడ్ లేదా UPI ఐడి ఉపయోగించి మీ వాలెట్‌ను రీచార్జ్ చేయండి",
+          "Send_Screenshot":
+              "దయచేసి పూర్తి చెల్లించిన చెల్లింపు స్క్రీన్‌షాట్‌ను ఈ వాట్సాప్ సంఖ్యకు పంపండి: +91 7893653899",
+          "Once_Confirmed": "భుగతానం ఖచ్చితంగా సమర్పించబడితే",
+          "Subscription_Active": "మీ చందా ప్రణాళి సక్రియం అవుతుంది",
+
+          //Alert
+          'Subscription_NotActive':
+              'Alert! \nమీ చందాదారి సక్రియం కాదు. రైడ్‌లు పొందడానికి దయచేసి సభ్యత్వం పొందండి'
         },
       };
 }

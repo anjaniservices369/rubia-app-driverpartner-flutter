@@ -653,7 +653,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           scale: 3.5,
                         ),
                         title: Text(
-                          'Privacy Policy',
+                          'Privacy'.tr,
                           style: TextStyle(color: tBlue),
                         ),
                       ),
@@ -666,7 +666,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           scale: 3.5,
                         ),
                         title: Text(
-                          'Terms & Conditions',
+                          'Terms'.tr,
                           style: TextStyle(color: tBlue),
                         ),
                       ),
@@ -679,7 +679,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           scale: 3.5,
                         ),
                         title: Text(
-                          'Cancellation & Refund Policy',
+                          'Cancellation'.tr,
                           style: TextStyle(color: tBlue),
                         ),
                       ),

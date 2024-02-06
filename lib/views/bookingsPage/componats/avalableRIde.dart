@@ -596,7 +596,7 @@ class _AvalableRideState extends State<AvalableRide> {
                   fontSize: isTab(context) ? 16.sp : 14.sp,
                   fontWeight: FontWeight.w800,
                 ),),
-                content: Text("Your subscription is not active. Please subscribe to get rides."),
+                content: Text('Subscription_NotActive'.tr),
                 actions: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

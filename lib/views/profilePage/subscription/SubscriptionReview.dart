@@ -203,7 +203,7 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
                               child: Column(
                                 children: [
                                   Text(
-                                    "Once Payment is confirmed,".tr,
+                                    "Once_Confirmed".tr,
                                     style: GoogleFonts.mulish(
                                         color: tSecondaryColor,
                                         fontWeight: FontWeight.w600,
@@ -211,7 +211,7 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
                                         isTab(context) ? 11.sp : 13.sp),
                                   ),
                                   Text(
-                                    "Your Subscription plan will be active".tr,
+                                    "Subscription_Active".tr,
                                     style: GoogleFonts.mulish(
                                         color: tSecondaryColor,
                                         fontWeight: FontWeight.w600,

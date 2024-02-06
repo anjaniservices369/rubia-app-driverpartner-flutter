@@ -179,7 +179,7 @@ class _QRPayment extends State<QRPayment> {
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Text(
-                    "Recharge your Wallet using below QR Code or UPI id",
+                    "Recharge_with_QR".tr,
                     style: GoogleFonts.mulish(
                       color: tBlack,
                       fontSize: isTab(context) ? 16.sp : 14.sp,
@@ -208,7 +208,7 @@ class _QRPayment extends State<QRPayment> {
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Text(
-                    "Please Send the Screenshot of the completed payment to this whatsapp number: +91 7893653899",
+                    "Send_Screenshot".tr,
                     style: GoogleFonts.mulish(
                       color: tBlack,
                       fontSize: isTab(context) ? 16.sp : 14.sp,
