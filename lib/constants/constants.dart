@@ -68,8 +68,8 @@ const tBackbtnBoxShadow = BoxShadow(
   offset: Offset(0, 1),
 );
 
-// const mapKey = 'AIzaSyCg3ESJsiCH3csUNUf1mhrPCLbAS-5iLXQ';
-const mapKey = 'AIzaSyCYN4-YdhQ8xm-dzJ62v6VJwUnnjKgL4BE';
+const mapKey = 'AIzaSyCg3ESJsiCH3csUNUf1mhrPCLbAS-5iLXQ';
+// const mapKey = 'AIzaSyCYN4-YdhQ8xm-dzJ62v6VJwUnnjKgL4BE';
 const currencySymbol = '₹ ';
 const MAX_DISTANCE = 25;
 
