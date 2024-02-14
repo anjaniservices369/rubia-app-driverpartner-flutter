@@ -380,9 +380,14 @@ class _CompleteRideState extends State<CompleteRide> {
                                         Container(
                                           child: Expanded(
                                             child: Text(
-                                              widget.bookingDetails['drop_address'] == '' ? widget.bookingDetails['pickup_address'] : widget.bookingDetails['drop_address'],
+                                               (widget.bookingDetails['drop_address'] == null  )
+                                                  ? widget.bookingDetails['pickup_address']
+                                                  : widget.bookingDetails['drop_address'],
                                               style: GoogleFonts.mulish(
-                                                  color: tSecondaryColor, fontWeight: FontWeight.w700, fontSize: isTab(context) ? 10.sp : 12.sp),
+                                                color: tSecondaryColor,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: isTab(context) ? 10.sp : 12.sp,
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                             ),
