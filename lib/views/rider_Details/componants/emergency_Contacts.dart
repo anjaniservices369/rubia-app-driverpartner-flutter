@@ -151,25 +151,25 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'name'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'name_can_not_be_empty'.tr;
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  readOnly: false,
-                                  hinttext: "Enter Your Full Name",
-                                  controller: _personOneNameController,
-                                ),
+                                // TextFildTital(
+                                //   text: 'name'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return 'name_can_not_be_empty'.tr;
+                                //     } else {
+                                //       return null;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.text,
+                                //   readOnly: false,
+                                //   hinttext: "Enter Your Full Name",
+                                //   controller: _personOneNameController,
+                                // ),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -206,26 +206,26 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'relation_ship'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'relation_ship_can_not_be_empty'
-                                          .tr;
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  readOnly: false,
-                                  hinttext: 'Eg: father'.tr,
-                                  controller: _personOneReletivenameController,
-                                ),
+                                // TextFildTital(
+                                //   text: 'relation_ship'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return 'relation_ship_can_not_be_empty'
+                                //           .tr;
+                                //     } else {
+                                //       return null;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.text,
+                                //   readOnly: false,
+                                //   hinttext: 'Eg: father'.tr,
+                                //   controller: _personOneReletivenameController,
+                                // ),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -284,25 +284,25 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'name'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'name_can_not_be_empty'.tr;
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  readOnly: false,
-                                  hinttext: "Enter Your Full Name",
-                                  controller: _personTwoNameController,
-                                ),
+                                // TextFildTital(
+                                //   text: 'name'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return 'name_can_not_be_empty'.tr;
+                                //     } else {
+                                //       return null;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.text,
+                                //   readOnly: false,
+                                //   hinttext: "Enter Your Full Name",
+                                //   controller: _personTwoNameController,
+                                // ),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -339,26 +339,26 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                TextFildTital(
-                                  text: 'relation_ship'.tr,
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldWidgets(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'relation_ship_can_not_be_empty'
-                                          .tr;
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  readOnly: false,
-                                  hinttext: 'Eg: father'.tr,
-                                  controller: _personTwoReletivenameController,
-                                ),
+                                // TextFildTital(
+                                //   text: 'relation_ship'.tr,
+                                // ),
+                                // SizedBox(
+                                //   height: 1.h,
+                                // ),
+                                // TextFieldWidgets(
+                                //   validator: (value) {
+                                //     if (value!.isEmpty) {
+                                //       return 'relation_ship_can_not_be_empty'
+                                //           .tr;
+                                //     } else {
+                                //       return null;
+                                //     }
+                                //   },
+                                //   keyboardType: TextInputType.text,
+                                //   readOnly: false,
+                                //   hinttext: 'Eg: father'.tr,
+                                //   controller: _personTwoReletivenameController,
+                                // ),
                                 SizedBox(
                                   height: 2.h,
                                 ),

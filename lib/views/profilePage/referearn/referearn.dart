@@ -45,6 +45,7 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
   final Uri facebookUrl = Uri.parse('https://www.facebook.com/profile.php?id=61550853734341&mibextid=ZbWKwL');
   final Uri instagramUrl = Uri.parse('https://instagram.com/rubia.services?igshid=OGQ5ZDc2ODk2ZA==');
   final Uri twitterUrl = Uri.parse('https://x.com/RubiaServices?t=9Tr7ip8vD6euUPD5YfCSGQ&s=08');
+  // final uri TERMS_AND_CONDITIONS = Uri.parse(uri)
   Future<void> _launchUrl(Uri _url) async {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
@@ -213,7 +214,23 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
                                 Spacer(),
                                 GestureDetector(
                                   onTap: () async {
-                                    // await launchURL(TERMS_AND_CONDITIONS);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Terms & Conditions"),
+                                          content: Text("After verifying your referral driver, the referral reward will be added to your wallet."),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("OK"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                   child: Container(
                                     child: Row(
@@ -227,17 +244,18 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
                                           width: 1.w,
                                         ),
                                         Text("T&Cs",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                color: tPrimaryColor,
-                                                fontFamily: "mulish",
-                                                fontSize: isTab(context)
-                                                    ? 8.sp
-                                                    : 10.sp)),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: tPrimaryColor,
+                                              fontFamily: "mulish",
+                                              fontSize: isTab(context) ? 8.sp : 10.sp
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
+
                               ]),
                               GestureDetector(
                                 onTap: () async {
