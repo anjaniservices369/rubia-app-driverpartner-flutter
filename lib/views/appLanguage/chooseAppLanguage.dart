@@ -1,5 +1,6 @@
 // import 'package:base_project_flutter/views/bottomNavigation/bottomNavigation.dart';
 import 'package:base_project_flutter/views/profilePage/profilePage.dart';
+import 'package:base_project_flutter/views/rider_Details/componants/personal_Details.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter/material.dart';
@@ -340,7 +341,7 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
                 widget.isReferalPage == true
                     ? Twl.forceNavigateTo(context, AddDetailsView())
                     : Twl.forceNavigateTo(
-                        context, BottomNavigation(tabIndexId: 3));
+                        context, PersonalDetails());
                 print("object");
               },
             ),

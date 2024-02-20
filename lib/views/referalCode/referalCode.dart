@@ -15,6 +15,7 @@ import '../../globalWidgets/customTextFiled.dart';
 import '../../responsive.dart';
 // import '../chooseAppLanguage/appLanguaeg.dart';
 import '../appLanguage/chooseAppLanguage.dart';
+import '../location_popup_page.dart';
 import '../otpPage/otpPage.dart';
 
 class ReferalCodeView extends StatefulWidget {
@@ -258,8 +259,7 @@ class _ReferalCodeViewState extends State<ReferalCodeView> {
                             var res = await UserAPI().addReferralCode(
                                 context, _referralCodecontroller.text);
                             if (res != null && res['status'] == 'OK') {
-                              Twl.navigateTo(context,
-                                  ChooseAppLanguageView(isReferalPage: true));
+                              Twl.forceNavigateTo(context, LocationPopUpPage());
                             } else {
                               stopLoading();
                               Twl.createAlert(

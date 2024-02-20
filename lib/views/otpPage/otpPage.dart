@@ -22,9 +22,11 @@ import '../../constants/constants.dart';
 import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
+import '../appLanguage/chooseAppLanguage.dart';
 import '../location_popup_page.dart';
 import '../../responsive.dart';
 import '../referalCode/referalCode.dart';
+import '../rider_Details/componants/personal_Details.dart';
 
 class OtpPageView extends StatefulWidget {
   const OtpPageView({Key? key, this.mobileNumber, this.sessionCode}) : super(key: key);
@@ -323,7 +325,7 @@ class _OtpPageViewState extends State<OtpPageView> {
                                       print('1');
                                       startLoading();
                                       check['detail']['personal_details'] == false
-                                          ? Twl.navigateTo(context, ReferalCodeView())
+                                          ? Twl.navigateTo(context, PersonalDetails())
                                           : check['detail']['driver_emergency_contacts'] == false
                                               ? Twl.navigateTo(context, EmergencyContact())
                                               : check['detail']['driver_vehicle_types'] == false
@@ -339,8 +341,9 @@ class _OtpPageViewState extends State<OtpPageView> {
                                                                   : check['detail']['profile_verified'] != profile_verified_yes
                                                                       ? Twl.navigateTo(context, ProfileReview())
                                                                       : Twl.navigateTo(context, LocationPopUpPage());
-                                      // Twl.navigateTo(
-                                      //     context, ReferalCodeView());
+
+                                      Twl.navigateTo(
+                                          context, ChooseAppLanguageView());
                                       stopLoading();
                                     } else {
                                       stopLoading();

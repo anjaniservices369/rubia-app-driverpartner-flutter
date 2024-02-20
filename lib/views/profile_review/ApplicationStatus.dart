@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/imageConstant.dart';
 import '../location_popup_page.dart';
+import '../referalCode/referalCode.dart';
 
 class ApplicationStatusPage extends StatefulWidget {
   const ApplicationStatusPage({Key? key, this.profileStatus, this.profiledetails});
@@ -377,7 +378,9 @@ class _VerificationSucessPageState extends State<VerificationSucessPage> {
                   bottonText: 'Go Home',
                   onTap: (startLoading, stopLoading, btnState) async {
                     startLoading();
-                    Twl.forceNavigateTo(context, LocationPopUpPage());
+
+
+                    Twl.forceNavigateTo(context, ReferalCodeView());
                     stopLoading();
                   }),
             ),
