@@ -219,7 +219,7 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text("Terms & Conditions"),
-                                          content: Text("After verifying your referral driver, the referral reward will be added to your wallet."),
+                                          content: Text("After verifying your referral driver, the referral reward will be added to your wallet, You cannot withdraw referral amount it can only redeemed on rides"),
                                           actions: <Widget>[
                                             TextButton(
                                               onPressed: () {

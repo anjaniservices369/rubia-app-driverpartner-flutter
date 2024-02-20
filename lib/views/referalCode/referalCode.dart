@@ -98,7 +98,7 @@ class _ReferalCodeViewState extends State<ReferalCodeView> {
                           child: GestureDetector(
                             onTap: () {
                               Twl.navigateTo(context,
-                                  ChooseAppLanguageView(isReferalPage: true));
+                                  LocationPopUpPage());
                             },
                             child: Row(
                               children: [

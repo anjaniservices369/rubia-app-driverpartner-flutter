@@ -62,8 +62,8 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         resConfigs "en","fr"
-        versionCode 26
-        versionName "1.1.4"
+        versionCode 28
+        versionName "1.1.6"
     }
 
     buildTypes {

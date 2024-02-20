@@ -324,6 +324,7 @@ class _OtpPageViewState extends State<OtpPageView> {
                                     if (check != null && check['status'] == 'OK') {
                                       print('1');
                                       startLoading();
+
                                       check['detail']['personal_details'] == false
                                           ? Twl.navigateTo(context, PersonalDetails())
                                           : check['detail']['driver_emergency_contacts'] == false
@@ -342,8 +343,8 @@ class _OtpPageViewState extends State<OtpPageView> {
                                                                       ? Twl.navigateTo(context, ProfileReview())
                                                                       : Twl.navigateTo(context, LocationPopUpPage());
 
-                                      Twl.navigateTo(
-                                          context, ChooseAppLanguageView());
+                                      // Twl.navigateTo(
+                                      //     context, ChooseAppLanguageView());
                                       stopLoading();
                                     } else {
                                       stopLoading();
