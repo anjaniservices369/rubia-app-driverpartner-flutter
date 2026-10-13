@@ -11,13 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// endpoints even though their session is valid, and must not be logged out.
 class SkipperApi {
   static Future<Map<String, dynamic>?> _post(
-      String path, Map<String, String> body) async {
+      String path, Map<String, String> body,
+      {Map<String, String>? query}) async {
     final prefs = await SharedPreferences.getInstance();
     final authCode = prefs.getString('authCode');
     if (authCode == null || authCode.isEmpty) return null;
     try {
       final response = await http
-          .post(Uri.parse(apiBaseUrl + path),
+          .post(Uri.parse(apiBaseUrl + path).replace(queryParameters: query),
               headers: {'auth_code': authCode}, body: body)
           .timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) return null;
@@ -41,7 +42,8 @@ class SkipperApi {
   }
 
   static Future<Map<String, dynamic>?> updateOnlineStatus(bool online) =>
-      _post(SKIPPER_ONLINE_STATUS, {'status': online ? '1' : '0'});
+      // This endpoint reads `status` from the query string, not the body.
+      _post(SKIPPER_ONLINE_STATUS, {}, query: {'status': online ? '1' : '0'});
 
   static Future<Map<String, dynamic>?> updateLatLng(double lat, double lng) =>
       _post(SKIPPER_UPDATE_LAT_LNG,
