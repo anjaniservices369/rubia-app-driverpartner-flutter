@@ -85,3 +85,23 @@ const String ENDING_ODOMETER = 'driver/update-odometer-end?auth_code=';
 /// OneSignal App ID for the Partner (driver) app. Backend `PUSH_DRIVER` must be
 /// `onesignal`. Leave empty to disable push registration.
 const String oneSignalAppId = '';
+
+// Skipper ride flow (contract C2). All POST, form-encoded, `auth_code` header.
+const String SKIPPER_ONLINE_STATUS = 'skipper/update-online-status';
+const String SKIPPER_UPDATE_LAT_LNG = 'skipper/update-lat-lng';
+const String SKIPPER_NEW_REQUEST = 'skipper/new-request';
+const String SKIPPER_ACCEPT_OR_REJECT = 'skipper/accept-or-reject';
+const String SKIPPER_CHANGE_STATUS = 'skipper/change-status';
+const String SKIPPER_VERIFY_RIDE_OTP = 'skipper/verify-ride-otp';
+
+/// Ride request statuses used by the skipper endpoints.
+const int RIDE_ACCEPTED = 4;
+const int RIDE_ON_THE_WAY = 5;
+const int RIDE_ARRIVED = 6;
+const int RIDE_REJECTED = 7;
+const int RIDE_STARTED = 8;
+const int RIDE_COMPLETED = 9;
+
+/// Poll `skipper/new-request` and ring while online. Only accounts with the
+/// backend role `skipper` receive offers (see MOBILE_APP_CHANGES.md C2).
+const bool skipperOffersEnabled = true;

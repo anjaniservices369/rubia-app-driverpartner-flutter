@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:base_project_flutter/api_services/offerService.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:flutter/foundation.dart';
@@ -43,6 +44,11 @@ class PushService {
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       event.preventDefault();
       _showLocal(event.notification);
+      // Ride offer: show the accept/reject dialog right away.
+      if (event.notification.additionalData?['type']?.toString() ==
+          'newOrder') {
+        OfferService.pollNow();
+      }
     });
 
     // The id appears after registration and can change; keep the server current.
@@ -79,7 +85,10 @@ class PushService {
   }
 
   static Future<void> _showLocal(OSNotification n) async {
-    final isNewBooking = n.title == 'New Booking';
+    // Server sends data `type=newOrder` (+ `order_id`) for ride offers.
+    final isNewBooking =
+        n.additionalData?['type']?.toString() == 'newOrder' ||
+            n.title == 'New Booking';
     final details = AndroidNotificationDetails(
       isNewBooking ? _newBookingChannelId : _otherChannelId,
       isNewBooking ? _newBookingChannelName : _otherChannelName,

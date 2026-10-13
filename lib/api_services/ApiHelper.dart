@@ -5,6 +5,7 @@ import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/logiPage/loginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:base_project_flutter/api_services/offerService.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +41,7 @@ class ApiHelper {
     if (_redirectingToLogin) return;
     _redirectingToLogin = true;
     try {
+      OfferService.stop(notifyOffline: false);
       final prefs = await SharedPreferences.getInstance();
       final languageCode = prefs.getString('language_code');
       await prefs.clear();

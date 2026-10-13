@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:base_project_flutter/api_services/locationPing.dart';
+import 'package:base_project_flutter/api_services/offerService.dart';
 import '../../constants/imageConstant.dart';
 import '../../providers/notifactionProvider.dart';
 import '../profile_review/profile_block.dart';
@@ -171,8 +172,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       // Admin live map needs online + a recent position from this driver.
       if (onlineStatus == online_status_yes) {
         LocationPing.start();
+        OfferService.start();
       } else {
         LocationPing.stop();
+        OfferService.stop();
       }
 
     } else {
