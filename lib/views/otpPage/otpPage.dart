@@ -1,5 +1,7 @@
 // import 'package:base_project_flutter/api_services/pushService.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:smart_auth/smart_auth.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/views/joiningfees/joining%20_fees.dart';
 import 'package:base_project_flutter/views/locationError/locationError.dart';
@@ -43,11 +45,48 @@ class _OtpPageViewState extends State<OtpPageView> {
 
   bool hasError = false;
   var deviceToken;
+  final SmartAuth _smartAuth = SmartAuth.instance;
+
   @override
   void initState() {
     fecthDeviceToken();
+    _listenForOtpSms();
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _smartAuth.removeUserConsentApiListener();
+    _otpCodeController.dispose();
+    super.dispose();
+  }
+
+  /// Reads the OTP SMS with Google's SMS User Consent API: no READ_SMS
+  /// permission and no app hash in the message. Android shows a one-tap
+  /// "allow this app to read this message" prompt, then the code is filled in.
+  Future<void> _listenForOtpSms() async {
+    try {
+      // First standalone 4-digit group in the message (the OTP is 4 digits).
+      final res = await _smartAuth.getSmsWithUserConsentApi(matcher: r'\b\d{4}\b');
+      if (!mounted) return;
+
+      if (res.hasData) {
+        final sms = res.requireData;
+        final code = sms.code;
+        // OTPs are secrets: only ever logged in debug builds.
+        if (kDebugMode) {
+          print('OTP SMS received: "${sms.sms}" -> code: $code');
+        }
+        if (code != null && code.length == 4) {
+          setState(() => _otpCodeController.text = code);
+        }
+      } else if (kDebugMode) {
+        print('OTP SMS not read: ${res.isCanceled ? 'user cancelled' : 'no message'}');
+      }
+    } catch (e) {
+      if (kDebugMode) print('OTP SMS listener error: $e');
+    }
   }
 
   // OneSignal subscription id; may arrive a moment after the SDK starts.
