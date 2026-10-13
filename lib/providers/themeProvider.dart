@@ -7,7 +7,7 @@ class ThemeProvider with ChangeNotifier {
 
   bool get swithValue => _swithValue;
   void setDayMode(value) async {
-    ThemeData(primarySwatch: Colors.blue, backgroundColor: tWhite);
+    ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: tWhite);
     // tPrimaryColor = Color(0XFFFB6E1F);
     // tSecondaryColor = Color(0XFF6B0BE4);
     tBackground = Colors.white;
@@ -21,18 +21,18 @@ class ThemeProvider with ChangeNotifier {
   }
 
   ThemeData lightTheme =
-      ThemeData(primarySwatch: Colors.blue, backgroundColor: tWhite);
+      ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: tWhite);
   ThemeData darkTheme = ThemeData(
       primarySwatch: Colors.blue,
-      backgroundColor: tBlack,
+      scaffoldBackgroundColor: tBlack,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
       textTheme: TextTheme(
-        headline1: TextStyle(color: Colors.white),
-        headline2: TextStyle(color: Colors.white),
-        bodyText2: TextStyle(color: Colors.white),
-        subtitle1: TextStyle(color: Colors.white),
+        displayLarge: TextStyle(color: Colors.white),
+        displayMedium: TextStyle(color: Colors.white),
+        bodyMedium: TextStyle(color: Colors.white),
+        titleMedium: TextStyle(color: Colors.white),
       ));
   void setNightMode(value) async {
     darkTheme;

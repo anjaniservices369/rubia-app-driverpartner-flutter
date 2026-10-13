@@ -107,7 +107,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: tBlack,
+                foregroundColor: tBlack,
               ),
             ),
           ),

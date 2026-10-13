@@ -1,27 +1,36 @@
-buildscript {
-    ext.kotlin_version='1.8.0'
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()  // Maven Central repository
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.15'
-    }
-}
-
 allprojects {
     repositories {
         google()
-        jcenter()
-        mavenCentral()  // Maven Central repository
-        configurations.all{
-          resolutionStrategy{
-           force "com.google.android.gms:play-services-location:21.0.1"
-          }
+        mavenCentral()
+    }
+    configurations.all {
+        resolutionStrategy {
+            force "com.google.android.gms:play-services-location:21.0.1"
+        }
+    }
+}
+
+
+// Older plugins don't declare a namespace (required by AGP 8+); derive it from their manifest.
+subprojects { sub ->
+    sub.afterEvaluate {
+        def ext = sub.extensions.findByName("android")
+        if (ext != null && sub.plugins.hasPlugin("com.android.library")) {
+            ext.compileSdkVersion 36
+        }
+    }
+    sub.pluginManager.withPlugin("com.android.library") {
+        def android = sub.extensions.findByName("android")
+        if (android != null) {
+            android.compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+            android.compileOptions.targetCompatibility = JavaVersion.VERSION_17
+        }
+        if (android != null && android.namespace == null) {
+            def manifest = sub.file("src/main/AndroidManifest.xml")
+            if (manifest.exists()) {
+                def pkg = new XmlSlurper().parse(manifest).@package.toString()
+                if (pkg) android.namespace = pkg
+            }
         }
     }
 }
@@ -29,6 +38,8 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
     project.evaluationDependsOn(':app')
 }
 

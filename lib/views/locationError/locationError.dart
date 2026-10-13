@@ -58,7 +58,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
-                    primary: Colors.blue,
+                    foregroundColor: Colors.blue,
                   ),
                   onPressed: () {
                     final AndroidIntent intent = AndroidIntent(action: 'android.settings.LOCATION_SOURCE_SETTINGS');
@@ -452,7 +452,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
                       ? Container()
                       : TextButton(
                     style: TextButton.styleFrom(
-                      primary: tPrimaryColor,
+                      foregroundColor: tPrimaryColor,
                     ),
                     onPressed: () => AppSettings.openAppSettings(type: AppSettingsType.location),
                     child: Text('app_settings'),
