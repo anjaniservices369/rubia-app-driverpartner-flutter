@@ -49,6 +49,16 @@ class UserAPI {
     }
   }
 
+  /// Push provider id (OneSignal subscription id / ExponentPushToken) changed
+  /// or became available after login. Same field names as before the backend
+  /// dropped Firebase; see `verifyOtp` for the login-time value.
+  updateDeviceToken(BuildContext context, String deviceToken) async {
+    var headers = await ApiHelper().getHeader(context);
+    var url = CHECK_API + headers['auth_code'];
+    Map<String, String> params = {'AuthSession[device_token]': deviceToken};
+    return await ApiHelper().getTypePost(context, url, params);
+  }
+
   getUpdateLatLong(BuildContext context, String latitude, String longitude, String locality) async {
     var headers = await ApiHelper().getHeader(context);
     var url = UPDATE_LAT_LONG + headers['auth_code'];

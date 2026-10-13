@@ -55,7 +55,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: tBlack,
+                foregroundColor: tBlack,
               ),
             ),
           ),
@@ -98,7 +98,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: tBlack,
+                foregroundColor: tBlack,
               ),
             ),
           ),
@@ -277,6 +277,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                                                   image: dlFrontImg == null
                                                       ? null
                                                       : DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             dlFrontImg,
                                                           ),
@@ -378,6 +379,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                                                   image: dlBackImg == null
                                                       ? null
                                                       : DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             dlBackImg,
                                                           ),

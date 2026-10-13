@@ -112,6 +112,7 @@ class _StartingOdometerDetailsState extends State<StartingOdometerDetails> {
                             decoration: BoxDecoration(
                                 color: tlightGray,
                                 image: DecorationImage(
+                                    onError: (_, __) {}, // missing/failed image -> blank
                                     image: NetworkImage(
                                       startImg,
                                     ),

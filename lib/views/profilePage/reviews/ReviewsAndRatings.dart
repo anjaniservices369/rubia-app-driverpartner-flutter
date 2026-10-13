@@ -444,6 +444,7 @@ class _ReviewsState extends State<Reviews> {
                                         children: [
                                           CircleAvatar(
                                             radius: 4.5.h,
+                                            onBackgroundImageError: (_, __) {},
                                             backgroundImage: NetworkImage(
                                                 review['user_image']),
                                           ),

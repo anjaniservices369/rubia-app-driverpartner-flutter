@@ -91,11 +91,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 color: tWhite, shape: BoxShape.circle),
                             child: checkDetails['profile_image'] == null
                                 ? CircleAvatar(
+                                    onBackgroundImageError: (_, __) {},
                                     backgroundImage: NetworkImage(
                                         "https://media.istockphoto.com/id/518757779/photo/happy-boy-in-leather-jacket-posing-on-the-ground.jpg?b=1&s=170667a&w=0&k=20&c=xxnFEYxgcIjtI9tTpF3Egc7RNd3ztDzo3qae8GEdd74="),
                                     radius: 28.0,
                                   )
                                 : CircleAvatar(
+                                    onBackgroundImageError: (_, __) {},
                                     backgroundImage: NetworkImage(
                                         checkDetails['profile_image']
                                             .toString()),

@@ -135,6 +135,7 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
                                                       ),
                                                       fit: BoxFit.fill)
                                                   : DecorationImage(
+                                                      onError: (_, __) {}, // missing/failed image -> blank
                                                       image: NetworkImage(
                                                           profileImage),
                                                       fit: BoxFit.cover),

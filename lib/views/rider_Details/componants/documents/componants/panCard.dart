@@ -145,6 +145,7 @@ class _PanCardState extends State<PanCard> {
                                                     image: panImg == null
                                                         ? null
                                                         : DecorationImage(
+                                                            onError: (_, __) {}, // missing/failed image -> blank
                                                             image: NetworkImage(
                                                               panImg,
                                                             ),

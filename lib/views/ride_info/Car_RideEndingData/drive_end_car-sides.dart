@@ -338,6 +338,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             decoration: BoxDecoration(
                                                 color: tlightGray,
                                                 image: DecorationImage(
+                                                    onError: (_, __) {}, // missing/failed image -> blank
                                                     image: NetworkImage(
                                                       firstImg,
                                                     ),
@@ -469,6 +470,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                               decoration: BoxDecoration(
                                                   color: tlightGray,
                                                   image: DecorationImage(
+                                                      onError: (_, __) {}, // missing/failed image -> blank
                                                       image: NetworkImage(
                                                         secoundImg,
                                                       ),
@@ -607,6 +609,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             decoration: BoxDecoration(
                                                 color: tlightGray,
                                                 image: DecorationImage(
+                                                    onError: (_, __) {}, // missing/failed image -> blank
                                                     image: NetworkImage(
                                                       thirdImg,
                                                     ),
@@ -736,6 +739,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             decoration: BoxDecoration(
                                                 color: tlightGray,
                                                 image: DecorationImage(
+                                                    onError: (_, __) {}, // missing/failed image -> blank
                                                     image: NetworkImage(
                                                       fourthImg,
                                                     ),
@@ -884,6 +888,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             decoration: BoxDecoration(
                                                 color: tlightGray,
                                                 image: DecorationImage(
+                                                    onError: (_, __) {}, // missing/failed image -> blank
                                                     image: NetworkImage(
                                                       fivthImg,
                                                     ),
@@ -1039,6 +1044,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             decoration: BoxDecoration(
                                                 color: tlightGray,
                                                 image: DecorationImage(
+                                                    onError: (_, __) {}, // missing/failed image -> blank
                                                     image: NetworkImage(
                                                       sixthImg,
                                                     ),

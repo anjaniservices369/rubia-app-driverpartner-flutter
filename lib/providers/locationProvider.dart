@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationProvider with ChangeNotifier {
   final GeolocatorPlatform _geolocator = GeolocatorPlatform.instance;
-  final databaseReference = FirebaseDatabase.instance.ref();
 
   double currentLatitude = 0.0;
   double get _currentLatitude => currentLatitude;
@@ -65,34 +62,6 @@ class LocationProvider with ChangeNotifier {
           rideData[bookingDetails['id'].toString()] = [];
         }
         rideData[bookingDetails['id'].toString()]!.add(intermediateLocation);
-
-        // Save intermediate locations to Firebase
-        // ...
-
-        // Save intermediate locations to Firebase Firestore
-        final locationData = {
-          'latitude': intermediateLocation.latitude,
-          'longitude': intermediateLocation.longitude,
-          'timestamp': DateTime.now(),
-        };
-
-        final CollectionReference ridesCollection = FirebaseFirestore.instance.collection('Rides');
-
-        // Retrieve or create the ride ID document
-        final DocumentReference rideDocumentRef = ridesCollection.doc(bookingDetails['id'].toString());
-        final DocumentSnapshot rideSnapshot = await rideDocumentRef.get();
-
-        if (rideSnapshot.exists) {
-          // If the ride ID document exists, update the rideHistory array
-          await rideDocumentRef.update({
-            'rideHistory': FieldValue.arrayUnion([locationData])
-          });
-        } else {
-          // If the ride ID document doesn't exist, create it with the rideHistory array
-          await rideDocumentRef.set({
-            'rideHistory': [locationData]
-          });
-        }
 
         previousPosition = currentPosition;
         // } else {

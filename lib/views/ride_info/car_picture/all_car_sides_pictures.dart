@@ -181,6 +181,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                   decoration: BoxDecoration(
                                                       color: tlightGray,
                                                       image: DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             firstImg,
                                                           ),
@@ -287,6 +288,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                       image: secoundImg == null
                                                           ? null
                                                           : DecorationImage(
+                                                              onError: (_, __) {}, // missing/failed image -> blank
                                                               image: NetworkImage(
                                                                 secoundImg,
                                                               ),
@@ -399,6 +401,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                   decoration: BoxDecoration(
                                                       color: tlightGray,
                                                       image: DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             thirdImg,
                                                           ),
@@ -503,6 +506,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                   decoration: BoxDecoration(
                                                       color: tlightGray,
                                                       image: DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             fourthImg,
                                                           ),
@@ -626,6 +630,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                   decoration: BoxDecoration(
                                                       color: tlightGray,
                                                       image: DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             fivthImg,
                                                           ),
@@ -730,6 +735,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                                   decoration: BoxDecoration(
                                                       color: tlightGray,
                                                       image: DecorationImage(
+                                                          onError: (_, __) {}, // missing/failed image -> blank
                                                           image: NetworkImage(
                                                             sixthImg,
                                                           ),

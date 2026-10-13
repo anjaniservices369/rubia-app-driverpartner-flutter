@@ -4,8 +4,7 @@ import 'package:base_project_flutter/providers/globalFunctionProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:base_project_flutter/api_services/mediaApi.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,23 +32,7 @@ class Twl {
 
 
 
-//getDynamiclink Start
-  Future<void> getDynamiclink() async {
-    //  Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink;
 
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri? deepLink = data?.link;
-    print(deepLink);
-    final postID = deepLink!.queryParameters['storeId'];
-    print(postID); //will print "123"
-    if (postID != null) {
-      // Get.to(() => StoreviewPage(storeId: int.parse(postID)));
-    }
-    // }
-  }
-//getDynamiclink end
 
 //getImage start
 
@@ -67,30 +50,29 @@ class Twl {
       pickedFile =
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     }
-    File? croppedFile = (await ImageCropper().cropImage(
+    final CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
-      aspectRatioPresets: Platform.isAndroid
-          ? [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ]
-          : [CropAspectRatioPreset.ratio16x9],
-        uiSettings :
-      androidUiSettings( AndroidUiSettings(
-        toolbarTitle: 'Crop Image',
-        toolbarColor: tPrimaryColor,
-        toolbarWidgetColor: tWhite,
-        initAspectRatio: CropAspectRatioPreset.ratio16x9,
-        lockAspectRatio: true,
-      ),
-        uiSettings :
-      iosUiSettings( IOSUiSettings(
-        minimumAspectRatio: 1.0,
-      ),
-    )))) as File?;
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          toolbarColor: tPrimaryColor,
+          toolbarWidgetColor: tWhite,
+          initAspectRatio: CropAspectRatioPreset.ratio16x9,
+          lockAspectRatio: true,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+          ],
+        ),
+        IOSUiSettings(
+          minimumAspectRatio: 1.0,
+          aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+        ),
+      ],
+    );
     // setState(() {
     _loading = false;
     if (croppedFile != null) {
@@ -348,19 +330,9 @@ class Twl {
       imageQuality: 70,
     );
     if (pickedFile != null) {
-      File _file = File(pickedFile.path);
-      String imageName = pickedFile.path;
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref =
-          storage.ref().child("$imageName" + DateTime.now().toString());
-      UploadTask uploadTask = ref.putFile(_file);
-      try {
-        TaskSnapshot snapshot = await uploadTask;
-        String url = await snapshot.ref.getDownloadURL();
-        return url;
-      } catch (error) {
-        print("Failed to upload image: $error");
-      }
+      final url = await MediaApi.upload(File(pickedFile.path));
+      if (url != null) return url;
+      print("Failed to upload image");
     }
     return '1';
   }
@@ -423,27 +395,13 @@ class Twl {
               ),
             )));
     if (imageSource != null) {
-      final pickedImage = await picker.pickImage(source: imageSource);
+      // Server caps uploads (~4 MB); keep photos <= 1600 px.
+      final pickedImage = await picker.pickImage(
+          source: imageSource, maxWidth: 1600, maxHeight: 1600, imageQuality: 80);
       if (pickedImage != null) {
-        String imageName = pickedImage.path;
-        print('imageName');
-        print(imageName);
-        File _file = File(pickedImage.path);
-        FirebaseStorage storage = FirebaseStorage.instance;
-        Reference ref =
-            storage.ref().child("$imageName" + DateTime.now().toString());
-        UploadTask uploadTask = ref.putFile(_file);
-        try {
-          TaskSnapshot snapshot = await uploadTask;
-          print('imageName');
-          String url = await snapshot.ref.getDownloadURL();
-          print('imageNamewwwwwwwwwwwww');
-          print('url...>>>');
-          print(url);
-          return url;
-        } catch (error) {
-          print("Failed to upload image: $error");
-        }
+        final url = await MediaApi.upload(File(pickedImage.path));
+        if (url != null) return url;
+        print("Failed to upload image");
       }
     }
     return '1';

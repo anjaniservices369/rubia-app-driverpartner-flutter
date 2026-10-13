@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import 'package:base_project_flutter/api_services/locationPing.dart';
 import 'notification.dart';
 
 const String notificationChannelId = "foreground_service";
@@ -115,6 +116,9 @@ LocationSettings locationSettings = LocationSettings(
     final permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.always) {
       addLocationToDatabase(position);
+      // Keep the admin live map fresh during rides (throttled inside).
+      LocationPing.send(position.latitude, position.longitude,
+          handleExpiredSession: false);
     }
   });
 

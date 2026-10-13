@@ -2,7 +2,6 @@ import 'package:base_project_flutter/main.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:camera/camera.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,14 +44,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
     setState(() {
       tabIndexs = widget.tabIndexId != null ? widget.tabIndexId : 0;
     });
-  }
-
-  Future<void> fetchFireBaseValues() async {
-    print("Hereeee");
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
   }
 
   @override

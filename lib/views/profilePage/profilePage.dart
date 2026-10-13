@@ -16,7 +16,7 @@ import 'package:base_project_flutter/views/profilePage/ridehistory/ridehistory.d
 import 'package:base_project_flutter/views/profilePage/subscription/subscription.dart';
 import 'package:base_project_flutter/views/profilePage/support/support.dart';
 import 'package:base_project_flutter/views/profilePage/tutorials/tutorialspage.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:base_project_flutter/api_services/mediaApi.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../collect_payment.dart/collect_payment.dart';
 import '../joiningfees/joining _fees.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -93,38 +93,26 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       pickedFile = await picker.pickImage(
         source: ImageSource.gallery,
+        maxWidth: 1600,
+        maxHeight: 1600,
+        imageQuality: 80,
       );
     }
 
     if (pickedFile != null) {
       File _file = File(pickedFile.path);
       print(_file.lengthSync());
-      // ignore: non_constant_identifier_names
-      String ImageName = pickedFile.path;
-      print("13" + ImageName);
-      // ignore: unused_local_variable
-      String url;
-      // Upload file
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref =
-      storage.ref().child("$ImageName" + DateTime.now().toString());
-      print(ref);
-      UploadTask uploadTask = ref.putFile(_file);
-      print(uploadTask);
-
       setState(() => loading = true);
-      uploadTask.then((res) async {
-        url = await res.ref.getDownloadURL();
-        print(url);
-
+      final url = await MediaApi.upload(_file);
+      if (url != null) {
         setState(() {
           profileImage = url;
         });
         uploadImage(profileImage);
-        return profileImage = url;
-
-        // return getFileName(url);
-      });
+      } else {
+        setState(() => loading = false);
+        Twl.createAlert(context, 'Oops..!', 'Image upload failed. Please try again.');
+      }
     }
     // ignore: unused_element
   }
@@ -275,6 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       width: isTab(context) ? 145 : 95,
                                       child: checkDetails['selfie'] != null
                                           ? CircleAvatar(
+                                              onBackgroundImageError: (_, __) {},
                                               backgroundImage: NetworkImage(
                                                   checkDetails['selfie']),
                                               backgroundColor: tWhite,
@@ -282,6 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             )
                                           : profileImage.isNotEmpty
                                           ? CircleAvatar(
+                                        onBackgroundImageError: (_, __) {},
                                         backgroundImage: NetworkImage(profileImage),
                                         backgroundColor: tWhite,
                                         radius: isTab(context) ? 20 : 30,

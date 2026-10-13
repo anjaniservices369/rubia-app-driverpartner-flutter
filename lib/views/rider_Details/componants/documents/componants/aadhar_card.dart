@@ -144,6 +144,7 @@ class _AdharCardState extends State<AdharCard> {
                                                             null
                                                         ? null
                                                         : DecorationImage(
+                                                            onError: (_, __) {}, // missing/failed image -> blank
                                                             image: NetworkImage(
                                                               aadharFrontImg,
                                                             ),
@@ -242,6 +243,7 @@ class _AdharCardState extends State<AdharCard> {
                                                     image: aadharBackImg == null
                                                         ? null
                                                         : DecorationImage(
+                                                            onError: (_, __) {}, // missing/failed image -> blank
                                                             image: NetworkImage(
                                                               aadharBackImg,
                                                             ),

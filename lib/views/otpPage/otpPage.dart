@@ -1,4 +1,4 @@
-// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:base_project_flutter/api_services/pushService.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/views/joiningfees/joining%20_fees.dart';
@@ -10,7 +10,7 @@ import 'package:base_project_flutter/views/rider_details/componants/bank_details
 import 'package:base_project_flutter/views/rider_details/componants/documents/documents.dart';
 import 'package:base_project_flutter/views/rider_details/componants/emergency_Contacts.dart';
 import 'package:base_project_flutter/views/rider_details/componants/vehicle_Types.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:base_project_flutter/api_services/pushService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,14 +50,12 @@ class _OtpPageViewState extends State<OtpPageView> {
     super.initState();
   }
 
-  fecthDeviceToken() {
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    _firebaseMessaging.getToken().then((token) async {
-      print(token);
-      setState(() {
-        deviceToken = token;
-      });
-      // await setValue("firebaseAppToken", token);
+  // OneSignal subscription id; may arrive a moment after the SDK starts.
+  fecthDeviceToken() async {
+    final token = await PushService.waitForSubscriptionId();
+    if (!mounted) return;
+    setState(() {
+      deviceToken = token;
     });
   }
 
@@ -303,7 +301,7 @@ class _OtpPageViewState extends State<OtpPageView> {
                                   'contact_no': widget.mobileNumber.toString(),
                                   'session_code': widget.sessionCode.toString(),
                                   'otp_code': _otpCodeController.text,
-                                  'device_token': deviceToken.toString(),
+                                  'device_token': (deviceToken ?? '').toString(),
                                   'device_type': '2',
                                 };
                                 print(param);

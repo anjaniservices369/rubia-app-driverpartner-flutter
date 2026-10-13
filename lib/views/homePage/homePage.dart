@@ -20,12 +20,11 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:base_project_flutter/api_services/locationPing.dart';
 import '../../constants/imageConstant.dart';
 import '../../providers/notifactionProvider.dart';
 import '../profile_review/profile_block.dart';
 import 'componats/earning_card.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:audioplayers/audioplayers.dart';
 
 class HomePage extends StatefulWidget {
@@ -124,103 +123,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     //   }
     // });
 
-    void handleNewBookingNotification(RemoteMessage message) async {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (notification != null && android != null && !kIsWeb) {
-        String soundName = 'noti6x';
-        print('Sound name : $soundName');
-        print("channel1 id home : ${channel1?.id}");
-        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel1!.id,
-          channel1!.name,
-          channelDescription: 'your other channel description',
-          icon: '@mipmap/ic_launcher',
-          importance: Importance.max,
-          enableLights: true,
-          enableVibration: true,
-          playSound: true,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound(soundName),
-        );
-
-        final NotificationDetails notificationDetails = NotificationDetails(
-          android: androidNotificationDetails,
-        );
-
-        await flutterLocalNotificationsPlugin?.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          notificationDetails,
-        );
-
-        print('Message data: ${message.data}');
-        if (message.notification != null) {
-          print('Message also contained a notification: ${message.notification}');
-          print('onMessageOpenedApp --2');
-        }
-      }
-    }
-
-    void handleOtherNotifications(RemoteMessage message) async {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (notification != null && android != null && !kIsWeb) {
-        String soundName = 'music';
-        print('Sound name : $soundName');
-        print("channel2 id home: ${channel2?.id}");
-
-        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel2!.id,
-          channel2!.name,
-          channelDescription: 'your other channel description',
-          icon: '@mipmap/ic_launcher',
-          importance: Importance.max,
-          enableLights: true,
-          enableVibration: true,
-          playSound: true,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound(soundName),
-        );
-
-        final NotificationDetails notificationDetails = NotificationDetails(
-          android: androidNotificationDetails,
-        );
-
-        await flutterLocalNotificationsPlugin?.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          notificationDetails,
-        );
-
-        print('Message data: ${message.data}');
-        if (message.notification != null) {
-          print('Message also contained a notification: ${message.notification}');
-          print('onMessageOpenedApp --2');
-        }
-      }
-    }
-
-    FirebaseMessaging.instance.getInitialMessage();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification? notification = message.notification;
-
-      if (notification != null && !kIsWeb) {
-        if (notification.title == 'New Booking') {
-
-          handleNewBookingNotification(message);
-        } else {
-          handleOtherNotifications(message);
-        }
-      }
-    });
-
     fetchDriverExactLocation();
-    FirebaseMessaging.instance.getInitialMessage();
     fetchCheckDetails();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -265,6 +168,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         onlineStatus = check['detail']['online_status'];
         checkDetails = check['detail'];
       });
+      // Admin live map needs online + a recent position from this driver.
+      if (onlineStatus == online_status_yes) {
+        LocationPing.start();
+      } else {
+        LocationPing.stop();
+      }
 
     } else {
       setState(() {
@@ -288,13 +197,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     startLocation = LatLng(_locationData!.latitude, _locationData!.longitude);
   }
 
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Geoflutterfire geo = Geoflutterfire();
   // PermissionStatus? _permissionGranted;
 
   Location location = new Location();
-  late Stream<List<DocumentSnapshot>> stream;
   Future<void> _incrementCounter() async {
     final SharedPreferences prefs = await _prefs;
     final int counter = (prefs.getInt('counter') ?? 0) + 1;

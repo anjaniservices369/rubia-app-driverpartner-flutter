@@ -563,6 +563,7 @@ class _ReviewsState extends State<Reviews> {
                                           height: isTab(context) ? 145 : 50,
                                           width: isTab(context) ? 145 : 50,
                                           child: CircleAvatar(
+                                            onBackgroundImageError: (_, __) {},
                                             backgroundImage: NetworkImage(
                                                 reviewList['driver_details']
                                                         ['selfie']

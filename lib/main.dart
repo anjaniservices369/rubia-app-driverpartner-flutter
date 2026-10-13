@@ -1,5 +1,7 @@
 // @dart=3.2.6
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:base_project_flutter/api_services/ApiHelper.dart';
+import 'package:base_project_flutter/api_services/pushService.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
@@ -19,8 +21,6 @@ import 'package:base_project_flutter/views/rider_Details/add_Details.dart';
 import 'package:base_project_flutter/views/translate.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,105 +48,6 @@ bool isBankDetails = false;
 bool isAllDetailsFilled = false;
 bool isPaidJoiningFee = false;
 var isProfileVerified;
-
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  try {
-    print('Handling a background message ${message.notification} ');
-
-    void handleNewBookingNotification(RemoteMessage message) async {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (notification != null && android != null && !kIsWeb) {
-        String soundName = 'noti6x';
-        print('Sound name : $soundName');
-        print("channel1 id : ${channel1?.id}");
-
-        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel1?.id ?? 'new_booking_alert', // Use a default ID if channel1 is null
-          // channel1?.id, // Use a default ID if channel1 is null
-          channel1?.name ?? 'New Booking Alert', // Use a default name if channel1 is null channel1?.id ?? 'default_channel_id', // Use a default ID if channel1 is null
-          // channel1?.name, // Use a default name if channel1 is null
-          channelDescription: 'your other channel description',
-          icon: '@mipmap/ic_launcher',
-          importance: Importance.max,
-          enableLights: true,
-          enableVibration: true,
-          playSound: true,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('noti6x'),
-        );
-
-        final NotificationDetails notificationDetails = NotificationDetails(
-          android: androidNotificationDetails,
-        );
-
-        await FlutterLocalNotificationsPlugin().show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          notificationDetails,
-        );
-
-        print('Message data: ${message.data}');
-      }
-    }
-
-    void handleOtherNotifications(RemoteMessage message) async {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (notification != null && android != null && !kIsWeb) {
-        String soundName = 'music';
-        print('Sound name : $soundName');
-        print("channel2 id : ${channel2?.id}");
-
-        AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          channel2?.id ?? 'other_high_importance_channel', // Use a default ID if channel2 is null
-          channel2?.name ?? 'Other High Importance Notifications', // Use a default name if channel2 is null
-          channelDescription: 'your other channel description',
-          icon: '@mipmap/ic_launcher',
-          importance: Importance.max,
-          enableLights: true,
-          enableVibration: true,
-          playSound: true,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('music'),
-        );
-
-        final NotificationDetails notificationDetails = NotificationDetails(
-          android: androidNotificationDetails,
-        );
-
-        await FlutterLocalNotificationsPlugin().show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          notificationDetails,
-        );
-
-        print('Message data: ${message.data}');
-      }
-    }
-
-    RemoteNotification? notification = message.notification;
-
-    if (notification != null && !kIsWeb) {
-      if (notification.title == 'New Booking') {
-        print("notification $notification");
-        handleNewBookingNotification(message);
-      } else {
-        handleOtherNotifications(message);
-      }
-    }
-  } catch (e, stackTrace) {
-    print('Error in background handler: $e\n$stackTrace');
-  }
-}
-
-
 
 AndroidNotificationChannel? channel;
 AndroidNotificationChannel? channel1;
@@ -193,20 +94,16 @@ void main() async {
     await androidPlugin?.createNotificationChannel(channel!);
     await androidPlugin?.createNotificationChannel(channel1!);
     await androidPlugin?.createNotificationChannel(channel2!);
-    await Firebase.initializeApp();
 
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   }
 
 
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Push (OneSignal). Background/terminated delivery is handled by the SDK.
+  await PushService.init();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -244,6 +141,10 @@ void main() async {
         }
       } else {
         checkAuth = '';
+        // Old/expired/revoked auth_code: forget it so the user logs in again.
+        if (ApiHelper.isSessionInvalid(check, uri: 'auth_code')) {
+          await sharedPreferences.remove('authCode');
+        }
       }
   } else {
     checkAuth = '';

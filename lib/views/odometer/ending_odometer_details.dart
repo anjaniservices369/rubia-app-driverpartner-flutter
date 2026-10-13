@@ -111,6 +111,7 @@ class _EndingOdometerDetailsState extends State<EndingOdometerDetails> {
                             decoration: BoxDecoration(
                                 color: tlightGray,
                                 image: DecorationImage(
+                                    onError: (_, __) {}, // missing/failed image -> blank
                                     image: NetworkImage(
                                       endImg,
                                     ),

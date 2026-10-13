@@ -81,3 +81,7 @@ const String MY_REFERALS = 'driver/my-earnings?auth_code=';
 //odometer apis
 const String STARTING_ODOMETER = 'driver/update-odometer-start?auth_code=';
 const String ENDING_ODOMETER = 'driver/update-odometer-end?auth_code=';
+
+/// OneSignal App ID for the Partner (driver) app. Backend `PUSH_DRIVER` must be
+/// `onesignal`. Leave empty to disable push registration.
+const String oneSignalAppId = '';

@@ -2,7 +2,6 @@ import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/providers/locationProvider.dart';
 import 'package:base_project_flutter/views/bill_details/bill_details.dart';
 import 'package:base_project_flutter/views/ride_info/completer_ride.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:base_project_flutter/constants/constants.dart';
@@ -38,7 +37,6 @@ class AddCarNumber extends StatefulWidget {
 
 class _AddCarNumberState extends State<AddCarNumber> {
   final _formKey = new GlobalKey<FormState>();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   var status = 0;
   GoogleMapController? mapController;
