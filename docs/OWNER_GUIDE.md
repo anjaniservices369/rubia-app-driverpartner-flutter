@@ -247,3 +247,4 @@ You asked for the app to work with the updated backend. In plain words:
 - **Delete account:** Profile -> Delete account (red text under Logout). After a confirmation the account and personal details are erased at once and the app returns to Login. It is refused while a ride is in progress. For people who no longer have the app, the public page /account-deletion on the website takes a request that support confirms by phone within 30 days. **That page's address must be entered in Play Console -> App content -> Data safety -> Account deletion link** (the old Google Form link is dead).
 - Outstation round trips show a note that the customer provides the driver's food and stay (not in the fare).
 - A driver must have a photo to accept a ride; ride bill, payment collection and the compulsory rating are as in section 9.
+- **Splash:** only the logo on white (Android 12 system splash `values-v31`, same size in-app, fade).
