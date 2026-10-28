@@ -25,7 +25,6 @@ Service providers that only process data for us (OneSignal, Sentry, Google Maps)
 | Photos and videos | Photos (selfie, document and vehicle pictures) | Yes | No | Required | App functionality, Fraud prevention and security |
 | Financial info | Bank account details (payouts), Purchase history (earnings, wallet, joining fee, payments) | Yes | No | Required | App functionality, Account management |
 | App activity | App interactions / Other user-generated content (ratings, reviews, ride history) | Yes | No | Required | App functionality |
-| App info and performance | Crash logs, Diagnostics | Yes (personal data not sent) | No | Required | Analytics (app stability) |
 | Device or other IDs | Device or other IDs (push notification id) | Yes (OneSignal) | No | Required | App functionality |
 
 Not collected: messages, audio, files, calendar, health, web browsing, installed apps, SMS/call logs, contacts.
@@ -34,3 +33,48 @@ Not collected: messages, audio, files, calendar, health, web browsing, installed
 - **Background location:** Play asks for a declaration and a short video showing the feature. Core feature: tracking the ride distance and position for the customer and for the fare. Describe it exactly so.
 - **Permissions to explain or remove if unused:** SYSTEM_ALERT_WINDOW, USE_FULL_SCREEN_INTENT (new ride alert), SCHEDULE_EXACT_ALARM, READ/WRITE_EXTERNAL_STORAGE, ACTIVITY_RECOGNITION. Remove the ones the app does not need; each one left in has to be justified.
 - Privacy Policy text must match this table and mention account deletion.
+
+## 4. Step 3 "Data types" - every box on the Play Console screen
+
+Same order as the screen. Yes = tick the box, No = leave it empty. Nothing is left to guess.
+
+| Category | Box | Tick? | Note |
+|---|---|---|---|
+| Location | Approximate location | **Yes** | required |
+|  | Precise location | **Yes** | including in the background while a ride is on |
+| Personal info | Name | **Yes** |  |
+|  | Email address | **Yes** |  |
+|  | User IDs | **Yes** |  |
+|  | Address | **Yes** | saved driver addresses |
+|  | Phone number | **Yes** | login OTP |
+|  | Race and ethnicity | **No** |  |
+|  | Political or religious beliefs | **No** |  |
+|  | Sexual orientation | **No** |  |
+|  | Other info | **Yes** | date of birth, gender, Aadhaar, PAN, driving licence, police verification, vehicle documents |
+| Financial info | User payment info | **Yes** | bank account and IFSC for payouts; Cashfree handles payment details for the joining fee and subscription |
+|  | Purchase history | **Yes** | earnings, wallet, joining fee, payments |
+|  | Credit score | **No** |  |
+|  | Other financial info | **No** |  |
+| Health and fitness | Health info | **No** |  |
+|  | Fitness info | **No** |  |
+| Messages | Emails | **No** |  |
+|  | SMS or MMS | **No** |  |
+|  | Other in-app messages | **No** |  |
+| Photos and videos | Photos | **Yes** | selfie, document and vehicle pictures |
+|  | Videos | **No** |  |
+| Audio files | Voice or sound recordings | **No** |  |
+|  | Music files | **No** |  |
+|  | Other audio files | **No** |  |
+| Files and docs | Files and docs | **No** |  |
+| Calendar | Calendar events | **No** |  |
+| Contacts | Contacts | **No** | the address book is not read (customer: permission removed from the manifest; driver: emergency contacts are typed in) |
+| App activity | App interactions | **Yes** |  |
+|  | In-app search history | **No** |  |
+|  | Installed apps | **No** |  |
+|  | Other user-generated content | **Yes** | ratings and reviews |
+|  | Other actions | **No** |  |
+| Web browsing | Web browsing history | **No** |  |
+| App info and performance | Crash logs | **No** | driver only: no crash-reporting SDK in the driver app; tick if you add Sentry or Crashlytics |
+|  | Diagnostics | **No** |  |
+|  | Other app performance data | **No** |  |
+| Device or other IDs | Device or other IDs | **Yes** | OneSignal push id |

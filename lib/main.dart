@@ -332,7 +332,7 @@ class _MyAppState extends State<MyApp> {
           home: ConnectivityWrapper(
             child: AnimatedSplashScreen(
               duration: 1000,
-              splash: Image.asset(Images.DRIVERLOGO),
+              splash: Center(child: SizedBox(width: 117, child: Image.asset(Images.DRIVERLOGO, fit: BoxFit.contain))), // same size as the Android 12 system splash logo
               splashIconSize: 300,
               nextScreen: widget.checkAuth == null || widget.checkAuth == ''
                   ? OnboardingPage()
@@ -354,7 +354,7 @@ class _MyAppState extends State<MyApp> {
                   profile_verified_yes
                   ? ProfileReview()
                   : LocationPopUpPage(),
-              splashTransition: SplashTransition.scaleTransition,
+              splashTransition: SplashTransition.fadeTransition,
               backgroundColor: Colors.white,
             ),
           ),
