@@ -15,6 +15,7 @@ import '../../../globalWidgets/button.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
 import '../../../responsive.dart';
+import '../add_Details.dart';
 
 // >>> START  class EmergencyContact
 class EmergencyContact extends StatefulWidget {
@@ -89,7 +90,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
   RegExp phoneNumberPattern = RegExp(r'^[0-9]{10}$');
   // >>> START  _EmergencyContactState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return Form(
+    final form = Form(
       key: _formKey,
       child: SingleChildScrollView(
         child: Padding(
@@ -418,10 +419,17 @@ class _EmergencyContactState extends State<EmergencyContact> {
                         'aadhar_number_two': _personTwoAdharCardNumber.text,
                       };
                       print(param.toString());
+                      // Opened as a full page (startup / OTP) there is nothing to
+                      // pop back to, so go to the hub; as a bottom sheet just close it.
+                      final openedAsPage = ModalRoute.of(context) is PageRoute;
                       var res = await DriverDetailsApi()
                           .addEmergencyContactAPi(context, param);
                       if (res != null && res['status'] == 'OK') {
-                        Twl.navigateBack(context);
+                        if (openedAsPage) {
+                          Twl.forceNavigateTo(context, const AddDetailsView());
+                        } else {
+                          Twl.navigateBack(context);
+                        }
                         stopLoading();
                       } else {
                         stopLoading();
@@ -450,6 +458,16 @@ class _EmergencyContactState extends State<EmergencyContact> {
         ),
       ),
     );
+    // As a full page (startup / OTP) the fields need a Scaffold for their Material
+    // ancestor; as a bottom sheet from the hub the sheet already provides it.
+    if (ModalRoute.of(context) is PageRoute) {
+      return Scaffold(
+        backgroundColor: tWhite,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(child: form),
+      );
+    }
+    return form;
   }
   // <<< END    _EmergencyContactState.build()
 }

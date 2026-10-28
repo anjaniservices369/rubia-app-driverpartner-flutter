@@ -576,6 +576,15 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                 onTap: (startLoading, stopLoading, btnState) async {
                   if (Uri.parse(dlFrontImg).isAbsolute && Uri.parse(dlBackImg).isAbsolute ) {
                     startLoading();
+                    // The date boxes show today's date until a date is actually
+                    // picked; formatting the unpicked (null) dates below threw an
+                    // error and left the spinner running with no message.
+                    if (selectedIssuedDate == null || selectedExpiryDate == null) {
+                      stopLoading();
+                      Twl.createAlert(context, 'Oops',
+                          'Please select the issued date and the expiry date');
+                      return;
+                    }
                     if (_formKey.currentState!.validate()) {
                       Map<String, String> param = {
                         'driving_license_front': dlFrontImg.toString(),
@@ -610,6 +619,9 @@ class _DrivingLicenseState extends State<DrivingLicense> {
                         Twl.createAlert(
                             context, 'Oops', 'All fields are mandatory');
                       }
+                      stopLoading();
+                    } else {
+                      // A failed validation used to leave the spinner running.
                       stopLoading();
                     }
                   }else{

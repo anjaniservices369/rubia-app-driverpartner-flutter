@@ -17,6 +17,7 @@ import '../../../constants/constants.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
+import '../add_Details.dart';
 
 // >>> START  class VechileSelection
 class VechileSelection extends StatefulWidget {
@@ -108,7 +109,7 @@ class _VechileSelectionState extends State<VechileSelection> {
   // >>> START  _VechileSelectionState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    final form = SingleChildScrollView(
       child: Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Container(
@@ -515,7 +516,12 @@ class _VechileSelectionState extends State<VechileSelection> {
                           var res = await DriverDetailsApi()
                               .addVehicleType(context, param);
                           if (res != null && res['status'] == 'OK') {
-                            Twl.navigateBack(context);
+                            // As a full page there is nothing to pop back to: go to the hub.
+                            if (ModalRoute.of(context) is PageRoute) {
+                              Twl.forceNavigateTo(context, const AddDetailsView());
+                            } else {
+                              Twl.navigateBack(context);
+                            }
                           } else {
                             stopLoading();
                             Twl.createAlert(
@@ -536,6 +542,16 @@ class _VechileSelectionState extends State<VechileSelection> {
         ),
       ),
     );
+    // As a full page (startup / OTP) the fields need a Scaffold for their Material
+    // ancestor; as a bottom sheet from the hub the sheet already provides it.
+    if (ModalRoute.of(context) is PageRoute) {
+      return Scaffold(
+        backgroundColor: tWhite,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(child: form),
+      );
+    }
+    return form;
   }
   // <<< END    _VechileSelectionState.build()
 }

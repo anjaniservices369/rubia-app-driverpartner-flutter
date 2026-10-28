@@ -13,7 +13,7 @@
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (125 files, about 43,207 lines)
+## 2. Files (125 files, about 43,268 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -124,15 +124,15 @@
 | `views/ride_info/location_service_repository.dart` | 138 | Background locator storage - Stores location updates received from the background plugin. |  |
 | `views/ride_info/ride_info.dart` | 819 | Ride screen - pickup - Map and customer details for an accepted ride; the driver slides 'Go for pickup' then 'Arrived'. |  |
 | `views/rider_Details/add_Details.dart` | 530 | Registration checklist - Shows the registration steps (personal, emergency, vehicle, documents, bank) with ticks and the final Submit button. |  |
-| `views/rider_Details/componants/bank_details.dart` | 367 | Registration: bank / UPI details - Where the driver's earnings are paid. |  |
+| `views/rider_Details/componants/bank_details.dart` | 382 | Registration: bank / UPI details - Where the driver's earnings are paid. |  |
 | `views/rider_Details/componants/documents/componants/aadhar_card.dart` | 419 | Document: Aadhaar card - Front and back photo of the Aadhaar card. |  |
-| `views/rider_Details/componants/documents/componants/driving_licence.dart` | 631 | Document: driving licence - Front and back photo of the licence. |  |
+| `views/rider_Details/componants/documents/componants/driving_licence.dart` | 643 | Document: driving licence - Front and back photo of the licence. |  |
 | `views/rider_Details/componants/documents/componants/panCard.dart` | 334 | Document: PAN card - Photo of the PAN card. |  |
 | `views/rider_Details/componants/documents/componants/take_your_selfie.dart` | 372 | Document: selfie - Driver's profile selfie (uploaded to the server). |  |
 | `views/rider_Details/componants/documents/documents.dart` | 416 | Registration: documents hub - List of documents to upload and their status. |  |
-| `views/rider_Details/componants/emergency_Contacts.dart` | 457 | Registration: emergency contacts - Two people to contact in an emergency. |  |
+| `views/rider_Details/componants/emergency_Contacts.dart` | 475 | Registration: emergency contacts - Two people to contact in an emergency. |  |
 | `views/rider_Details/componants/personal_Details.dart` | 900 | Registration: personal details - Name, date of birth, address etc. |  |
-| `views/rider_Details/componants/vehicle_Types.dart` | 542 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
+| `views/rider_Details/componants/vehicle_Types.dart` | 558 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
 | `views/translate.dart` | 2044 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
 | `views/wallet/AmountReview.dart` | 270 | Confirm top-up amount - Reviews the amount before paying. |  |

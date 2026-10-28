@@ -22,6 +22,7 @@ import '../../../globalWidgets/button.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
 import '../../../responsive.dart';
+import '../add_Details.dart';
 // import '../add_details_view.dart';
 // import '../riderDetails.dart';
 
@@ -58,7 +59,7 @@ class _BankDetailsState extends State<BankDetails> {
   final _formKey = new GlobalKey<FormState>();
   // >>> START  _BankDetailsState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return Form(
+    final form = Form(
       key: _formKey,
       child: SingleChildScrollView(
         child: Padding(
@@ -335,8 +336,12 @@ class _BankDetailsState extends State<BankDetails> {
                     var res = await DriverDetailsApi()
                         .addDriverBankDetails(context, param);
                     if (res != null && res['status'] == 'OK') {
-                      Twl.navigateBack(context);
-
+                      // As a full page there is nothing to pop back to: go to the hub.
+                      if (ModalRoute.of(context) is PageRoute) {
+                        Twl.forceNavigateTo(context, const AddDetailsView());
+                      } else {
+                        Twl.navigateBack(context);
+                      }
                       stopLoading();
                     } else {
                       stopLoading();
@@ -360,6 +365,16 @@ class _BankDetailsState extends State<BankDetails> {
         ),
       ),
     );
+    // As a full page (startup / OTP) the fields need a Scaffold for their Material
+    // ancestor; as a bottom sheet from the hub the sheet already provides it.
+    if (ModalRoute.of(context) is PageRoute) {
+      return Scaffold(
+        backgroundColor: tWhite,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(child: form),
+      );
+    }
+    return form;
   }
   // <<< END    _BankDetailsState.build()
 }
