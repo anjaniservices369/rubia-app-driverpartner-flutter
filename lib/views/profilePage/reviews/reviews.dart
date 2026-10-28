@@ -1,33 +1,32 @@
+// ----------------------------------------------------------------------
+// Ratings & reviews
+//
+// What customers said about the driver.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+// >>> START  class Reviews
 class Reviews extends StatefulWidget {
   const Reviews({Key? key}) : super(key: key);
 
   @override
   State<Reviews> createState() => _ReviewsState();
 }
+// <<< END    class Reviews
 
+// >>> START  class _ReviewsState
 class _ReviewsState extends State<Reviews> {
-  double _currentSliderValue = 20;
-  double _curveSliderValue = 15;
-  double _curveValue = 10;
-  double _curvesValue = 5;
-  double _curves = 5;
 
-  ScrollController _scrollController = ScrollController();
   List<dynamic> ratingList = [];
   bool showBottomSheet = false;
   int page = 0;
@@ -40,6 +39,7 @@ class _ReviewsState extends State<Reviews> {
   var reviewDetails;
   var resNOK;
 
+  // >>> START  _ReviewsState.fetchDriverReviews()  -  fetch driver reviews
   Future<void> fetchDriverReviews() async {
     setState(() {
       isLoading = true;
@@ -85,13 +85,17 @@ class _ReviewsState extends State<Reviews> {
       });
     }
   }
+  // <<< END    _ReviewsState.fetchDriverReviews()
 
+  // >>> START  _ReviewsState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchDriverReviews();
     super.initState();
   }
+  // <<< END    _ReviewsState.initState()
 
+  // >>> START  _ReviewsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,9 +136,11 @@ class _ReviewsState extends State<Reviews> {
           ),
           ),
         ),
-      ) : WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+      ) : PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
         },
         child: SingleChildScrollView(
           child: Column(
@@ -253,8 +259,7 @@ class _ReviewsState extends State<Reviews> {
                                                           'total_rating']
                                                       .toString())) /
                                               100,
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
+                                          barRadius: const Radius.circular(10),
                                           progressColor: tBlue,
                                           backgroundColor: tlightGray,
                                         ),
@@ -313,8 +318,7 @@ class _ReviewsState extends State<Reviews> {
                                                           'total_rating']
                                                       .toString())) /
                                               100,
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
+                                          barRadius: const Radius.circular(10),
                                           progressColor: tBlue,
                                           backgroundColor: tlightGray,
                                         ),
@@ -373,8 +377,7 @@ class _ReviewsState extends State<Reviews> {
                                                           'total_rating']
                                                       .toString())) /
                                               100,
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
+                                          barRadius: const Radius.circular(10),
                                           progressColor: tBlue,
                                           backgroundColor: tlightGray,
                                         ),
@@ -430,8 +433,7 @@ class _ReviewsState extends State<Reviews> {
                                                           'total_rating']
                                                       .toString())) /
                                               100,
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
+                                          barRadius: const Radius.circular(10),
                                           progressColor: tBlue,
                                           backgroundColor: tlightGray,
                                         ),
@@ -487,8 +489,7 @@ class _ReviewsState extends State<Reviews> {
                                                           'total_rating']
                                                       .toString())) /
                                               100,
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
+                                          barRadius: const Radius.circular(10),
                                           progressColor: tBlue,
                                           backgroundColor: tlightGray,
                                         ),
@@ -658,9 +659,13 @@ class _ReviewsState extends State<Reviews> {
       ),
     );
   }
+  // <<< END    _ReviewsState.build()
 
+  // >>> START  _ReviewsState.reviewTotal()  -  review total
   static reviewTotal(var actualValue, var totalValue) {
     final totalPrecentage = (actualValue / totalValue) * 100;
     return totalPrecentage;
   }
+  // <<< END    _ReviewsState.reviewTotal()
 }
+// <<< END    class _ReviewsState

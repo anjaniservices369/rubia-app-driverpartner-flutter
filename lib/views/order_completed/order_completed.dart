@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ride completed
+//
+// 'Great job' end screen with Ready for next ride.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/providers/locationProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
@@ -12,17 +17,22 @@ import '../../constants/imageConstant.dart';
 import '../../globalWidgets/button.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
 
+// >>> START  class OrderCompletd
 class OrderCompletd extends StatefulWidget {
   const OrderCompletd({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<OrderCompletd> createState() => _OrderCompletdState();
 }
+// <<< END    class OrderCompletd
 
+// >>> START  class _OrderCompletdState
 class _OrderCompletdState extends State<OrderCompletd> {
+  // >>> START  _OrderCompletdState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    LocationProvider _locationData = Provider.of<LocationProvider>(context);
+    // Keep rebuilding this widget when LocationProvider changes.
+    context.watch<LocationProvider>();
     return Scaffold(
       backgroundColor: tBackground,
       appBar: AppBar(
@@ -38,9 +48,12 @@ class _OrderCompletdState extends State<OrderCompletd> {
           ),
         ),
       ),
-      body: WillPopScope(
-        onWillPop: () =>
-            Twl.navigateTo(context, BottomNavigation(tabIndexId: 1)),
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.navigateTo(context, BottomNavigation(tabIndexId: 1));
+        },
         child: Column(
           children: [
             Expanded(
@@ -115,4 +128,6 @@ class _OrderCompletdState extends State<OrderCompletd> {
       ),
     );
   }
+  // <<< END    _OrderCompletdState.build()
 }
+// <<< END    class _OrderCompletdState

@@ -1,4 +1,8 @@
-import 'package:flutter/cupertino.dart';
+// ----------------------------------------------------------------------
+// Joining fee by QR / manual transfer
+//
+// Alternative payment: pay by QR and confirm with support.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,10 +16,10 @@ import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../../responsive.dart';
-import '../collect_payment.dart/componants/collect_cash_botomsheet.dart';
 import '../profile_review/profile_review.dart';
 import 'joining _fees.dart';
 
+// >>> START  class QRPage
 class QRPage extends StatefulWidget {
   const QRPage({Key? key}) : super(key: key);
 
@@ -24,16 +28,10 @@ class QRPage extends StatefulWidget {
   @override
   State<QRPage> createState() => _QRPageState();
 }
+// <<< END    class QRPage
 
-void _launchDialer(String phoneNumber) async {
-  final url = 'tel://$phoneNumber';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
-  }
-}
 
+// >>> START  _showContactInfoDialog()  -  show contact info dialog
 void _showContactInfoDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -78,9 +76,7 @@ void _showContactInfoDialog(BuildContext context) {
                     bottonText: 'Call'.tr,
                     borderSide: BorderSide(color: tPrimaryColor),
                     onTap: (startLoading, stopLoading, btnState) async {
-                      launch(
-                        "tel://+917893653899",
-                      );
+                      launchUrl(Uri.parse("tel://+917893653899"));
                     },
                   ),
                 ),
@@ -123,10 +119,13 @@ void _showContactInfoDialog(BuildContext context) {
     },
   );
 }
+// <<< END    _showContactInfoDialog()
 
 
+// >>> START  class _QRPageState
 class _QRPageState extends State<QRPage> {
 
+  // >>> START  _QRPageState.showConfirmationDialog()  -  show confirmation dialog
   Future<bool?> showConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -187,7 +186,9 @@ class _QRPageState extends State<QRPage> {
       },
     );
   }
+  // <<< END    _QRPageState.showConfirmationDialog()
 
+  // >>> START  _QRPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
 
@@ -219,9 +220,11 @@ class _QRPageState extends State<QRPage> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(
               context, JoiningFees());
         },
         child: SingleChildScrollView(
@@ -329,7 +332,9 @@ class _QRPageState extends State<QRPage> {
     );
 
   }
+  // <<< END    _QRPageState.build()
 }
+// <<< END    class _QRPageState
 
 
 

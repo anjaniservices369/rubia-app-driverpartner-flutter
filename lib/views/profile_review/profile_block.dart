@@ -1,12 +1,14 @@
+// ----------------------------------------------------------------------
+// Profile blocked
+//
+// Shown when the account has been blocked by the admin.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/constants/stetuesConstant.dart';
-import 'package:base_project_flutter/views/profile_review/ApplicationStatus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,9 +20,9 @@ import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 
-import '../enable_location/enable_location.dart';
 import '../location_popup_page.dart';
 
+// >>> START  class ProfileBlock
 class ProfileBlock extends StatefulWidget {
   const ProfileBlock({Key? key}) :
         super(key: key);
@@ -29,18 +31,23 @@ class ProfileBlock extends StatefulWidget {
   @override
   State<ProfileBlock> createState() => _ProfileBlockState();
 }
+// <<< END    class ProfileBlock
 
+// >>> START  class _ProfileBlockState
 class _ProfileBlockState extends State<ProfileBlock> {
 
+  // >>> START  _ProfileBlockState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheck();
     super.initState();
   }
+  // <<< END    _ProfileBlockState.initState()
 
   var authCode;
   var checkStatus;
   var check;
+  // >>> START  _ProfileBlockState.fetchCheck()  -  fetch check
   fetchCheck() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -55,16 +62,10 @@ class _ProfileBlockState extends State<ProfileBlock> {
       });
     }
   }
+  // <<< END    _ProfileBlockState.fetchCheck()
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _ProfileBlockState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -109,9 +110,7 @@ class _ProfileBlockState extends State<ProfileBlock> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                          "tel://+917893653899",
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                       },
                     ),
                   ),
@@ -154,6 +153,7 @@ class _ProfileBlockState extends State<ProfileBlock> {
       },
     );
   }
+  // <<< END    _ProfileBlockState._showContactInfoDialog()
 
   // Future<void> launchURL(Uri _url) async {
   //   if (!await launchUrl(_url)) {
@@ -162,6 +162,7 @@ class _ProfileBlockState extends State<ProfileBlock> {
   // }
 
 
+  // >>> START  _ProfileBlockState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,9 +176,11 @@ class _ProfileBlockState extends State<ProfileBlock> {
         ),
       ),
       backgroundColor: tBackground,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.willpopAlert(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.willpopAlert(context);
         },
         child: Padding(
           padding: EdgeInsets.all(2),
@@ -305,4 +308,6 @@ class _ProfileBlockState extends State<ProfileBlock> {
       ),
     );
   }
+  // <<< END    _ProfileBlockState.build()
 }
+// <<< END    class _ProfileBlockState

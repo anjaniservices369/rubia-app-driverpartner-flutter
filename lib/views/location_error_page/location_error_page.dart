@@ -1,5 +1,9 @@
-import 'package:base_project_flutter/constants/imageConstant.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
+// ----------------------------------------------------------------------
+// Location problem page
+//
+// Shown when the driver's location details are missing; going back returns
+// to the location explainer.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,21 +14,26 @@ import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../location_popup_page.dart';
 import '../../responsive.dart';
-import '../bookingsPage/bookingPage.dart';
 
+// >>> START  class LocationErrorPage
 class LocationErrorPage extends StatefulWidget {
   const LocationErrorPage({Key? key, this.Locationdetails}) : super(key: key);
   final Locationdetails;
   @override
   State<LocationErrorPage> createState() => _LocationErrorPageState();
 }
+// <<< END    class LocationErrorPage
 
+// >>> START  class _LocationErrorPageState
 class _LocationErrorPageState extends State<LocationErrorPage> {
+  // >>> START  _LocationErrorPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, LocationPopUpPage());
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, LocationPopUpPage());
       },
       child: Scaffold(
         body: Padding(
@@ -109,4 +118,6 @@ class _LocationErrorPageState extends State<LocationErrorPage> {
       ),
     );
   }
+  // <<< END    _LocationErrorPageState.build()
 }
+// <<< END    class _LocationErrorPageState

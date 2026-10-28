@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Notifications list
+//
+// List of messages received, with clear option.
+// ----------------------------------------------------------------------
 import 'dart:developer';
 
 import 'package:base_project_flutter/api_services/userApi.dart';
@@ -15,6 +20,7 @@ import '../../../../../../responsive.dart';
 import '../../../../globalFuctions/globalFunctions.dart';
 import '../../../providers/notifactionProvider.dart';
 
+// >>> START  class Notifactionpage
 class Notifactionpage extends StatefulWidget {
   const Notifactionpage({Key? key, this.boolnotificationPage})
       : super(key: key);
@@ -23,12 +29,15 @@ class Notifactionpage extends StatefulWidget {
   @override
   State<Notifactionpage> createState() => _NotifactionpageState();
 }
+// <<< END    class Notifactionpage
 
+// >>> START  class _NotifactionpageState
 class _NotifactionpageState extends State<Notifactionpage> {
   late double scrollPosition;
   ScrollController scrollController = new ScrollController();
 
   MyNotifactionProvider myNotificationProvider = MyNotifactionProvider();
+  // >>> START  _NotifactionpageState.initState()  -  runs once when the screen opens
   void initState() {
     super.initState();
     myNotificationProvider =
@@ -43,16 +52,20 @@ class _NotifactionpageState extends State<Notifactionpage> {
     );
     scrollController.addListener(_scrollListener);
   }
+  // <<< END    _NotifactionpageState.initState()
 
+  // >>> START  _NotifactionpageState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _NotifactionpageState.dispose()
 
   int currentPage = 0;
   int totalPages = 0;
   var resNok;
+  // >>> START  _NotifactionpageState._scrollListener()  -  scroll listener
   _scrollListener() {
     log('scroll conmterfdas0');
     if (scrollController.position.extentAfter == 0) {
@@ -68,15 +81,21 @@ class _NotifactionpageState extends State<Notifactionpage> {
       } else {}
     }
   }
+  // <<< END    _NotifactionpageState._scrollListener()
 
   List<String> name = ['Start Your First Ride with Winter Offers.', 'Hey! '];
+  // >>> START  _NotifactionpageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          return widget.boolnotificationPage != true
-              ? Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3))
-              : Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 0));
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (widget.boolnotificationPage != true) {
+            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+          } else {
+            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 0));
+          }
         },
         child: Scaffold(
             appBar: AppBar(
@@ -249,7 +268,7 @@ class _NotifactionpageState extends State<Notifactionpage> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color:
-                                                  tPrimaryColor.withOpacity(0.2)),
+                                                  tPrimaryColor.withValues(alpha: 0.2)),
                                           child: Padding(
                                               padding: EdgeInsets.all(5.0),
                                               child: Icon(
@@ -334,4 +353,6 @@ class _NotifactionpageState extends State<Notifactionpage> {
                   );
             })));
   }
+  // <<< END    _NotifactionpageState.build()
 }
+// <<< END    class _NotifactionpageState

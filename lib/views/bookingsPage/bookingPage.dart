@@ -1,4 +1,8 @@
-import 'dart:convert';
+// ----------------------------------------------------------------------
+// Bookings (two tabs)
+//
+// Available rides, Accepted rides and Completed rides (paid and rated).
+// ----------------------------------------------------------------------
 import 'dart:developer';
 
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
@@ -11,18 +15,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import '../../api_services/userApi.dart';
 import '../../constants/constants.dart';
 import '../../globalFuctions/globalFunctions.dart';
-import '../../globalWidgets/button.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
 import 'componats/accepted_rides.dart';
-import 'package:http/http.dart' as http;
+import '../profilePage/ridehistory/ridetab.dart';
 
 import 'componats/avalableRIde.dart';
 
+// >>> START  class MyBookingHistory
 class MyBookingHistory extends StatefulWidget {
   const MyBookingHistory({Key? key, this.tabIndexType, this.index,}) : super(key: key);
   final tabIndexType;
@@ -30,31 +32,35 @@ class MyBookingHistory extends StatefulWidget {
   @override
   State<MyBookingHistory> createState() => _MyBookingHistoryState();
 }
+// <<< END    class MyBookingHistory
 
+// >>> START  class _MyBookingHistoryState
 class _MyBookingHistoryState extends State<MyBookingHistory> {
   var selectedindex;
 
+  // >>> START  _MyBookingHistoryState.checkBottomIndex()  -  check bottom index
   void checkBottomIndex() {
     setState(() {
       selectedindex = widget.tabIndexType != null ? widget.tabIndexType : 0;
     });
   }
+  // <<< END    _MyBookingHistoryState.checkBottomIndex()
 
+  // >>> START  _MyBookingHistoryState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     checkBottomIndex();
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _MyBookingHistoryState.initState()
 
+  // >>> START  _MyBookingHistoryState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.navigateBack(context);
-      },
-      child: Scaffold(
+    // Keep rebuilding this widget when HomePageProvider changes.
+    context.watch<HomePageProvider>();
+    return Scaffold(
         backgroundColor: tBackground,
         appBar: AppBar(
           backgroundColor: tAppbarColor,
@@ -92,7 +98,7 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
           ),
         ),
         body: DefaultTabController(
-            length: 2,
+            length: 3,
             initialIndex: widget.tabIndexType != null ? widget.tabIndexType : 0,
             child: Column(children: [
               Container(
@@ -132,6 +138,17 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
                           ),
                         ),
                       ),
+                      Tab(
+                        child: Container(
+                          decoration: BoxDecoration(),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text("Completed".tr,
+                                style: TextStyle(
+                                    fontSize: isTab(context) ? 22 : 16)),
+                          ),
+                        ),
+                      ),
                     ]),
               ),
               Expanded(
@@ -139,6 +156,8 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
                   child: TabBarView(children: [
                     AvalableRide(status: STATUS_WAITING_FOR_DRIVER,index:widget.index),
                     AcceptedRides(status: STATUS_ACCEPTED_RIDES),
+                    // A ride moves here once its payment is collected and the customer has been rated; a tap opens the ride details.
+                    RideHistoryList(status: STATUS_RIDE_COMPLETED, selectedType: null, allDates: true),
                   ]),
                 ),
               )
@@ -146,20 +165,9 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: tPrimaryColor,
           onPressed: () async {
+               // Reload the Bookings screen. Offers are created by the server when a
+               // booking is made and by its cron job, so nothing is triggered from here.
                Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
-               String apiUrl = 'http://rubiaservices.org/app/api/user/assign-booking-to-driver';
-
-               try {
-                 var response = await http.get(Uri.parse(apiUrl));
-                 if (response.statusCode == 200) {
-                   // Handle the response here, if needed
-                   print('Request successful: ${response.body}');
-                 } else {
-                   print('Request failed with status: ${response.statusCode}');
-                 }
-               } catch (error) {
-                 print('Error: $error');
-               }
             // var path = await getApplicationDocumentsDirectory();
             // Hive.init(path.path);
             // await Hive.openBox('peopleBox');
@@ -286,7 +294,8 @@ class _MyBookingHistoryState extends State<MyBookingHistory> {
             Icons.refresh,
           ),
         ),
-      ),
-    );
+      );
   }
+  // <<< END    _MyBookingHistoryState.build()
 }
+// <<< END    class _MyBookingHistoryState

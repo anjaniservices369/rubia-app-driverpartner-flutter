@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------
+// Wallet widgets & top-up
+//
+// Balance card, add-money flow (Cashfree) and withdraw button.
+//
+// Developer note: Cashfree mode comes from cashfreeProduction in apiConstants.dart.
+// Withdrawal is manual: the app tells the driver to visit the office.
+// ----------------------------------------------------------------------
+import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'dart:io';
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
@@ -6,11 +15,9 @@ import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/globalWidgets/customTextFiled.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/wallet/qr_payment.dart';
-import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpaymentcomponents/cfpaymentcomponent.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
@@ -28,8 +35,8 @@ import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 
 import '../../../responsive.dart';
-import '../joiningfees/qr_page.dart';
 
+// >>> START  class WalletCardWidget
 class WalletCardWidget extends StatefulWidget {
   const WalletCardWidget({
     Key? key,
@@ -38,19 +45,14 @@ class WalletCardWidget extends StatefulWidget {
   @override
   State<WalletCardWidget> createState() => _WalletCardWidgetState();
 }
+// <<< END    class WalletCardWidget
 
+// >>> START  class _WalletCardWidgetState
 class _WalletCardWidgetState extends State<WalletCardWidget> {
   final TextEditingController _amountController = TextEditingController();
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _WalletCardWidgetState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -108,9 +110,7 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                          "tel://+917893653899",
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                       },
                     ),
                   ),
@@ -153,7 +153,9 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       },
     );
   }
+  // <<< END    _WalletCardWidgetState._showContactInfoDialog()
 
+  // >>> START  _WalletCardWidgetState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // TODO: implement initState
@@ -162,11 +164,13 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       fetchBalance();
     }
   }
+  // <<< END    _WalletCardWidgetState.initState()
 
   String? result;
   bool isLoading = true;
   var walletAmount;
   var resNOK;
+  // >>> START  _WalletCardWidgetState.fetchBalance()  -  fetch balance
   fetchBalance() async {
     var response = await RideBookingsApi().getAvailableBalance(context);
     if (response != null && response['status'] == 'OK') {
@@ -178,7 +182,9 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       resNOK = response['status'];
     }
   }
+  // <<< END    _WalletCardWidgetState.fetchBalance()
 
+  // >>> START  _WalletCardWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return walletAmount == null
@@ -357,7 +363,9 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
             ),
           );
   }
+  // <<< END    _WalletCardWidgetState.build()
 
+  // >>> START  _WalletCardWidgetState.verifyPayment()  -  verify payment
   void verifyPayment(String orderId) async {
     print("Verify Payment/...........");
     print("Verify Payment.........");
@@ -378,7 +386,9 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
     }
     print("Verify Payment");
   }
+  // <<< END    _WalletCardWidgetState.verifyPayment()
 
+  // >>> START  _WalletCardWidgetState.onError()  -  on error
   void onError(CFErrorResponse errorResponse, String orderId) async {
     print(errorResponse.getMessage());
     print(errorResponse.getStatus().toString());
@@ -388,15 +398,20 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
     Twl.createAlert(context,errorResponse.getStatus().toString(),errorResponse.getMessage().toString());
     
   }
+  // <<< END    _WalletCardWidgetState.onError()
 
+  // >>> START  _WalletCardWidgetState.receivedEvent()  -  received event
   void receivedEvent(String event_name, Map<dynamic, dynamic> meta_data) {
     print(event_name);
     print(meta_data);
   }
+  // <<< END    _WalletCardWidgetState.receivedEvent()
 
   var cfPaymentGatewayService = CFPaymentGatewayService();
-  CFEnvironment environment = CFEnvironment.SANDBOX;
+  CFEnvironment environment =
+      cashfreeProduction ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
 
+  // >>> START  _WalletCardWidgetState.createSession()  -  create session
   CFSession? createSession(orderId, sessionID) {
     print(orderId);
     print('sessionID');
@@ -414,36 +429,35 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
     }
     return null;
   }
+  // <<< END    _WalletCardWidgetState.createSession()
 
+  // >>> START  _WalletCardWidgetState.pay()
   pay(orderId, sessionId) async {
     print(orderId);
     print('sessionID');
     print(sessionId);
     try {
       var session = createSession(orderId, sessionId);
-      List<CFPaymentModes> components = <CFPaymentModes>[];
-      var paymentComponent =
-          CFPaymentComponentBuilder().setComponents(components).build();
-
       var theme = CFThemeBuilder()
           .setNavigationBarBackgroundColorColor("#FF0000")
           .setPrimaryFont("Menlo")
           .setSecondaryFont("Futura")
           .build();
 
-      var cfDropCheckoutPayment = CFDropCheckoutPaymentBuilder()
+      var cfWebCheckoutPayment = CFWebCheckoutPaymentBuilder()
           .setSession(session!)
-          .setPaymentComponent(paymentComponent)
           .setTheme(theme)
           .build();
 
-      cfPaymentGatewayService.doPayment(cfDropCheckoutPayment);
+      cfPaymentGatewayService.doPayment(cfWebCheckoutPayment);
     } on CFException catch (e) {
       print("e.pay");
       print(e.message);
     }
   }
+  // <<< END    _WalletCardWidgetState.pay()
 
+  // >>> START  _WalletCardWidgetState.createAlert()  -  create alert
   createAlert(BuildContext context) {
     showDialog(
       context: context,
@@ -550,7 +564,9 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       },
     );
   }
+  // <<< END    _WalletCardWidgetState.createAlert()
 
+  // >>> START  _WalletCardWidgetState.withDrawAlert()  -  with draw alert
   withDrawAlert(BuildContext context) {
     showDialog(
       context: context,
@@ -657,6 +673,7 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
       },
     );
   }
+  // <<< END    _WalletCardWidgetState.withDrawAlert()
 
   // Future<void> onPaymentClick(paymentToekn) async {
   //   setState(() {
@@ -721,3 +738,4 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
   //       });
   // }
 }
+// <<< END    class _WalletCardWidgetState

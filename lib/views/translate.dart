@@ -1,7 +1,17 @@
+// ----------------------------------------------------------------------
+// All on-screen text (translations)
+//
+// Every sentence shown in the app, in English, Hindi and Telugu. To change
+// wording or add a language, edit this file.
+//
+// Developer note: GetX Translations. Keys: en_us, hi_in, tl_in. Used as
+// 'key'.tr throughout the views.
+// ----------------------------------------------------------------------
 import 'package:get/get.dart';
 
 import '../constants/constants.dart';
 
+// >>> START  class LanguageTranslations
 class LanguageTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
@@ -16,7 +26,7 @@ class LanguageTranslations extends Translations {
           'automatic': 'Automatic',
 
           'view_bill': 'View Bill',
-          'write_a_review_to_driver': 'Write a review to Driver',
+          'write_a_review_to_driver': 'Write a review about the customer',
 
           // takeselfioccra
 
@@ -29,6 +39,8 @@ class LanguageTranslations extends Translations {
           'take_photos_of_car': 'take photos of car',
           'before_you_start_ride_please_take_selfies_&':
               'Before you start ride please take selfies &',
+          'before_you_end_ride_please_take_selfies_&':
+              'Before you end ride please take selfies &',
           'verification': 'Verification',
           'car_number_Cant_Be_Empty': 'Car number cant Be Empty',
           //  profile  review
@@ -40,7 +52,6 @@ class LanguageTranslations extends Translations {
           'available_rides': 'Available Rides',
           'prices_may_vary':
               'Kindly be aware that the pricing structure is influenced by the distance & time traveled.',
-          'and_privacy_policy.': 'Make picture clear',
           'and_privacy_policy.': 'Make picture clear',
           'take_selfie': 'Take Selfie',
           'from_the_front_angle.': 'from The front angle',
@@ -71,7 +82,6 @@ class LanguageTranslations extends Translations {
           'phone_number': 'Phone Number',
           'relation_ship': 'Relation Ship',
           'aadhar_number': 'Aadhar Number',
-          'next': 'Next',
           //
           'Resend_Code': 'Resend Code?',
           "earnings_by_orders": "Earnings by orders",
@@ -81,8 +91,6 @@ class LanguageTranslations extends Translations {
           'confirm_your_cancellation': 'Confirm your cancellation',
           'Once_you_cancel_your_ride_you_will_be_pay_fee_Rs_500_for_cancellations_as_per_our_policy':
               'Cancellation of rides is subject to a fee as per our policy.',
-          'support': 'Support',
-          'app_language': 'App Language',
           "Driver_details": "Driver Details",
           'Address_details': 'Address Details',
           'bill_details': 'Bill Details',
@@ -178,7 +186,6 @@ class LanguageTranslations extends Translations {
           'collect_bill': 'Collect Bill',
           'Full_name': 'Full name',
           'Phone_Number': 'Phone Number',
-          'email': 'Email',
           'Error_of_coupons': 'Error of coupons',
           'No_rides_found': 'No rides found',
           'Select_Title': 'Select Title',
@@ -244,15 +251,13 @@ class LanguageTranslations extends Translations {
           "Left_from_school": "Left from school",
           "Hangouts_video_call": "Hangouts video call",
           "Reached_at_school": "Reached at school",
-          "When_bus_reached_at_pickup_remainder_spot":
-              "When bus reached at pickup remainde pot",
           "Drop_Notifications": "Drop Notifications",
-          "When_bus_reached_at_pickup_remainder_spot":
-              "When bus reached at pickup remainder spot",
+          "When_driverpartner_reached_at_pickup_location":
+              "When the driver partner reaches the pickup location",
           "Pick_up_Notifications": "Pick up Notificationst",
-          "When_bus_started_at_starting_point_remainder_spot":
-              "When bus started at starting point remainder spot",
-          "Bus_trip_start_Notifications": "Bus trip start Notifications",
+          "When_trip_started_at_starting_point":
+              "When the trip starts at the starting point",
+          "Trip_start_Notifications": "Trip start Notifications",
           "Settings": "Settings",
 
           //   otp_page
@@ -282,7 +287,6 @@ class LanguageTranslations extends Translations {
               'Please pay the amount\nbefore contuning',
           'payout_details': 'Payout Details',
           'pay_now': 'Pay Now',
-          'skip': 'Skip',
           'payment_under_process': 'Payment Under Process',
           'please_Don’t_Go_Back_Or_Refresh_The_Page\nas_We_Are_Processing_Your_Payment':
               'Please don’t go back or refresh the page\nas we are processing your payment',
@@ -422,7 +426,6 @@ class LanguageTranslations extends Translations {
               'Pincode must be minimum 6 digits',
           'enter_Pincode': 'Enter pincode',
           //PanCard
-          'pan_card': 'PAN Card',
           'upload_your_pan_card': 'Upload Your PAN Card',
           'pan_number': 'PAN Number',
           'pan_number_can_not_be_empty.': 'PAN number can not be empty.',
@@ -451,7 +454,6 @@ class LanguageTranslations extends Translations {
 //Documents
           'upload_All_documents,_required_For_Your_Verification.':
               'Upload all Documents, Required for your verification.',
-          'aadhar_card': 'Aadhar Card',
           'upload_Your_Aadhar_Card': 'Upload Your Aadhar Card',
           //Demo
           'membership_For_45_Days': 'Membership for 45 days',
@@ -491,14 +493,12 @@ class LanguageTranslations extends Translations {
           "mobile_Number_Can't_Be_Empty": "Mobile number can't be empty",
           "mobile_Number_Must_Be_10_Digits": "Mobile number must be 10 digits",
           'enter_Mobile_Number': 'Enter Mobile Number',
-          'login': 'Login',
           'get_OTP': 'Get OTP',
           'your_number_is_safe_with_us_we_don’t_use_your_number':
               'Your number is safe with us, we don’t use your number',
           'for_any_unsolicitedcommunication':
               'for any unsolicitedcommunication.',
 //NotificationView
-          'notifications': 'Notifications',
           "clear": "Clear",
           "start_your_first_ride_with_winter_Offers.":
               "Start Your First Ride with Winter offers.",
@@ -517,7 +517,6 @@ class LanguageTranslations extends Translations {
           'total_Distance : ': 'Total distance : ',
           'total_Ride_Time : ': 'Total ride time : ',
           'amount': 'Amount',
-          'distance': 'Distance',
           'add_review': 'Add Review',
           'Discount': 'Discount',
           'ready_for_next_ride': 'Ready For Next Ride',
@@ -697,7 +696,6 @@ class LanguageTranslations extends Translations {
 
           'Aadhar_number': 'Aadhar number',
           'upload_Aadhar_back_side': 'Upload Aadhar Back side',
-          'upload_Aadhar_back_side': 'Upload Aadhar Back side',
           'Upload_adhar_card_back': 'Upload Aadhar Back side',
           'Upload_adhar_card_front': 'Upload Aadhar Back side',
 
@@ -759,7 +757,7 @@ class LanguageTranslations extends Translations {
           "manual": "मैनुअल",
           "automatic": "स्वचालित",
           "view_bill": "बिल देखें",
-          "write_a_review_to_driver": "ड्राइवर के लिए समीक्षा लिखें",
+          "write_a_review_to_driver": "ग्राहक के बारे में समीक्षा लिखें",
           "Before_you_start_ride_please_selfie_along":
               "राइड शुरू करने से पहले कृपया सेल्फी लें",
           "with_car_number_plate": "कार नंबर प्लेट के साथ",
@@ -768,6 +766,8 @@ class LanguageTranslations extends Translations {
           "take_photos_of_car": "कार की फोटो लें",
           "before_you_start_ride_please_take_selfies_&":
               "राइड शुरू करने से पहले कृपया सेल्फी लें",
+          "before_you_end_ride_please_take_selfies_&":
+              "राइड समाप्त करने से पहले कृपया सेल्फी लें",
           "verification": "सत्यापन",
           "car_number_Cant_Be_Empty": "कार नंबर खाली नहीं हो सकता",
           "your_Profile_Is_Under_Reviewing\nprocess._Please_Wait_2_To_4_Days":
@@ -798,7 +798,6 @@ class LanguageTranslations extends Translations {
 
           "emergency_contact_details": "आपातकालीन संपर्क विवरण",
           "emergency_contacts": "आपातकालीन संपर्क",
-          "upload_your_driving_license": "अपना ड्राइविंग लाइसेंस अपलोड करें",
           "Person": "व्यक्ति",
           "vehicle_types": "वाहन प्रकार",
           "relation_ship_can_not_be_empty": "संबंध खाली नहीं हो सकता",
@@ -807,7 +806,6 @@ class LanguageTranslations extends Translations {
           "phone_number": "फोन नंबर",
           "relation_ship": "संबंध",
           "aadhar_number": "आधार नंबर",
-          "next": "आगे",
           "Resend_Code": "कोड पुनः भेजें?",
           "earnings_by_orders": "आर्डर्स द्वारा कमाई",
           "Choose_your_ride": "अपनी राइड चुनें",
@@ -816,18 +814,11 @@ class LanguageTranslations extends Translations {
           "confirm_your_cancellation": "अपनी रद्दीकरण की पुष्टि करें",
           "Once_you_cancel_your_ride_you_will_be_pay_fee_Rs_500_for_cancellations_as_per_our_policy":
               "अगर आप अपनी यात्रा रद्द करते हैं, तो हमारी नीति के अनुसार आपको रद्दीकरण के लिए रु. 500 शुल्क देना होगा।",
-          "support": "सहायता",
-          "app_language": "ऐप भाषा",
           "Driver_details": "ड्राइवर विवरण",
           "Address_details": "पता विवरण",
           "bill_details": "बिल विवरण",
           "Ride_status": "राइड स्थिति",
           "Ride": "राइड",
-          "Loads": "भार",
-          "Ride_now": "अब राइड करें",
-          "Outstation": "आउटस्टेशन",
-          "Confirm_Ride": "राइड की पुष्टि करें",
-          "Rentals": "किराया",
           "Loads": "भार",
           "Ride_now": "अब राइड करें",
           "Outstation": "बाहरी क्षेत्र",
@@ -916,7 +907,6 @@ class LanguageTranslations extends Translations {
           "collect_bill": "बिल जमा करें",
           "Full_name": "पूरा नाम",
           "Phone_Number": "फ़ोन नंबर",
-          "email": "ईमेल",
           "Error_of_coupons": "कूपन त्रुटि",
           "No_rides_found": "कोई राइड नहीं मिली",
           "Select_Title": "शीर्षक चुनें",
@@ -973,13 +963,13 @@ class LanguageTranslations extends Translations {
           "Left_from_school": "स्कूल से निकल गया",
           "Hangouts_video_call": "हैंगआउट्स वीडियो कॉल",
           "Reached_at_school": "स्कूल पर पहुंचा",
-          "When_bus_reached_at_pickup_remainder_spot":
-              "जब बस पिकअप बची हुई स्थान पर पहुंची",
+          "When_driverpartner_reached_at_pickup_location":
+              "जब ड्राइवर पार्टनर पिकअप स्थान पर पहुँचे",
           "Drop_Notifications": "नोटिफिकेशन ड्रॉप करें",
           "Pick_up_Notifications": "नोटिफिकेशन पिकअप करें",
-          "When_bus_started_at_starting_point_remainder_spot":
-              "जब बस प्रारंभिक बिंदु बची हुई स्थान पर शुरू हुई",
-          "Bus_trip_start_Notifications": "बस यात्रा शुरू नोटिफिकेशन",
+          "When_trip_started_at_starting_point":
+              "जब यात्रा शुरुआती स्थान पर शुरू हो",
+          "Trip_start_Notifications": "यात्रा शुरू नोटिफिकेशन",
           "Settings": "सेटिंग्स",
           "privacy_policy": "गोपनीयता नीति",
           "terms_&_Condition": "नियम और शर्तें",
@@ -1032,7 +1022,6 @@ class LanguageTranslations extends Translations {
           'earning_Per_km': 'आय प्रति किमी',
           'price_Per_Minute': 'मूल्य प्रति मिनट',
           'platform_Charge': 'प्लेटफॉर्म चार्ज',
-          'outstation_rides': 'आउटस्टैटिन सवारी',
           'pickup_extra_km_Fare_Post_2km':
               'पिकअप अतिरिक्त किमी किराया 2 किमी के बाद',
           '(Max_10)': '(मैक्स 10)',
@@ -1205,7 +1194,6 @@ class LanguageTranslations extends Translations {
           'enter_Mobile_Number': 'मोबाइल नंबर दर्ज करें',
           'login': 'लॉग इन करें',
 //NotificationView
-          'notifications': 'सूचनाएं',
           "clear": "साफ़ करे",
           "start_your_first_ride_with_winter_Offers.":
               "विंटर ऑफ़र के साथ अपनी पहली राइड शुरू करें.",
@@ -1409,7 +1397,7 @@ class LanguageTranslations extends Translations {
           "manual": "మేన్యువల్",
           "automatic": "స్వయంచాలక",
           "view_bill": "బిల్ వీక్షించు",
-          "write_a_review_to_driver": "డ్రైవర్‌కు సమీక్ష రాయండి",
+          "write_a_review_to_driver": "కస్టమర్ గురించి సమీక్ష రాయండి",
           "Before_you_start_ride_please_selfie_along":
               "రైడ్ ప్రారంభించుటకు ముందుగా సెల్ఫీ తీసుకోండి",
           "with_car_number_plate": "కారు నంబర్ ప్లేట్‌తో",
@@ -1418,6 +1406,8 @@ class LanguageTranslations extends Translations {
           "take_photos_of_car": "కారు చిత్రాలు తీసుకోండి",
           "before_you_start_ride_please_take_selfies_&":
               "రైడ్ ప్రారంభించుటకు ముందుగా సెల్ఫీలను తీసుకోండి &",
+          "before_you_end_ride_please_take_selfies_&":
+              "రైడ్ ముగించే ముందు సెల్ఫీలను తీసుకోండి &",
           "verification": "ధృవీకరణ",
           "car_number_Cant_Be_Empty": "కారు సంఖ్య ఖాళీ ఉండకూడదు",
           "your_Profile_Is_Under_Reviewing\nprocess.Please_Wait_2_To_4_Days":
@@ -1449,8 +1439,6 @@ class LanguageTranslations extends Translations {
 
           "emergency_contact_details": "ఎమర్జెన్సీ సంప్రదించండి వివరాలు",
           "emergency_contacts": "ఎమర్జెన్సీ కాంటాక్ట్‌లు",
-          "upload_your_driving_license":
-              "మీ డ్రైవింగ్ లైసెన్స్ అప్‌లోడ్ చేయండి",
           "Person": "వ్యక్తి",
           "vehicle_types": "వాహన రకాలు",
           "relation_ship_can_not_be_empty": "సంబంధం ఖాళీ ఉండకూడదు",
@@ -1459,7 +1447,6 @@ class LanguageTranslations extends Translations {
           "phone_number": "ఫోన్ నంబర్",
           "relation_ship": "సంబంధం",
           "aadhar_number": "ఆధార్ సంఖ్య",
-          "next": "తరువాయి",
           "Resend_Code": "కోడ్‌ను రీసెండ్ చేయండి?",
           "earnings_by_orders": "ఆర్డర్ల ద్వారా ఆదాయం",
           "Choose_your_ride": "మీ రైడ్‌ను ఎంచుకోండి",
@@ -1468,8 +1455,6 @@ class LanguageTranslations extends Translations {
           "confirm_your_cancellation": "మీ రద్దు ధృడీకరణను నిర్ధారించండి",
           "Once_you_cancel_your_ride_you_will_be_pay_fee_Rs_500_for_cancellations_as_per_our_policy":
               "మీ రైడ్ రద్దు చేసినా, మేము మీరు మా విధివతికి సరిపోయేందుకు రూ. 500 ఫీజు చెల్లించవచ్చు.",
-          "support": "మద్దతు",
-          "app_language": "యాప్ భాష",
           "Driver_details": "డ్రైవర్ వివరాలు",
           "Address_details": "చిరునామా వివరాలు",
           "bill_details": "బిల్ వివరాలు",
@@ -1563,7 +1548,6 @@ class LanguageTranslations extends Translations {
           "collect_bill": "బిల్‌ను సేకరించు",
           "Full_name": "పూర్తి పేరు",
           "Phone_Number": "ఫోన్ నంబర్",
-          "email": "ఇమెయిల్",
           "Error_of_coupons": "కూపన్‌ల దోషం",
           "No_rides_found": "రైడ్‌లు కనుగొనబడలేదు",
           "Select_Title": "శీర్షికను ఎంచుకోండి",
@@ -1624,15 +1608,13 @@ class LanguageTranslations extends Translations {
           "Left_from_school": "పాఠశాలను నుండి వద్దు",
           "Hangouts_video_call": "హాంగ్ అవుట్స్ వీడియో కాల్",
           "Reached_at_school": "పాఠశాలకు చేరాను",
-          "When_bus_reached_at_pickup_remainder_spot":
-              "బస్ పికప్ రిమెండర్ స్పాట్ కి చేరుటప్పుడు",
           "Drop_Notifications": "డ్రాప్ నోటిఫికేషన్‌లు",
-          "When_bus_reached_at_pickup_remainder_spot":
-              "బస్ పికప్ రిమెండర్ స్పాట్‌కి ఎప్పుడు చేరుకోవడం",
+          "When_driverpartner_reached_at_pickup_location":
+              "డ్రైవర్ పార్టనర్ పికప్ స్థానానికి చేరుకున్నప్పుడు",
           "Pick_up_Notifications": "పిక్ అప్ నోటిఫికేషన్‌లు",
-          "When_bus_started_at_starting_point_remainder_spot":
-              "బస్ ప్రారంభ పాయింట్ రిమెండర్ స్పాట్ లో ఎప్పుడు ప్రారంభించింది",
-          "Bus_trip_start_Notifications": "బస్ ట్రిప్ స్టార్ట్ నోటిఫికేషన్‌లు",
+          "When_trip_started_at_starting_point":
+              "ప్రయాణం ప్రారంభ స్థానంలో ప్రారంభమైనప్పుడు",
+          "Trip_start_Notifications": "ట్రిప్ ప్రారంభ నోటిఫికేషన్‌లు",
           "Settings": "సెట్టింగులు",
 
           "privacy_policy": "గోప్యతా విధానం",
@@ -1688,7 +1670,6 @@ class LanguageTranslations extends Translations {
           'earning_Per_km': 'కిలోమీటరు కొలచాడు',
           'price_Per_Minute': 'ప్రతి నిమిషం ధర',
           'platform_Charge': 'ప్లాట్‌ఫారం ఛార్జీ',
-          'outstation_rides': 'అవాఉట్‌స్టేషన్ సవారీలు',
           'pickup_extra_km_Fare_Post_2km':
               '2 కిమీ తర్వాత పికప్ అదనపు కిలోమీటరు ధర',
           '(Max_10)': '(గరిష్టం 10)',
@@ -1860,7 +1841,6 @@ class LanguageTranslations extends Translations {
           'enter_Mobile_Number': 'మొబైల్ నంబర్ నమోదు చేయండి',
           'login': 'లాగిన్',
 //NotificationView
-          'notifications': 'నోటిఫికేషన్లు',
           "clear": "తిరిగి నివేదించండి",
           "start_your_first_ride_with_winter_Offers.":
               "వింటర్ ఆఫర్లతో మీ మొదటి రైడ్‌ను ప్రారంభించండి.",
@@ -2060,3 +2040,4 @@ class LanguageTranslations extends Translations {
         },
       };
 }
+// <<< END    class LanguageTranslations

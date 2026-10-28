@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Registration checklist
+//
+// Shows the registration steps (personal, emergency, vehicle, documents,
+// bank) with ticks and the final Submit button.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -22,23 +28,29 @@ import 'componants/emergency_Contacts.dart';
 import 'componants/personal_Details.dart';
 import 'componants/vehicle_Types.dart';
 
+// >>> START  class AddDetailsView
 class AddDetailsView extends StatefulWidget {
   const AddDetailsView({Key? key}) : super(key: key);
 
   @override
   State<AddDetailsView> createState() => _AddDetailsViewState();
 }
+// <<< END    class AddDetailsView
 
+// >>> START  class _AddDetailsViewState
 class _AddDetailsViewState extends State<AddDetailsView> {
+  // >>> START  _AddDetailsViewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheck();
     super.initState();
   }
+  // <<< END    _AddDetailsViewState.initState()
 
   var authCode;
   var checkDetails;
   var check;
+  // >>> START  _AddDetailsViewState.fetchCheck()  -  fetch check
   fetchCheck() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -53,14 +65,18 @@ class _AddDetailsViewState extends State<AddDetailsView> {
       });
     }
   }
+  // <<< END    _AddDetailsViewState.fetchCheck()
 
   bool ischeckbox = false;
 
   bool isjobdetails = false;
+  // >>> START  _AddDetailsViewState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.willpopAlert(context);
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.willpopAlert(context);
       },
       child: Scaffold(
         backgroundColor: tBackground,
@@ -115,8 +131,14 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                                       onTap: () {
                                         if (checkDetails['personal_details'] ==
                                             false) {
-                                          Twl.navigateTo(
-                                              context, PersonalDetails());
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            backgroundColor:
+                                                Colors.transparent,
+                                            builder: (context) =>
+                                                PersonalDetails(),
+                                          ).then((_) => fetchCheck());
                                         }
                                       },
                                       child: Container(
@@ -168,8 +190,14 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                                           if (checkDetails[
                                                   'driver_emergency_contacts'] ==
                                               false) {
-                                            Twl.navigateTo(
-                                                context, EmergencyContact());
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              builder: (context) =>
+                                                  EmergencyContact(),
+                                            ).then((_) => fetchCheck());
                                           }
                                         } else {
                                           Twl.createAlert(context, 'Alert',
@@ -228,8 +256,14 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                                           if (checkDetails[
                                                   'driver_vehicle_types'] ==
                                               false) {
-                                            Twl.navigateTo(
-                                                context, VechileSelection());
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              builder: (context) =>
+                                                  VechileSelection(),
+                                            ).then((_) => fetchCheck());
                                           }
                                         } else {
                                           Twl.createAlert(context, 'Alert',
@@ -347,8 +381,14 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                                           if (checkDetails[
                                                   'driver_bank_details'] ==
                                               false) {
-                                            Twl.navigateTo(
-                                                context, BankDetails());
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              builder: (context) =>
+                                                  BankDetails(),
+                                            ).then((_) => fetchCheck());
                                           }
                                         } else {
                                           Twl.createAlert(context, 'Alert',
@@ -484,4 +524,6 @@ class _AddDetailsViewState extends State<AddDetailsView> {
       ),
     );
   }
+  // <<< END    _AddDetailsViewState.build()
 }
+// <<< END    class _AddDetailsViewState

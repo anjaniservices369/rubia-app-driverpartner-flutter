@@ -1,28 +1,31 @@
-import 'package:base_project_flutter/api_services/userApi.dart';
+// ----------------------------------------------------------------------
+// Wallet
+//
+// Wallet screen: balance, add money, withdraw and transactions.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/wallet/components.dart';
 import 'package:base_project_flutter/views/wallet/transactiondetails.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../globalFuctions/globalFunctions.dart';
 import '../../responsive.dart';
 
+// >>> START  class WalletPage
 class WalletPage extends StatefulWidget {
   const WalletPage({Key? key, this.selectedType}) : super(key: key);
 
-  @override
   final selectedType;
   State<WalletPage> createState() => _WalletPageState();
 }
+// <<< END    class WalletPage
 
+// >>> START  class _WalletPageState
 class _WalletPageState extends State<WalletPage> {
+  // >>> START  _WalletPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,11 +43,7 @@ class _WalletPageState extends State<WalletPage> {
           ),
         ),
       ),
-      body: WillPopScope(
-        onWillPop: (){
-          return Twl.navigateTo(context, BottomNavigation(tabIndexId: 0,));
-        },
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Column(
             children: [
               WalletCardWidget(),
@@ -54,7 +53,6 @@ class _WalletPageState extends State<WalletPage> {
             ],
           ),
         ),
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: tPrimaryColor,
         onPressed: () {
@@ -66,4 +64,6 @@ class _WalletPageState extends State<WalletPage> {
       ),
     );
   }
+  // <<< END    _WalletPageState.build()
 }
+// <<< END    class _WalletPageState

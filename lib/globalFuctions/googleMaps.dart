@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------
+// Google Maps helper
+//
+// Earlier helper for drawing locations on Google Maps; all of its code is
+// commented out.
+//
+// STATUS: not imported by any other file (legacy / experiment). Safe to
+// delete after a quick check.
+// ----------------------------------------------------------------------
 // import 'package:base_project_flutter/api_services/userApi.dart';
 // import 'package:base_project_flutter/constants/constants.dart';
 // import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';

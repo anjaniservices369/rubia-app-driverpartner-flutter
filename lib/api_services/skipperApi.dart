@@ -1,9 +1,19 @@
+// ----------------------------------------------------------------------
+// Taxi / skipper ride requests (switched off)
+//
+// Server calls for the taxi-style ride-offer flow. Not used by the driver
+// app today.
+//
+// Developer note: Disabled via skipperOffersEnabled=false in
+// apiConstants.dart. Never triggers the global logout.
+// ----------------------------------------------------------------------
 import 'dart:convert';
 
 import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class SkipperApi
 /// Client for the `/api/skipper/...` ride endpoints (contract C2).
 ///
 /// Deliberately does NOT use the central session-expired handler: a partner
@@ -79,3 +89,4 @@ class SkipperApi {
         'otp': otp,
       });
 }
+// <<< END    class SkipperApi

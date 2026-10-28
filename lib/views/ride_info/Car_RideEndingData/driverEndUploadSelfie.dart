@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// End of ride: driver selfie
+//
+// Selfie before ending the ride.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,17 +19,21 @@ import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../responsive.dart';
 import 'drive_end_car-sides.dart';
 
+// >>> START  class DriverEndUploadSelfie
 class DriverEndUploadSelfie extends StatefulWidget {
   const DriverEndUploadSelfie({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<DriverEndUploadSelfie> createState() => _DriverEndUploadSelfieState();
 }
+// <<< END    class DriverEndUploadSelfie
 
+// >>> START  class _DriverEndUploadSelfieState
 class _DriverEndUploadSelfieState extends State<DriverEndUploadSelfie> {
   var selfeImage;
   bool isLoading = false;
 
+  // >>> START  _DriverEndUploadSelfieState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
@@ -40,9 +49,11 @@ class _DriverEndUploadSelfieState extends State<DriverEndUploadSelfie> {
         ),
         centerTitle: false,
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.navigateBack(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.navigateBack(context);
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: tDefaultPadding),
@@ -217,30 +228,21 @@ class _DriverEndUploadSelfieState extends State<DriverEndUploadSelfie> {
                           _storedData.rideEndedImagesList.clear();
                           String imageUrl = await Twl().uploadImage();
 
-                          if (imageUrl != null) {
-                            print('Uploaded image URL: $imageUrl');
-                            setState(() {
-                              stopLoading();
-                              selfeImage = imageUrl;
-                              isLoading = false;
-                            });
+                          print('Uploaded image URL: $imageUrl');
+                          setState(() {
+                            stopLoading();
+                            selfeImage = imageUrl;
+                            isLoading = false;
+                          });
 
-                            _storedData.rideEndedImagesList.add({
-                              "booking_id": widget.bookingDetails['id'].toString(),
-                              "image": selfeImage,
-                              "image_type": image_type_selfie.toString(),
-                              "type": type_after_ride.toString()
-                            });
+                          _storedData.rideEndedImagesList.add({
+                            "booking_id": widget.bookingDetails['id'].toString(),
+                            "image": selfeImage,
+                            "image_type": image_type_selfie.toString(),
+                            "type": type_after_ride.toString()
+                          });
 
-                            print(_storedData.rideEndedImagesList.toString());
-                          } else {
-                            print('Image upload failed or no image selected.');
-                            setState(() {
-                              stopLoading();
-                              selfeImage = null;
-                              isLoading = false;
-                            });
-                          }
+                          print(_storedData.rideEndedImagesList.toString());
                         }
                       : (startLoading, stopLoading, btnState) async {
                           startLoading();
@@ -256,4 +258,6 @@ class _DriverEndUploadSelfieState extends State<DriverEndUploadSelfie> {
       ),
     );
   }
+  // <<< END    _DriverEndUploadSelfieState.build()
 }
+// <<< END    class _DriverEndUploadSelfieState

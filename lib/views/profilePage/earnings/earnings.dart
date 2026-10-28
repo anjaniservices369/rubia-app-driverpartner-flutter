@@ -1,9 +1,12 @@
+// ----------------------------------------------------------------------
+// Earnings
+//
+// Earnings by day / 7 days / custom range.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/profilePage/earnings/componants/coustomDatePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
@@ -12,32 +15,40 @@ import '../../../responsive.dart';
 import '../../wallet/pickCustomDate.dart';
 import 'componants/earn_container.dart';
 
+// >>> START  class EarningPage
 class EarningPage extends StatefulWidget {
   EarningPage({Key? key, this.tabindex, this.selectedType, this.isEarningPage})
       : super(key: key);
   final selectedType;
-  var tabindex;
+  final tabindex;
   final isEarningPage;
   @override
   State<EarningPage> createState() => _EarningPageState();
 }
+// <<< END    class EarningPage
 
+// >>> START  class _EarningPageState
 class _EarningPageState extends State<EarningPage> {
+  // Current tab; the widget's own field is final.
+  late dynamic _tabindex = widget.tabindex;
   int initPosition = 0;
   String filterValue = "All";
 
+  // >>> START  _EarningPageState.initState()  -  runs once when the screen opens
   void initState() {
     checkBottomIndex();
     super.initState();
   }
+  // <<< END    _EarningPageState.initState()
 
+  // >>> START  _EarningPageState.checkBottomIndex()  -  check bottom index
   void checkBottomIndex() async {
     setState(() {});
     setState(() {
-      widget.tabindex = widget.tabindex != null ? widget.tabindex : 0;
-      print('widget.tabindex.toString()' + widget.tabindex.toString());
+      _tabindex = _tabindex != null ? _tabindex : 0;
+      print('_tabindex.toString()' + _tabindex.toString());
     });
-    if (widget.tabindex == 0) {
+    if (_tabindex == 0) {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
 
@@ -57,6 +68,7 @@ class _EarningPageState extends State<EarningPage> {
       sharedPreferences.setString('endDate', endDate);
     }
   }
+  // <<< END    _EarningPageState.checkBottomIndex()
 
   // @override
   // void dispose() async {
@@ -89,6 +101,7 @@ class _EarningPageState extends State<EarningPage> {
   //   });
   // }
 
+  // >>> START  _EarningPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,14 +133,16 @@ class _EarningPageState extends State<EarningPage> {
                   color: tBlue,
                   fontWeight: FontWeight.w700)),
         ),
-        body: WillPopScope(
-          onWillPop: () {
-            return Twl.forceNavigateTo(
+        body: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.forceNavigateTo(
                 context, BottomNavigation(tabIndexId: 3));
           },
           child: DefaultTabController(
               length: 4,
-              initialIndex: widget.tabindex == null ? 0 : widget.tabindex,
+              initialIndex: _tabindex == null ? 0 : _tabindex,
               child: Column(children: [
                 SizedBox(
                   height: 1.5.h,
@@ -150,7 +165,7 @@ class _EarningPageState extends State<EarningPage> {
                       borderRadius: BorderRadius.circular(4)),
                   onTap: (int index) {
                     setState(() {
-                      widget.tabindex = index;
+                      _tabindex = index;
                       print(index);
                     });
                   },
@@ -225,7 +240,6 @@ class _EarningPageState extends State<EarningPage> {
                         sharedPreferences.setString(
                             'filteredValue', 'Last 7 Days');
 
-                        var now = new DateTime.now();
                         var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                         String endDate = formatter
                             .format(DateTime.now().add(Duration(days: 1)));
@@ -277,7 +291,6 @@ class _EarningPageState extends State<EarningPage> {
                         sharedPreferences.setString(
                             'filteredValue', 'Last 30 Days');
 
-                        var now = new DateTime.now();
                         var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                         String endDate = formatter
                             .format(DateTime.now().add(Duration(days: 1)));
@@ -330,7 +343,6 @@ class _EarningPageState extends State<EarningPage> {
                             return Container();
                           },
                           transitionBuilder: (ctx, a1, a2, child) {
-                            var curve = Curves.easeInOut.transform(a1.value);
                             return PickCustomDate(
                                 filterValue: filterValue, isEarningPage: true);
                           },
@@ -506,4 +518,6 @@ class _EarningPageState extends State<EarningPage> {
           // ),
         ));
   }
+  // <<< END    _EarningPageState.build()
 }
+// <<< END    class _EarningPageState

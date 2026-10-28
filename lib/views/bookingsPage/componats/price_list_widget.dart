@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Price row
+//
+// One line of a price list.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -5,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../../../constants/constants.dart';
 import '../../../responsive.dart';
 
+// >>> START  class priceListWidget
 class priceListWidget extends StatelessWidget {
   const priceListWidget({
     Key? key,
@@ -15,6 +21,7 @@ class priceListWidget extends StatelessWidget {
   final title;
   final value;
 
+  // >>> START  priceListWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,4 +45,6 @@ class priceListWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    priceListWidget.build()
 }
+// <<< END    class priceListWidget

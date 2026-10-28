@@ -1,7 +1,16 @@
+// ----------------------------------------------------------------------
+// Booking status labels
+//
+// Turns a booking's status number into the words shown to the driver
+// (Pending, Accepted, Way to pickup ...).
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 
+// >>> START  class StatusConstants
+/// Converts a ride status number into the label shown to the driver.
 class StatusConstants {
+  // >>> START  StatusConstants.getBookingStatusConstants()  -  get booking status constants
   getBookingStatusConstants(int status) {
     switch (status) {
       case STATUS_WAITING_FOR_DRIVER:
@@ -28,7 +37,9 @@ class StatusConstants {
         return 'pending';
     }
   }
+  // <<< END    StatusConstants.getBookingStatusConstants()
 
+  // >>> START  StatusConstants.getBookingStatusConstantsColors()  -  get booking status constants colors
   getBookingStatusConstantsColors(int status) {
     switch (status) {
       case STATUS_WAITING_FOR_DRIVER:
@@ -55,4 +66,6 @@ class StatusConstants {
         return tAppbarColor;
     }
   }
+  // <<< END    StatusConstants.getBookingStatusConstantsColors()
 }
+// <<< END    class StatusConstants

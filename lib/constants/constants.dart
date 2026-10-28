@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Colours and spacing
+//
+// The brand colours and standard spacing used across the app. Change a
+// colour here to restyle every screen.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 
 const tDefaultPadding = 20.0;

@@ -1,14 +1,20 @@
+// ----------------------------------------------------------------------
+// Subscription plans
+//
+// Paid membership plans the driver can buy.
+//
+// Developer note: Cashfree mode comes from cashfreeProduction in apiConstants.dart.
+// ----------------------------------------------------------------------
+import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/profile_review/profile_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpaymentcomponents/cfpaymentcomponent.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
@@ -18,18 +24,20 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 
 import '../../../globalFuctions/globalFunctions.dart';
 import 'QR_subscription.dart';
 
+// >>> START  class Subscription
 class Subscription extends StatefulWidget {
   const Subscription({Key? key}) : super(key: key);
 
   @override
   _SubscriptionState createState() => _SubscriptionState();
 }
+// <<< END    class Subscription
 
+// >>> START  class _SubscriptionState
 class _SubscriptionState extends State<Subscription> {
   var planDetails;
   var resNok;
@@ -37,6 +45,7 @@ class _SubscriptionState extends State<Subscription> {
   DateTime d2 = DateTime.now().add(Duration(days: 30));
   late Duration difference = d1.difference(d2);
 
+  // >>> START  _SubscriptionState.parseDate()  -  parse date
   DateTime parseDate(String dateString) {
     // Parse your date string into a DateTime object
     // Assuming dateString is in the format 'dd-MM-yyyy'
@@ -47,8 +56,10 @@ class _SubscriptionState extends State<Subscription> {
     DateTime parsedDate = DateTime(year, month, day, 23, 59, 59);
     return parsedDate;
   }
+  // <<< END    _SubscriptionState.parseDate()
 
 
+  // >>> START  _SubscriptionState.fetchDriverPlans()  -  fetch driver plans
   fetchDriverPlans() async {
     var res = await DriverDetailsApi().getDriverPlans(context);
     if (res != null && res['status'] == 'OK') {
@@ -69,13 +80,17 @@ class _SubscriptionState extends State<Subscription> {
       });
     }
   }
+  // <<< END    _SubscriptionState.fetchDriverPlans()
 
+  // >>> START  _SubscriptionState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchDriverPlans();
     super.initState();
   }
+  // <<< END    _SubscriptionState.initState()
 
+  // >>> START  _SubscriptionState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,9 +121,11 @@ class _SubscriptionState extends State<Subscription> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
         },
         child: planDetails == null
             ? resNok == 'NOK'
@@ -557,7 +574,9 @@ class _SubscriptionState extends State<Subscription> {
       ),
     );
   }
+  // <<< END    _SubscriptionState.build()
 
+  // >>> START  _SubscriptionState.verifyPayment()  -  verify payment
   void verifyPayment(String orderId) async {
     print("Verify Payment/...........");
     print("Verify Payment.........");
@@ -572,7 +591,9 @@ class _SubscriptionState extends State<Subscription> {
       Twl.createAlert(context, 'Oops', res['error'].toString());
     }
   }
+  // <<< END    _SubscriptionState.verifyPayment()
 
+  // >>> START  _SubscriptionState.onError()  -  on error
   void onError(CFErrorResponse errorResponse, String orderId) async {
     print(errorResponse.getMessage());
     print(errorResponse.getStatus().toString());
@@ -581,15 +602,20 @@ class _SubscriptionState extends State<Subscription> {
     return Twl.createAlert(context, errorResponse.getStatus().toString(),
         errorResponse.getMessage().toString());
   }
+  // <<< END    _SubscriptionState.onError()
 
+  // >>> START  _SubscriptionState.receivedEvent()  -  received event
   void receivedEvent(String event_name, Map<dynamic, dynamic> meta_data) {
     print(event_name);
     print(meta_data);
   }
+  // <<< END    _SubscriptionState.receivedEvent()
 
   var cfPaymentGatewayService = CFPaymentGatewayService();
-  CFEnvironment environment = CFEnvironment.SANDBOX;
+  CFEnvironment environment =
+      cashfreeProduction ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
 
+  // >>> START  _SubscriptionState.createSession()  -  create session
   CFSession? createSession(orderId, sessionID) {
     print(orderId);
     print('sessionID');
@@ -607,33 +633,32 @@ class _SubscriptionState extends State<Subscription> {
     }
     return null;
   }
+  // <<< END    _SubscriptionState.createSession()
 
+  // >>> START  _SubscriptionState.pay()
   pay(orderId, sessionId) async {
     print(orderId);
     print('sessionID');
     print(sessionId);
     try {
       var session = createSession(orderId, sessionId);
-      List<CFPaymentModes> components = <CFPaymentModes>[];
-      var paymentComponent =
-          CFPaymentComponentBuilder().setComponents(components).build();
-
       var theme = CFThemeBuilder()
           .setNavigationBarBackgroundColorColor("#FF0000")
           .setPrimaryFont("Menlo")
           .setSecondaryFont("Futura")
           .build();
 
-      var cfDropCheckoutPayment = CFDropCheckoutPaymentBuilder()
+      var cfWebCheckoutPayment = CFWebCheckoutPaymentBuilder()
           .setSession(session!)
-          .setPaymentComponent(paymentComponent)
           .setTheme(theme)
           .build();
 
-      cfPaymentGatewayService.doPayment(cfDropCheckoutPayment);
+      cfPaymentGatewayService.doPayment(cfWebCheckoutPayment);
     } on CFException catch (e) {
       print("e.pay");
       print(e.message);
     }
   }
+  // <<< END    _SubscriptionState.pay()
 }
+// <<< END    class _SubscriptionState

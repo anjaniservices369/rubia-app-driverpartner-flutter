@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ride screen - in progress
+//
+// Shows the drop location and the 'Complete ride' slider.
+// ----------------------------------------------------------------------
 import 'package:action_slider/action_slider.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
@@ -22,38 +27,44 @@ import '../../../../../responsive.dart';
 
 // import 'componants/demo.dart';
 import '../../globalWidgets/emergency_widget.dart';
-import '../odometer/ending_odometer_details.dart';
-import 'enter_otp_ride.dart';
 
+// >>> START  class CompleteRide
 class CompleteRide extends StatefulWidget {
   const CompleteRide({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<CompleteRide> createState() => _CompleteRideState();
 }
+// <<< END    class CompleteRide
 
+// >>> START  class _CompleteRideState
 class _CompleteRideState extends State<CompleteRide> {
   final _controller = ActionSliderController();
   var status = 0;
   GoogleMapController? mapController;
   GeoLatLong.LatLng? startLocation;
 
+  // >>> START  _CompleteRideState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
   }
+  // <<< END    _CompleteRideState.initState()
 
+  // >>> START  _CompleteRideState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     mapController?.dispose();
     super.dispose();
   }
+  // <<< END    _CompleteRideState.dispose()
 
   Set<Marker> markers = Set();
+  // >>> START  _CompleteRideState.addMarkers()  -  add markers
   addMarkers() async {
-    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.fromAssetImage(
+    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.asset(
       ImageConfiguration(),
       'assets/icons/back.png',
     );
@@ -69,9 +80,10 @@ class _CompleteRideState extends State<CompleteRide> {
       icon: markerbitmapdrop, //Icon for Marker
     ));
   }
+  // <<< END    _CompleteRideState.addMarkers()
 
   final Set<Polyline> _polylines = Set();
-  GoogleMapController? _mapController;
+  // >>> START  _CompleteRideState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     LocationProvider locationProvider = Provider.of<LocationProvider>(context);
@@ -83,7 +95,7 @@ class _CompleteRideState extends State<CompleteRide> {
     LatLng dropLatLng;
     // Create LatLng objects for pickup and drop coordinates
     LatLng pickupLatLng = LatLng(double.parse(pickupLatitude), double.parse(pickupLongitude));
-    if (dropLatitude != null && dropLatitude.isNotEmpty && dropLongitude != null && dropLongitude.isNotEmpty) {
+    if (dropLatitude.isNotEmpty && dropLongitude.isNotEmpty) {
       dropLatLng = LatLng(double.parse(dropLatitude), double.parse(dropLongitude));
 
       markers.add(
@@ -133,16 +145,15 @@ class _CompleteRideState extends State<CompleteRide> {
     return Scaffold(
       backgroundColor: tBackground,
       body: Container(
-        child: WillPopScope(
-          onWillPop: () {
-            return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+        child: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
           },
           child: Stack(
             children: [
               GoogleMap(
-                onMapCreated: (controller) {
-                  _mapController = controller;
-                },
                 initialCameraPosition: CameraPosition(
                   target: pickupLatLng,
                   zoom: 12.0,
@@ -345,9 +356,7 @@ class _CompleteRideState extends State<CompleteRide> {
                                         Spacer(),
                                         GestureDetector(
                                           onTap: () {
-                                            launch(
-                                              "tel://" + widget.bookingDetails['user_details']['contact_no'].toString(),
-                                            );
+                                            launchUrl(Uri.parse("tel://" + widget.bookingDetails['user_details']['contact_no'].toString()));
                                           },
                                           child: Container(
                                               padding: EdgeInsets.all(10.0),
@@ -468,6 +477,7 @@ class _CompleteRideState extends State<CompleteRide> {
       ),
     );
   }
+  // <<< END    _CompleteRideState.build()
 
   // Future<void> _runMethod(
   //   BuildContext context,
@@ -505,3 +515,4 @@ class _CompleteRideState extends State<CompleteRide> {
   //   );
   // }
 }
+// <<< END    class _CompleteRideState

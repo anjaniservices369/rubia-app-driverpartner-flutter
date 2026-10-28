@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Profile under review
+//
+// Shown while your team checks the documents.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
@@ -18,25 +23,30 @@ import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 
-import '../enable_location/enable_location.dart';
 
+// >>> START  class ProfileReview
 class ProfileReview extends StatefulWidget {
   const ProfileReview({Key? key}) : super(key: key);
 
   @override
   State<ProfileReview> createState() => _ProfileReviewState();
 }
+// <<< END    class ProfileReview
 
+// >>> START  class _ProfileReviewState
 class _ProfileReviewState extends State<ProfileReview> {
+  // >>> START  _ProfileReviewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheck();
     super.initState();
   }
+  // <<< END    _ProfileReviewState.initState()
 
   var authCode;
   var checkDetails;
   var check;
+  // >>> START  _ProfileReviewState.fetchCheck()  -  fetch check
   fetchCheck() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -51,16 +61,10 @@ class _ProfileReviewState extends State<ProfileReview> {
       });
     }
   }
+  // <<< END    _ProfileReviewState.fetchCheck()
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _ProfileReviewState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -105,9 +109,7 @@ class _ProfileReviewState extends State<ProfileReview> {
                   bottonText: 'Call'.tr,
                   borderSide: BorderSide(color: tPrimaryColor),
                   onTap: (startLoading, stopLoading, btnState) async {
-                    launch(
-                      "tel://+917893653899",
-                    );
+                    launchUrl(Uri.parse("tel://+917893653899"));
                   },
                 ),
               ),
@@ -150,6 +152,7 @@ class _ProfileReviewState extends State<ProfileReview> {
       },
     );
   }
+  // <<< END    _ProfileReviewState._showContactInfoDialog()
 
 
   // Future<void> launchURL(String url,) async {
@@ -162,6 +165,7 @@ class _ProfileReviewState extends State<ProfileReview> {
   //   }
   // }
 
+  // >>> START  _ProfileReviewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,9 +179,11 @@ class _ProfileReviewState extends State<ProfileReview> {
         ),
       ),
       backgroundColor: tBackground,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.willpopAlert(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.willpopAlert(context);
         },
         child: Padding(
           padding: EdgeInsets.all(2),
@@ -341,4 +347,6 @@ class _ProfileReviewState extends State<ProfileReview> {
       ),
     );
   }
+  // <<< END    _ProfileReviewState.build()
 }
+// <<< END    class _ProfileReviewState

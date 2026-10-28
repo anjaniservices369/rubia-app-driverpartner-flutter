@@ -1,39 +1,41 @@
+// ----------------------------------------------------------------------
+// Ride history list
+//
+// List of past rides for one tab.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/BookingStatusConstants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
-import 'package:base_project_flutter/globalWidgets/button.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/componants/rideinfo.dart';
-import 'package:base_project_flutter/views/profilePage/notifications/notifications.dart';
-import 'package:badges/badges.dart' as badges;
-import 'package:base_project_flutter/views/ride_info/ride_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 import '../../../globalFuctions/globalFunctions.dart';
-import 'package:badges/badges.dart';
 import '../../../responsive.dart';
-import 'package:dotted_line/dotted_line.dart';
 
+// >>> START  class RideHistoryList
 class RideHistoryList extends StatefulWidget {
   const
   RideHistoryList({
     Key? key,
     this.status,
     this.selectedType,
+    this.allDates = false,
   }) : super(key: key);
   final status;
   final selectedType;
+  // true: ignore the date range of Ride History and list every ride of this status
+  final bool allDates;
 
   @override
   State<RideHistoryList> createState() => _RideHistoryListState();
 }
+// <<< END    class RideHistoryList
 
+// >>> START  class _RideHistoryListState
 class _RideHistoryListState extends State<RideHistoryList> {
   ScrollController _scrollController = ScrollController();
   List<dynamic> bookingsData = [];
@@ -45,6 +47,7 @@ class _RideHistoryListState extends State<RideHistoryList> {
   bool isLoading = false;
   String errorMessage = '';
 
+  // >>> START  _RideHistoryListState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     _scrollController.addListener(_scrollListener);
@@ -52,16 +55,20 @@ class _RideHistoryListState extends State<RideHistoryList> {
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _RideHistoryListState.initState()
 
   var resStatus;
 
+  // >>> START  _RideHistoryListState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _RideHistoryListState.dispose()
 
+  // >>> START  _RideHistoryListState._scrollListener()  -  scroll listener
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -71,14 +78,17 @@ class _RideHistoryListState extends State<RideHistoryList> {
       }
     }
   }
+  // <<< END    _RideHistoryListState._scrollListener()
 
+  // >>> START  _RideHistoryListState.fetchBookingsHistory()  -  fetch bookings history
   Future<void> fetchBookingsHistory() async {
     setState(() {
       isLoading = true;
     });
     try {
       dynamic data = await RideBookingsApi().fetchBookingHistory(
-          context, page.toString(), widget.status.toString());
+          context, page.toString(), widget.status.toString(),
+          allDates: widget.allDates);
       final List<dynamic> newBookings = data['details'];
       setState(() {
         resStatus = data['status'];
@@ -102,7 +112,9 @@ class _RideHistoryListState extends State<RideHistoryList> {
       });
     }
   }
+  // <<< END    _RideHistoryListState.fetchBookingsHistory()
 
+  // >>> START  _RideHistoryListState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -617,4 +629,6 @@ class _RideHistoryListState extends State<RideHistoryList> {
           );
         });
   }
+  // <<< END    _RideHistoryListState.build()
 }
+// <<< END    class _RideHistoryListState

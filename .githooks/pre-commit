@@ -1,0 +1,20 @@
+#!/bin/sh
+# Keeps the START/END code markers and docs/CODE_MAP.md in sync with the source.
+# Enable once per clone:   git config core.hooksPath .githooks
+PY=$(command -v python3 || command -v python)
+if [ -z "$PY" ]; then
+  echo "pre-commit: python not found - skipping documentation checks"
+  exit 0
+fi
+
+fail=0
+"$PY" tools/annotate_code.py --check || fail=1
+"$PY" tools/update_docs.py --check   || fail=1
+
+if [ "$fail" -ne 0 ]; then
+  echo ""
+  echo "The code markers / docs/CODE_MAP.md are out of date. Run:"
+  echo "    python tools/annotate_code.py && python tools/update_docs.py"
+  echo "then 'git add' the changed files and commit again."
+  exit 1
+fi

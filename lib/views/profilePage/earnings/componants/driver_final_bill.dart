@@ -1,7 +1,11 @@
+// ----------------------------------------------------------------------
+// Driver's final bill
+//
+// Driver's share of a ride's bill.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/bookingsPage/componats/price_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constants/stetuesConstant.dart';
@@ -9,6 +13,7 @@ import '../../../../globalFuctions/globalFunctions.dart';
 import '../../../../responsive.dart';
 
 
+// >>> START  class DriverBillAmountWidget
 class DriverBillAmountWidget extends StatefulWidget {
   DriverBillAmountWidget({Key? key, this.estimateDetails, this.billDetails, this.showDriverEarnings}) : super(key: key);
 
@@ -18,13 +23,16 @@ class DriverBillAmountWidget extends StatefulWidget {
   @override
   State<DriverBillAmountWidget> createState() => DriverBillAmountWidgetState();
 }
+// <<< END    class DriverBillAmountWidget
 
+// >>> START  class DriverBillAmountWidgetState
 class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
   var extraMin = 2;
   var nightCharges = 300;
   dynamic cancellationCharge = 100;
   late List<String> texts;
 
+  // >>> START  DriverBillAmountWidgetState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // TODO: implement initState
@@ -40,7 +48,9 @@ class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
     ];
 
   }
+  // <<< END    DriverBillAmountWidgetState.initState()
 
+  // >>> START  DriverBillAmountWidgetState.getCharges()  -  get charges
   void getCharges() {
     if(widget.estimateDetails['trip_type'] == TRIP_TYPE_INTERCITY && widget.estimateDetails['rider_type'] == RIDER_TYPE_ROUNDTRIP){
       setState(() {
@@ -64,7 +74,9 @@ class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
       });
     }
   }
+  // <<< END    DriverBillAmountWidgetState.getCharges()
 
+  // >>> START  DriverBillAmountWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
 //     // final tripOptionsProvider = Provider.of<TripOptionsProvider>(context);
@@ -86,21 +98,17 @@ class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
     double? usageHours = double.parse(widget.estimateDetails['usage_hours']);
 
     String usageText;
-    if (usageHours != null) {
-      if (usageHours >= 1) {
-        int wholeHours = usageHours.toInt();
-        int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-        if (wholeMinutes > 0) {
-          usageText = '$wholeHours hrs $wholeMinutes mins usage';
-        } else {
-          usageText = '$wholeHours hrs usage';
-        }
+    if (usageHours >= 1) {
+      int wholeHours = usageHours.toInt();
+      int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+      if (wholeMinutes > 0) {
+        usageText = '$wholeHours hrs $wholeMinutes mins usage';
       } else {
-        int usageMinutes = (usageHours * 60).toInt();
-        usageText = '$usageMinutes mins usage';
+        usageText = '$wholeHours hrs usage';
       }
     } else {
-      usageText = 'Usage hours not available'; // Handle the case where 'usage_hours' is null
+      int usageMinutes = (usageHours * 60).toInt();
+      usageText = '$usageMinutes mins usage';
     }
 
      var admin_earning = widget.billDetails['estimatePrice'] - widget.estimateDetails['final_price'] - widget.billDetails['gst'] - widget.estimateDetails['secured_fee'] - widget.estimateDetails['platform_charges'];
@@ -393,13 +401,17 @@ class DriverBillAmountWidgetState extends State<DriverBillAmountWidget> {
       ),
     );
   }
+  // <<< END    DriverBillAmountWidgetState.build()
 }
+// <<< END    class DriverBillAmountWidgetState
 
+// >>> START  class FinalPriceHeadWidget
 class FinalPriceHeadWidget extends StatelessWidget {
   const FinalPriceHeadWidget({
     Key? key,
   }) : super(key: key);
 
+  // >>> START  FinalPriceHeadWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -441,4 +453,6 @@ class FinalPriceHeadWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    FinalPriceHeadWidget.build()
 }
+// <<< END    class FinalPriceHeadWidget

@@ -1,20 +1,22 @@
+// ----------------------------------------------------------------------
+// Location gate
+//
+// Checks the driver's location is on and sends the first position to the
+// server before opening the home screen.
+// ----------------------------------------------------------------------
 // ignore_for_file: deprecated_member_use
 
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:get/get.dart';
 import 'package:location_permissions/location_permissions.dart' as locPermission;
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/globalFuctions/googleMaps.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder2/geocoder2.dart';
-import 'package:geocoding/geocoding.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:geolocator/geolocator.dart' as locater;
 import 'package:lottie/lottie.dart';
@@ -23,13 +25,16 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:location/location.dart' as loct;
 
+// >>> START  class LocationErrorScreen
 class LocationErrorScreen extends StatefulWidget {
   LocationErrorScreen({Key? key, this.authCode}) : super(key: key);
   final authCode;
   @override
   _LocationErrorScreenState createState() => _LocationErrorScreenState();
 }
+// <<< END    class LocationErrorScreen
 
+// >>> START  class _LocationErrorScreenState
 class _LocationErrorScreenState extends State<LocationErrorScreen> {
   locater.Position? currentLocation;
   String? _currentAddress;
@@ -38,6 +43,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
   SharedPreferences? sharedPreferences;
   bool isLocationEnabled = false;
 
+  // >>> START  _LocationErrorScreenState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // TODO: implement initState
@@ -45,7 +51,9 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
     print('....Object');
     getUserLocation();
   }
+  // <<< END    _LocationErrorScreenState.initState()
 
+  // >>> START  _LocationErrorScreenState._checkGps()  -  check gps
   Future _checkGps() async {
     if (!(await locater.Geolocator.isLocationServiceEnabled())) {
       if (Theme.of(context).platform == TargetPlatform.android) {
@@ -66,7 +74,6 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
                     intent.launch();
 
                     Navigator.of(context).pop();
-                    getUserLocation();
                   },
                   child: Text('ok'),
                 )
@@ -77,44 +84,26 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       }
     }
   }
+  // <<< END    _LocationErrorScreenState._checkGps()
 
   //changed code on 22 -2-23
-  late locater.Position _currentPosition;
 
-  _getCurrentLocation() {
-    locater.Geolocator.getCurrentPosition(desiredAccuracy: locater.LocationAccuracy.best, forceAndroidLocationManager: true)
-        .then((locater.Position position) {
-      setState(() {
-        _currentPosition = position;
-        _getAddressFromLatLng();
-      });
-    }).catchError((e) {
-      print(e);
-    });
-  }
 
-  _getAddressFromLatLng() async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(_currentPosition.latitude, _currentPosition.longitude);
 
-      Placemark place = placemarks[0];
-
-      setState(() {
-        _currentAddress = "${place.locality}, ${place.postalCode}, ${place.country}";
-        print('_currentAddress');
-        print(_currentAddress);
-        print('_currentAddress');
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
+  // >>> START  _LocationErrorScreenState.locateUser()  -  locate user
   Future locateUser() async {
     print('addresses;;;');
     setState(() {
       isLoading = true;
     });
+    if (!(await locater.Geolocator.isLocationServiceEnabled())) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
+      await _checkGps();
+      return;
+    }
     // if ((await locater.Geolocator.isLocationServiceEnabled())) {
     // locater.Position position = await locater.Geolocator.getCurrentPosition(
     //     desiredAccuracy: locater.LocationAccuracy.high);
@@ -193,7 +182,9 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
     // }
     //  await _checkGps();
   }
+  // <<< END    _LocationErrorScreenState.locateUser()
 
+  // >>> START  _LocationErrorScreenState.getUserLocation()  -  get user location
   getUserLocation() async {
     print('getUserLocation');
     setState(() {
@@ -204,6 +195,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
     print('locateUser');
     // print('center $_center');
   }
+  // <<< END    _LocationErrorScreenState.getUserLocation()
 
 //   determinePosition() async {
 //     print('determinePosition');
@@ -245,6 +237,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
 //     return await getUserLocation();
 //   }
 
+  // >>> START  _LocationErrorScreenState.determinePosition()  -  determine position
   Future<bool> determinePosition() async {
     print('determinePosition');
 
@@ -310,13 +303,16 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       }
     }
   }
+  // <<< END    _LocationErrorScreenState.determinePosition()
 
+  // >>> START  _LocationErrorScreenState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    var openLocationSettings;
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.willpopAlert(context);
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.willpopAlert(context);
       },
       child: Scaffold(
         body: Stack(
@@ -448,15 +444,7 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
                         ),
                       ),
                     ),
-                  isLocationEnabled != null
-                      ? Container()
-                      : TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: tPrimaryColor,
-                    ),
-                    onPressed: () => AppSettings.openAppSettings(type: AppSettingsType.location),
-                    child: Text('app_settings'),
-                  )
+                  Container()
                 ],
               )
                   : CircularProgressIndicator(),
@@ -490,4 +478,6 @@ class _LocationErrorScreenState extends State<LocationErrorScreen> {
       ),
     );
   }
+  // <<< END    _LocationErrorScreenState.build()
 }
+// <<< END    class _LocationErrorScreenState

@@ -1,13 +1,18 @@
+// ----------------------------------------------------------------------
+// Pay joining fee
+//
+// The driver pays the one-time joining fee through Cashfree.
+//
+// Developer note: Cashfree mode comes from cashfreeProduction in apiConstants.dart
+// (build with --dart-define=CASHFREE_PRODUCTION=true for real money).
+// ----------------------------------------------------------------------
+import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/views/joiningfees/qr_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfdropcheckoutpayment.dart';
-import 'package:flutter_cashfree_pg_sdk/api/cfpaymentcomponents/cfpaymentcomponent.dart';
+import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
@@ -24,15 +29,19 @@ import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 import '../profile_review/profile_review.dart';
 
+// >>> START  class JoiningFees
 class JoiningFees extends StatefulWidget {
   const JoiningFees({Key? key}) : super(key: key);
 
   @override
   State<JoiningFees> createState() => _JoiningFeesState();
 }
+// <<< END    class JoiningFees
 
+// >>> START  class _JoiningFeesState
 class _JoiningFeesState extends State<JoiningFees> {
   bool ischeckbox = false;
+  // >>> START  _JoiningFeesState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -242,7 +251,9 @@ class _JoiningFeesState extends State<JoiningFees> {
       ),
     );
   }
+  // <<< END    _JoiningFeesState.build()
 
+  // >>> START  _JoiningFeesState.verifyPayment()  -  verify payment
   void verifyPayment(String orderId) async {
     print("Verify Payment/...........");
     print("Verify Payment.........");
@@ -258,7 +269,9 @@ class _JoiningFeesState extends State<JoiningFees> {
     }
     print("Verify Payment");
   }
+  // <<< END    _JoiningFeesState.verifyPayment()
 
+  // >>> START  _JoiningFeesState.onError()  -  on error
   void onError(CFErrorResponse errorResponse, String orderId) async {
     print(errorResponse.getMessage());
     print(errorResponse.getStatus().toString());
@@ -267,15 +280,20 @@ class _JoiningFeesState extends State<JoiningFees> {
     return Twl.createAlert(context, errorResponse.getStatus().toString(),
         errorResponse.getMessage().toString());
   }
+  // <<< END    _JoiningFeesState.onError()
 
+  // >>> START  _JoiningFeesState.receivedEvent()  -  received event
   void receivedEvent(String event_name, Map<dynamic, dynamic> meta_data) {
     print(event_name);
     print(meta_data);
   }
+  // <<< END    _JoiningFeesState.receivedEvent()
 
   var cfPaymentGatewayService = CFPaymentGatewayService();
-  CFEnvironment environment = CFEnvironment.SANDBOX;
+  CFEnvironment environment =
+      cashfreeProduction ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
 
+  // >>> START  _JoiningFeesState.createSession()  -  create session
   CFSession? createSession(orderId, sessionID) {
     print(orderId);
     print('sessionID');
@@ -293,33 +311,32 @@ class _JoiningFeesState extends State<JoiningFees> {
     }
     return null;
   }
+  // <<< END    _JoiningFeesState.createSession()
 
+  // >>> START  _JoiningFeesState.pay()
   pay(orderId, sessionId) async {
     print(orderId);
     print('sessionID');
     print(sessionId);
     try {
       var session = createSession(orderId, sessionId);
-      List<CFPaymentModes> components = <CFPaymentModes>[];
-      var paymentComponent =
-          CFPaymentComponentBuilder().setComponents(components).build();
-
       var theme = CFThemeBuilder()
           .setNavigationBarBackgroundColorColor("#FF0000")
           .setPrimaryFont("Menlo")
           .setSecondaryFont("Futura")
           .build();
 
-      var cfDropCheckoutPayment = CFDropCheckoutPaymentBuilder()
+      var cfWebCheckoutPayment = CFWebCheckoutPaymentBuilder()
           .setSession(session!)
-          .setPaymentComponent(paymentComponent)
           .setTheme(theme)
           .build();
 
-      cfPaymentGatewayService.doPayment(cfDropCheckoutPayment);
+      cfPaymentGatewayService.doPayment(cfWebCheckoutPayment);
     } on CFException catch (e) {
       print("e.pay");
       print(e.message);
     }
   }
+  // <<< END    _JoiningFeesState.pay()
 }
+// <<< END    class _JoiningFeesState

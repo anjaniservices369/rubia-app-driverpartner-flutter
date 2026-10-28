@@ -1,13 +1,18 @@
+// ----------------------------------------------------------------------
+// Final bill breakdown
+//
+// Explains how the final fare is made up.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/bookingsPage/componats/price_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../responsive.dart';
 import '../../constants/stetuesConstant.dart';
 
+// >>> START  class FinalBillAmountWidget
 class FinalBillAmountWidget extends StatefulWidget {
   FinalBillAmountWidget({Key? key, this.estimateDetails, this.billDetails}) : super(key: key);
 
@@ -16,13 +21,16 @@ class FinalBillAmountWidget extends StatefulWidget {
   @override
   State<FinalBillAmountWidget> createState() => FinalBillAmountWidgetState();
 }
+// <<< END    class FinalBillAmountWidget
 
+// >>> START  class FinalBillAmountWidgetState
 class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
   var extraMin = 2;
   var nightCharges = 300;
   dynamic cancellationCharge = 100;
   late List<String> texts;
 
+  // >>> START  FinalBillAmountWidgetState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // TODO: implement initState
@@ -38,7 +46,9 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
     ];
 
   }
+  // <<< END    FinalBillAmountWidgetState.initState()
 
+  // >>> START  FinalBillAmountWidgetState.getCharges()  -  get charges
   void getCharges() {
     if(widget.estimateDetails['trip_type'] == TRIP_TYPE_INTERCITY && widget.estimateDetails['rider_type'] == RIDER_TYPE_ROUNDTRIP){
       setState(() {
@@ -62,7 +72,9 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
       });
     }
   }
+  // <<< END    FinalBillAmountWidgetState.getCharges()
 
+  // >>> START  FinalBillAmountWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
 //     // final tripOptionsProvider = Provider.of<TripOptionsProvider>(context);
@@ -84,21 +96,17 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
     double? usageHours = double.parse(widget.estimateDetails['usage_hours']);
 
     String usageText;
-    if (usageHours != null) {
-      if (usageHours >= 1) {
-        int wholeHours = usageHours.toInt();
-        int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-        if (wholeMinutes > 0) {
-          usageText = '$wholeHours hrs $wholeMinutes mins usage';
-        } else {
-          usageText = '$wholeHours hrs usage';
-        }
+    if (usageHours >= 1) {
+      int wholeHours = usageHours.toInt();
+      int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+      if (wholeMinutes > 0) {
+        usageText = '$wholeHours hrs $wholeMinutes mins usage';
       } else {
-        int usageMinutes = (usageHours * 60).toInt();
-        usageText = '$usageMinutes mins usage';
+        usageText = '$wholeHours hrs usage';
       }
     } else {
-      usageText = 'Usage hours not available'; // Handle the case where 'usage_hours' is null
+      int usageMinutes = (usageHours * 60).toInt();
+      usageText = '$usageMinutes mins usage';
     }
 
     return SingleChildScrollView(
@@ -368,13 +376,17 @@ class FinalBillAmountWidgetState extends State<FinalBillAmountWidget> {
       ),
     );
   }
+  // <<< END    FinalBillAmountWidgetState.build()
 }
+// <<< END    class FinalBillAmountWidgetState
 
+// >>> START  class FinalPriceHeadWidget
 class FinalPriceHeadWidget extends StatelessWidget {
   const FinalPriceHeadWidget({
     Key? key,
   }) : super(key: key);
 
+  // >>> START  FinalPriceHeadWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -416,4 +428,6 @@ class FinalPriceHeadWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    FinalPriceHeadWidget.build()
 }
+// <<< END    class FinalPriceHeadWidget

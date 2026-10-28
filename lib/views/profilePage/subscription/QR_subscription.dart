@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------
+// Subscription by QR
+//
+// Pay a plan by QR and confirm with support.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/views/profilePage/subscription/subscription.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +21,7 @@ import 'SubscriptionReview.dart';
 
 
 
+// >>> START  class QRSubscriptionPage
 class QRSubscriptionPage extends StatefulWidget {
   const QRSubscriptionPage({Key? key,this.price}) : super(key: key);
   final price;
@@ -26,16 +31,10 @@ class QRSubscriptionPage extends StatefulWidget {
   @override
   State<QRSubscriptionPage> createState() => _QRSubscriptionPageState();
 }
+// <<< END    class QRSubscriptionPage
 
-void _launchDialer(String phoneNumber) async {
-  final url = 'tel://$phoneNumber';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
-  }
-}
 
+// >>> START  _showContactInfoDialog()  -  show contact info dialog
 void _showContactInfoDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -80,9 +79,7 @@ void _showContactInfoDialog(BuildContext context) {
                     bottonText: 'Call'.tr,
                     borderSide: BorderSide(color: tPrimaryColor),
                     onTap: (startLoading, stopLoading, btnState) async {
-                      launch(
-                        "tel://+917893653899",
-                      );
+                      launchUrl(Uri.parse("tel://+917893653899"));
                     },
                   ),
                 ),
@@ -125,10 +122,13 @@ void _showContactInfoDialog(BuildContext context) {
     },
   );
 }
+// <<< END    _showContactInfoDialog()
 
 
+// >>> START  class _QRSubscriptionPageState
 class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
 
+  // >>> START  _QRSubscriptionPageState.showConfirmationDialog()  -  show confirmation dialog
   Future<bool?> showConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -187,7 +187,9 @@ class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
       },
     );
   }
+  // <<< END    _QRSubscriptionPageState.showConfirmationDialog()
 
+  // >>> START  _QRSubscriptionPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
 
@@ -219,9 +221,11 @@ class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(
               context, Subscription());
         },
         child: SingleChildScrollView(
@@ -333,7 +337,9 @@ class _QRSubscriptionPageState extends State<QRSubscriptionPage> {
     );
 
   }
+  // <<< END    _QRSubscriptionPageState.build()
 }
+// <<< END    class _QRSubscriptionPageState
 
 
 

@@ -1,23 +1,29 @@
+// ----------------------------------------------------------------------
+// Notifications
+//
+// Notification history.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../../../constants/constants.dart';
 import '../../../../../../responsive.dart';
 import '../../../../globalFuctions/globalFunctions.dart';
-import '../../../constants/imageConstant.dart';
 
-import '../../homePage/homePage.dart';
 
+// >>> START  class NotificationPage
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }
+// <<< END    class NotificationPage
 
+// >>> START  class _NotificationPageState
 class _NotificationPageState extends State<NotificationPage> {
+  // >>> START  _NotificationPageState.initState()  -  runs once when the screen opens
   // late Future<NOTIFICATION.NotificationModel> myRides;
   void initState() {
     super.initState();
@@ -26,14 +32,18 @@ class _NotificationPageState extends State<NotificationPage> {
     //   '0',
     // );
   }
+  // <<< END    _NotificationPageState.initState()
 
   List<String> name = ['Start Your First Ride with Winter Offers.', 'Hey! '];
+  // >>> START  _NotificationPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
           // return Twl.forceNavigateTo(context, HomePage());
-          return Twl.navigateBack(context);
+          if (didPop) return;
+          Twl.navigateBack(context);
         },
         child: Scaffold(
             appBar: AppBar(
@@ -140,7 +150,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 Container(
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: tPrimaryColor.withOpacity(0.2)),
+                                      color: tPrimaryColor.withValues(alpha: 0.2)),
                                   child: Padding(
                                       padding: EdgeInsets.all(5.0),
                                       child: Icon(
@@ -243,7 +253,9 @@ class _NotificationPageState extends State<NotificationPage> {
             //     })),
             ));
   }
+  // <<< END    _NotificationPageState.build()
 }
+// <<< END    class _NotificationPageState
 
 // class NotificationPagination extends StatefulWidget {
 //   const NotificationPagination({

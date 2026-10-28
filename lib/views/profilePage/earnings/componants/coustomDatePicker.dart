@@ -1,15 +1,19 @@
+// ----------------------------------------------------------------------
+// Earnings date picker
+//
+// Choose a custom date range.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/earnings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+// >>> START  class EarningCoustomDate
 class EarningCoustomDate extends StatefulWidget {
-  String filterValue;
+  final String filterValue;
 
   EarningCoustomDate({
     Key? key,
@@ -19,15 +23,20 @@ class EarningCoustomDate extends StatefulWidget {
   @override
   State<EarningCoustomDate> createState() => _EarningCoustomDateState();
 }
+// <<< END    class EarningCoustomDate
 
+// >>> START  class _EarningCoustomDateState
 class _EarningCoustomDateState extends State<EarningCoustomDate> {
+  // >>> START  _EarningCoustomDateState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _EarningCoustomDateState.initState()
 
   var startDate;
   var endDate;
+  // >>> START  _EarningCoustomDateState._onSelectionChanged()  -  on selection changed
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
     debugPrint(args.value.startDate.toString().substring(0, 10));
@@ -37,7 +46,9 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
       endDate = formatter.format(args.value.endDate);
     });
   }
+  // <<< END    _EarningCoustomDateState._onSelectionChanged()
 
+  // >>> START  _EarningCoustomDateState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -50,7 +61,7 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
             height: 300,
             width: 400,
             child: SfDateRangePicker(
-              rangeSelectionColor: tPrimaryColor.withOpacity(0.4),
+              rangeSelectionColor: tPrimaryColor.withValues(alpha: 0.4),
               startRangeSelectionColor: tPrimaryColor,
               endRangeSelectionColor: tPrimaryColor,
               rangeTextStyle: TextStyle(
@@ -72,7 +83,7 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
-                backgroundColor: tPrimaryColor.withOpacity(0.7),
+                backgroundColor: tPrimaryColor.withValues(alpha: 0.7),
               ),
               backgroundColor: tWhite,
               onSelectionChanged: _onSelectionChanged,
@@ -102,7 +113,6 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
                       await SharedPreferences.getInstance();
                   sharedPreferences.remove('filteredEarnigs');
                   sharedPreferences.setString('filteredEarnigs', 'Custom');
-                  var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                   print('dates');
                   print(startDate);
                   print(endDate);
@@ -111,7 +121,6 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
                   sharedPreferences.setString('earningStartDate', startDate);
                   sharedPreferences.setString('earningEndDate', endDate);
                   setState(() {
-                    widget.filterValue = 'Custom';
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => EarningPage()),
                         (Route<dynamic> route) => false);
@@ -127,6 +136,7 @@ class _EarningCoustomDateState extends State<EarningCoustomDate> {
         ],
       ),
     );
-    ;
   }
+  // <<< END    _EarningCoustomDateState.build()
 }
+// <<< END    class _EarningCoustomDateState

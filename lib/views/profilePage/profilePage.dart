@@ -1,15 +1,19 @@
+// ----------------------------------------------------------------------
+// Profile
+//
+// Driver's profile photo, name, ratings and the menu to every other section;
+// logout.
+// ----------------------------------------------------------------------
 import 'dart:io';
 
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
-import 'package:base_project_flutter/providers/locationProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/appLanguage/chooseAppLanguage.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/homePage/componats/notifactionPage.dart';
 import 'package:base_project_flutter/views/logiPage/loginPage.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/earnings.dart';
-import 'package:base_project_flutter/views/profilePage/notifications/notifications.dart';
 import 'package:base_project_flutter/views/profilePage/referearn/referearn.dart';
 import 'package:base_project_flutter/views/profilePage/reviews/reviews.dart';
 import 'package:base_project_flutter/views/profilePage/ridehistory/ridehistory.dart';
@@ -18,8 +22,6 @@ import 'package:base_project_flutter/views/profilePage/support/support.dart';
 import 'package:base_project_flutter/views/profilePage/tutorials/tutorialspage.dart';
 import 'package:base_project_flutter/api_services/mediaApi.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -34,17 +36,19 @@ import '../../api_services/DriverDetailApis.dart';
 import '../../constants/constants.dart';
 import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
-import '../collect_payment.dart/collect_payment.dart';
-import '../joiningfees/joining _fees.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+// >>> START  class ProfilePage
 class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+// <<< END    class ProfilePage
 
+// >>> START  class _ProfilePageState
 class _ProfilePageState extends State<ProfilePage> {
 
+  // >>> START  _ProfilePageState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheckDetails();
@@ -53,6 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
     _getVersion();
     loading = false;
   }
+  // <<< END    _ProfilePageState.initState()
 
   var authCode;
   var checkDetails;
@@ -62,6 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String profileImage = '';
   bool loading = false;
 
+  // >>> START  _ProfilePageState.fetchCheckDetails()  -  fetch check details
   fetchCheckDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -75,7 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+  // <<< END    _ProfilePageState.fetchCheckDetails()
 
+  // >>> START  _ProfilePageState.getProfileImage()  -  get profile image
   Future getProfileImage(String type) async {
     var pickedFile;
     if (type == 'camera') {
@@ -116,8 +124,10 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     // ignore: unused_element
   }
+  // <<< END    _ProfilePageState.getProfileImage()
 
 
+  // >>> START  _ProfilePageState.uploadImage()  -  upload image
   uploadImage(profileImage) async {
     Map<String, String> param = {
       'profile_image': profileImage.toString()
@@ -141,24 +151,28 @@ class _ProfilePageState extends State<ProfilePage> {
           context, 'Oops', res['error'].toString());
     }
   }
+  // <<< END    _ProfilePageState.uploadImage()
 
+  // >>> START  _ProfilePageState._getVersion()  -  get version
   Future<void> _getVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       _version = packageInfo.version;
     });
   }
+  // <<< END    _ProfilePageState._getVersion()
 
+  // >>> START  _ProfilePageState._launchUrl()  -  launch url
   Future<void> _launchUrl(Uri _url) async {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
   }
+  // <<< END    _ProfilePageState._launchUrl()
 
+  // >>> START  _ProfilePageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    final locationProvider =
-        Provider.of<LocationProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -810,10 +824,56 @@ class _ProfilePageState extends State<ProfilePage> {
                   )),
                 ),
               ),
+              SizedBox(height: 1.5.h),
+              // Google Play requires that an account can be deleted from inside the app
+              Center(
+                child: TextButton(
+                  onPressed: () => _confirmDeleteAccount(context),
+                  child: Text('Delete account',
+                      style: GoogleFonts.mulish(color: Colors.red.shade700, fontWeight: FontWeight.w700, fontSize: 12.sp)),
+                ),
+              ),
+              SizedBox(height: 2.h),
             ],
           ),
         ),
       ),
     );
   }
+  // <<< END    _ProfilePageState.build()
+
+  // >>> START  _ProfilePageState._confirmDeleteAccount()  -  confirm delete account
+  Future<void> _confirmDeleteAccount(BuildContext context) async {
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete account?'),
+        content: const Text(
+            'Your account and personal details (name, email, phone number, photo, emergency contacts) will be deleted for good. Ride and payment records are kept without your identity, as the law requires. This cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('Delete', style: TextStyle(color: Colors.red.shade700))),
+        ],
+      ),
+    );
+    if (sure != true) return;
+    var res = await UserAPI().deleteAccount(context);
+    if (res != null && res['status'] == 'OK') {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.clear();
+      Twl.navigateTo(context, LoginPageView());
+    } else {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          title: 'Could not delete',
+          desc: (res != null && res['error'] != null) ? res['error'].toString() : 'Please try again',
+          btnOkOnPress: () {},
+          btnOkColor: Colors.red)
+        .show();
+    }
+  }
+  // <<< END    _ProfilePageState._confirmDeleteAccount()
 }
+// <<< END    class _ProfilePageState

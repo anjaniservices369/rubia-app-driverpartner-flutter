@@ -1,7 +1,14 @@
+// ----------------------------------------------------------------------
+// Before ride: car photos
+//
+// Four photos of the car plus optional damage photos, uploaded to the
+// server.
+//
+// Developer note: Posts driver/vehicle-verification with media URLs.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/ride_info/carNumberadd.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +20,11 @@ import '../../../constants/stetuesConstant.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../globalWidgets/leadingbackbtn.dart';
-import '../../../globalWidgets/texfildtital.dart';
 import '../../../providers/hoempageProvider.dart';
 import '../../../responsive.dart';
 import 'driverUploadSelfie.dart';
 
+// >>> START  class AllSidesPictures
 class AllSidesPictures extends StatefulWidget {
   const AllSidesPictures({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
@@ -25,7 +32,9 @@ class AllSidesPictures extends StatefulWidget {
   @override
   State<AllSidesPictures> createState() => _AllSidesPicturesState();
 }
+// <<< END    class AllSidesPictures
 
+// >>> START  class _AllSidesPicturesState
 class _AllSidesPicturesState extends State<AllSidesPictures> {
   final _formKey = new GlobalKey<FormState>();
   var firstImg;
@@ -42,6 +51,7 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
   bool fivthImgLoading = false;
   bool sixthImgLoading = false;
 
+  // >>> START  _AllSidesPicturesState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
@@ -57,9 +67,11 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
         ),
         centerTitle: false,
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, DriverUploadSelfie(bookingDetails: widget.bookingDetails));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, DriverUploadSelfie(bookingDetails: widget.bookingDetails));
         },
         child: Form(
           key: _formKey,
@@ -117,32 +129,30 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               firstImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                firstImg = imageUrl;
-                                                firstImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              firstImg = imageUrl;
+                                              firstImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": firstImg,
+                                              "image_type": image_type_front.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": firstImg,
                                                 "image_type": image_type_front.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": firstImg,
-                                                  "image_type": image_type_front.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": firstImg,
-                                                  "image_type": image_type_front.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
+                                              });
+                                            } else {
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": firstImg,
+                                                "image_type": image_type_front.toString(),
+                                                "type": type_before_ride.toString()
+                                              });
                                             }
                                           },
                                           child: firstImg == null
@@ -215,40 +225,33 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               secoundImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                secoundImg = imageUrl;
-                                                secoundImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              secoundImg = imageUrl;
+                                              secoundImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": secoundImg,
+                                              "image_type": image_type_back.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": secoundImg,
                                                 "image_type": image_type_back.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": secoundImg,
-                                                  "image_type": image_type_back.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": secoundImg,
-                                                  "image_type": image_type_back.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData.rideDetailImagesList.toString());
+                                              });
                                             } else {
-                                              print('Image upload failed or no image selected.');
-                                              setState(() {
-                                                secoundImg = null;
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": secoundImg,
+                                                "image_type": image_type_back.toString(),
+                                                "type": type_before_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData.rideDetailImagesList.toString());
                                           },
                                           child: secoundImg == null
                                               ? secoundImgLoading == false
@@ -330,40 +333,33 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               thirdImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                thirdImg = imageUrl;
-                                                thirdImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              thirdImg = imageUrl;
+                                              thirdImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": thirdImg,
+                                              "image_type": image_type_side_one.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": thirdImg,
                                                 "image_type": image_type_side_one.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": thirdImg,
-                                                  "image_type": image_type_side_one.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": thirdImg,
-                                                  "image_type": image_type_side_one.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData.rideDetailImagesList.toString());
+                                              });
                                             } else {
-                                              print('Image upload failed or no image selected.');
-                                              setState(() {
-                                                thirdImg = null;
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": thirdImg,
+                                                "image_type": image_type_side_one.toString(),
+                                                "type": type_before_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData.rideDetailImagesList.toString());
                                           },
                                           child: thirdImg == null
                                               ? thirdImgLoading == false
@@ -435,40 +431,33 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               fourthImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                fourthImg = imageUrl;
-                                                fourthImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              fourthImg = imageUrl;
+                                              fourthImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": fourthImg,
+                                              "image_type": image_type_side_two.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": fourthImg,
                                                 "image_type": image_type_side_two.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": fourthImg,
-                                                  "image_type": image_type_side_two.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": fourthImg,
-                                                  "image_type": image_type_side_two.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData.rideDetailImagesList.toString());
+                                              });
                                             } else {
-                                              print('Image upload failed or no image selected.');
-                                              setState(() {
-                                                fourthImg = null;
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": fourthImg,
+                                                "image_type": image_type_side_two.toString(),
+                                                "type": type_before_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData.rideDetailImagesList.toString());
                                           },
                                           child: fourthImg == null
                                               ? fourthImgLoading == false
@@ -559,40 +548,33 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               fivthImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                fivthImg = imageUrl;
-                                                fivthImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              fivthImg = imageUrl;
+                                              fivthImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": fivthImg,
+                                              "image_type": image_type_front.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": fivthImg,
                                                 "image_type": image_type_front.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": fivthImg,
-                                                  "image_type": image_type_front.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": fivthImg,
-                                                  "image_type": image_type_damages.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData.rideDetailImagesList.toString());
+                                              });
                                             } else {
-                                              print('Image upload failed or no image selected.');
-                                              setState(() {
-                                                fivthImg = null;
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": fivthImg,
+                                                "image_type": image_type_damages.toString(),
+                                                "type": type_before_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData.rideDetailImagesList.toString());
                                           },
                                           child: fivthImg == null
                                               ? fivthImgLoading == false
@@ -664,40 +646,33 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
                                               sixthImgLoading = true;
                                             });
                                             String imageUrl = await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print('Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                sixthImg = imageUrl;
-                                                sixthImgLoading = false;
-                                              });
-                                              if (_storedData.rideDetailImagesList.contains({
+                                            print('Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              sixthImg = imageUrl;
+                                              sixthImgLoading = false;
+                                            });
+                                            if (_storedData.rideDetailImagesList.contains({
+                                              "booking_id": widget.bookingDetails['id'].toString(),
+                                              "image": sixthImg,
+                                              "image_type": image_type_damages.toString(),
+                                              "type": type_before_ride.toString()
+                                            })) {
+                                              _storedData.rideDetailImagesList.remove({
                                                 "booking_id": widget.bookingDetails['id'].toString(),
                                                 "image": sixthImg,
                                                 "image_type": image_type_damages.toString(),
                                                 "type": type_before_ride.toString()
-                                              })) {
-                                                _storedData.rideDetailImagesList.remove({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": sixthImg,
-                                                  "image_type": image_type_damages.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideDetailImagesList.add({
-                                                  "booking_id": widget.bookingDetails['id'].toString(),
-                                                  "image": sixthImg,
-                                                  "image_type": image_type_damages.toString(),
-                                                  "type": type_before_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData.rideDetailImagesList.toString());
+                                              });
                                             } else {
-                                              print('Image upload failed or no image selected.');
-                                              setState(() {
-                                                sixthImg = null;
+                                              _storedData.rideDetailImagesList.add({
+                                                "booking_id": widget.bookingDetails['id'].toString(),
+                                                "image": sixthImg,
+                                                "image_type": image_type_damages.toString(),
+                                                "type": type_before_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData.rideDetailImagesList.toString());
                                           },
                                           child: sixthImg == null
                                               ? sixthImgLoading == false
@@ -824,4 +799,6 @@ class _AllSidesPicturesState extends State<AllSidesPictures> {
       ),
     );
   }
+  // <<< END    _AllSidesPicturesState.build()
 }
+// <<< END    class _AllSidesPicturesState

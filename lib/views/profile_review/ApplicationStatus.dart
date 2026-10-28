@@ -1,12 +1,14 @@
+// ----------------------------------------------------------------------
+// Application status
+//
+// Shows approved / pending status of the application.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/globalWidgets/leadingbackbtn.dart';
 import 'package:base_project_flutter/responsive.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/enable_location/enable_location.dart';
-import 'package:base_project_flutter/views/locationError/locationError.dart';
 import 'package:base_project_flutter/views/profile_review/profile_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,9 +20,9 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/imageConstant.dart';
-import '../location_popup_page.dart';
 import '../referalCode/referalCode.dart';
 
+// >>> START  class ApplicationStatusPage
 class ApplicationStatusPage extends StatefulWidget {
   const ApplicationStatusPage({Key? key, this.profileStatus, this.profiledetails});
   final profileStatus;
@@ -28,7 +30,9 @@ class ApplicationStatusPage extends StatefulWidget {
   @override
   State<ApplicationStatusPage> createState() => _ApplicationStatusPageState();
 }
+// <<< END    class ApplicationStatusPage
 
+// >>> START  class _ApplicationStatusPageState
 class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
   // Future<void> launchURL(String url) async {
   //   if (await canLaunchUrl(Uri.parse(url))) {
@@ -40,15 +44,8 @@ class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
   //   }
   // }
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _ApplicationStatusPageState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -93,9 +90,7 @@ class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                          "tel://+917893653899",
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                       },
                     ),
                   ),
@@ -138,7 +133,9 @@ class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
       },
     );
   }
+  // <<< END    _ApplicationStatusPageState._showContactInfoDialog()
 
+  // >>> START  _ApplicationStatusPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,18 +319,24 @@ class _ApplicationStatusPageState extends State<ApplicationStatusPage> {
       ),
     );
   }
+  // <<< END    _ApplicationStatusPageState.build()
 }
+// <<< END    class _ApplicationStatusPageState
 
 //Verification sucess status
 
+// >>> START  class VerificationSucessPage
 class VerificationSucessPage extends StatefulWidget {
   const VerificationSucessPage({Key? key});
 
   @override
   State<VerificationSucessPage> createState() => _VerificationSucessPageState();
 }
+// <<< END    class VerificationSucessPage
 
+// >>> START  class _VerificationSucessPageState
 class _VerificationSucessPageState extends State<VerificationSucessPage> {
+  // >>> START  _VerificationSucessPageState.build()  -  draws this screen / widget (its layout)
   @override
   // void initState() {
   //   super.initState();
@@ -390,4 +393,6 @@ class _VerificationSucessPageState extends State<VerificationSucessPage> {
       ),
     );
   }
+  // <<< END    _VerificationSucessPageState.build()
 }
+// <<< END    class _VerificationSucessPageState

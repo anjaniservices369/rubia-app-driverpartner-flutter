@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------
+// Starting odometer
+//
+// Driver enters the odometer reading and photo at ride start.
+// ----------------------------------------------------------------------
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/material.dart';
@@ -13,24 +17,30 @@ import '../../../responsive.dart';
 import '../../api_services/userApi.dart';
 import '../ride_info/componants/verification_popup.dart';
 
+// >>> START  class StartingOdometerDetails
 class StartingOdometerDetails extends StatefulWidget {
   const StartingOdometerDetails({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<StartingOdometerDetails> createState() => _StartingOdometerDetailsState();
 }
+// <<< END    class StartingOdometerDetails
 
+// >>> START  class _StartingOdometerDetailsState
 class _StartingOdometerDetailsState extends State<StartingOdometerDetails> {
   final _formKey = new GlobalKey<FormState>();
 
   TextEditingController _odometerController = TextEditingController();
   var startImg;
   bool startImgLoading = false;
+  // >>> START  _StartingOdometerDetailsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
       },
       child: Form(
         key: _formKey,
@@ -260,4 +270,6 @@ class _StartingOdometerDetailsState extends State<StartingOdometerDetails> {
       ),
     );
   }
+  // <<< END    _StartingOdometerDetailsState.build()
 }
+// <<< END    class _StartingOdometerDetailsState

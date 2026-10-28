@@ -1,8 +1,11 @@
+// ----------------------------------------------------------------------
+// Main tabs
+//
+// The bottom bar: Home, Bookings, Wallet, Profile.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/main.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/wallet/walletpage.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../constants/constants.dart';
@@ -14,6 +17,7 @@ import '../homePage/homePage.dart';
 import '../profilePage/profilePage.dart';
 
 
+// >>> START  class BottomNavigation
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({
     Key? key,
@@ -29,73 +33,46 @@ class BottomNavigation extends StatefulWidget {
   @override
   _BottomNavigationState createState() => _BottomNavigationState();
 }
+// <<< END    class BottomNavigation
 
+// >>> START  class _BottomNavigationState
 class _BottomNavigationState extends State<BottomNavigation> {
   var tabIndexs = 0;
 
+  // >>> START  _BottomNavigationState._onItemTapped()  -  on item tapped
   void _onItemTapped(int index) {
     setState(() {
       tabIndexs = index;
       print(index);
     });
   }
+  // <<< END    _BottomNavigationState._onItemTapped()
 
+  // >>> START  _BottomNavigationState.checkBottomIndex()  -  check bottom index
   void checkBottomIndex() {
     setState(() {
       tabIndexs = widget.tabIndexId != null ? widget.tabIndexId : 0;
     });
   }
+  // <<< END    _BottomNavigationState.checkBottomIndex()
 
+  // >>> START  _BottomNavigationState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
     checkBottomIndex();
-    //fetchFireBaseValues();
 
-    // FirebaseMessaging.instance.getInitialMessage();
-    // super.initState();
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null && !kIsWeb) {
-    //     flutterLocalNotificationsPlugin!.show(
-    //       notification.hashCode,
-    //       notification.title,
-    //       notification.body,
-    //       NotificationDetails(
-    //         android: AndroidNotificationDetails(
-    //           channel!.id,
-    //           channel!.name,
-    //           importance: Importance.max,
-    //           priority: Priority.high,
-    //           icon: '@mipmap/ic_launcher',
-    //           enableLights: true,
-    //           enableVibration: true,
-    //           // sound: RawResourceAndroidNotificationSound('clock'),
-    //           playSound: true,
-    //           sound: RawResourceAndroidNotificationSound('noti.mp3'),
-    //
-    //         ),
-    //       ),
-    //     );
-    //     if (message.notification != null) {
-    //       print(
-    //           'Message also contained a notification: ${message.notification}');
-    //       print('onMessageOpenedApp --2');
-    //       // Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
-    //     }
-    //     // showNotification();
-    //   }
-    // });
   }
+  // <<< END    _BottomNavigationState.initState()
 
 
 
+  // >>> START  _BottomNavigationState.loadCams()  -  load cams
   loadCams() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
   }
+  // <<< END    _BottomNavigationState.loadCams()
 
+  // >>> START  _BottomNavigationState.showNotification()  -  show notification
   void showNotification() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channel!.id,
@@ -122,7 +99,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
       payload: 'notification_payload',
     );
   }
+  // <<< END    _BottomNavigationState.showNotification()
 
+  // >>> START  _BottomNavigationState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     Image home(int index) =>
@@ -165,17 +144,19 @@ class _BottomNavigationState extends State<BottomNavigation> {
           Images.PROFILE,
           width: isTab(context) ? 36 : 18,
         );
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         // Check if the current page is not the home page
         if (tabIndexs != 0) {
           // Switch to the home page and prevent the app from exiting
           _onItemTapped(0);
-          return false;
+          return;
         }
 
-        // Allow the app to exit if on the home page
-        return Twl.willpopAlert(context);
+        // Ask before exiting if on the home page
+        Twl.willpopAlert(context);
       },
       child: Scaffold(
         backgroundColor: tBackground,
@@ -244,6 +225,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
     );
   }
+  // <<< END    _BottomNavigationState.build()
 
   _bottomNavigationBarItem({required icon, required String label}) {
     return BottomNavigationBarItem(
@@ -252,3 +234,4 @@ class _BottomNavigationState extends State<BottomNavigation> {
     );
   }
 }
+// <<< END    class _BottomNavigationState

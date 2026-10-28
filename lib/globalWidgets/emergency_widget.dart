@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Emergency numbers widget
+//
+// Panel listing emergency phone numbers (police etc.) shown from the ride
+// screen.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -6,9 +12,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../constants/constants.dart';
 import '../responsive.dart';
 
+// >>> START  class Emergencywidget
 class Emergencywidget extends StatelessWidget {
   const Emergencywidget({Key? key}) : super(key: key);
 
+  // >>> START  Emergencywidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,9 +35,7 @@ class Emergencywidget extends StatelessWidget {
                         fontSize: isTab(context) ? 14.sp : 16.sp)),
                 GestureDetector(
                   onTap: () {
-                    launch(
-                      "tel://" + '100',
-                    );
+                    launchUrl(Uri.parse("tel://" + '100'));
                   },
                   child: Container(
                       padding: EdgeInsets.all(10.0),
@@ -56,9 +62,7 @@ class Emergencywidget extends StatelessWidget {
                         fontSize: isTab(context) ? 14.sp : 16.sp)),
                 GestureDetector(
                   onTap: () {
-                    launch(
-                      "tel://" + '108',
-                    );
+                    launchUrl(Uri.parse("tel://" + '108'));
                   },
                   child: Container(
                       padding: EdgeInsets.all(10.0),
@@ -75,4 +79,6 @@ class Emergencywidget extends StatelessWidget {
           ],
         ));
   }
+  // <<< END    Emergencywidget.build()
 }
+// <<< END    class Emergencywidget

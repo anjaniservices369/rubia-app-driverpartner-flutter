@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// Ride-offer poller (switched off)
+//
+// Would check for new ride offers every 5 seconds, ring a tone and show an
+// accept/reject pop-up. Switched off in the driver app.
+//
+// Developer note: Gated by skipperOffersEnabled in apiConstants.dart.
+// ----------------------------------------------------------------------
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -8,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+// >>> START  class OfferService
 /// While the partner is online: posts position and polls `new-request` every
 /// 5 s, rings a looping tone and shows an accept/reject dialog for new offers.
 /// A `type=newOrder` push triggers an immediate poll ([pollNow]).
@@ -23,12 +32,14 @@ class OfferService {
 
   static bool get isRunning => _timer != null;
 
+  // >>> START  OfferService.start()
   static void start() {
     if (!skipperOffersEnabled || isRunning) return;
     SkipperApi.updateOnlineStatus(true);
     _timer = Timer.periodic(_interval, (_) => pollNow());
     pollNow();
   }
+  // <<< END    OfferService.start()
 
   /// [notifyOffline] is false when the session is already gone.
   static void stop({bool notifyOffline = true}) {
@@ -41,6 +52,7 @@ class OfferService {
 
   static void rideFinished() => _hasActiveRide = false;
 
+  // >>> START  OfferService.pollNow()  -  poll now
   static Future<void> pollNow() async {
     if (!isRunning || _polling) return;
     _polling = true;
@@ -66,7 +78,9 @@ class OfferService {
       _polling = false;
     }
   }
+  // <<< END    OfferService.pollNow()
 
+  // >>> START  OfferService._postPosition()  -  post position
   static Future<void> _postPosition() async {
     try {
       final pos = await Geolocator.getLastKnownPosition() ??
@@ -74,7 +88,9 @@ class OfferService {
       await SkipperApi.updateLatLng(pos.latitude, pos.longitude);
     } catch (_) {}
   }
+  // <<< END    OfferService._postPosition()
 
+  // >>> START  OfferService._pick()
   static String _pick(Map<String, dynamic> m, List<String> keys) {
     for (final k in keys) {
       final v = m[k];
@@ -82,7 +98,9 @@ class OfferService {
     }
     return '-';
   }
+  // <<< END    OfferService._pick()
 
+  // >>> START  OfferService._showOffer()  -  show offer
   static Future<void> _showOffer(String id, Map<String, dynamic> offer) async {
     _dialogOpen = true;
     _startRinging();
@@ -105,8 +123,8 @@ class OfferService {
     final fare = _pick(offer, ['total_fare', 'fare']);
 
     final accepted = await Get.dialog<bool>(
-      WillPopScope(
-        onWillPop: () async => false,
+      PopScope(
+        canPop: false,
         child: AlertDialog(
           title: const Text('New ride request'),
           content: Column(
@@ -157,7 +175,9 @@ class OfferService {
       }
     }
   }
+  // <<< END    OfferService._showOffer()
 
+  // >>> START  OfferService._startRinging()  -  start ringing
   static Future<void> _startRinging() async {
     try {
       _player ??= AudioPlayer();
@@ -167,10 +187,14 @@ class OfferService {
       print('OfferService ring error: $e');
     }
   }
+  // <<< END    OfferService._startRinging()
 
+  // >>> START  OfferService._stopRinging()  -  stop ringing
   static Future<void> _stopRinging() async {
     try {
       await _player?.stop();
     } catch (_) {}
   }
+  // <<< END    OfferService._stopRinging()
 }
+// <<< END    class OfferService

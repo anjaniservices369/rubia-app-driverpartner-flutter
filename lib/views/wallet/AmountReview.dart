@@ -1,15 +1,15 @@
-import 'package:base_project_flutter/api_services/userApi.dart';
+// ----------------------------------------------------------------------
+// Confirm top-up amount
+//
+// Reviews the amount before paying.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/constants/stetuesConstant.dart';
-import 'package:base_project_flutter/views/profile_review/ApplicationStatus.dart';
-import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,21 +20,26 @@ import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 
 import '../bottomNavigation.dart/bottomNavigation.dart';
-import '../enable_location/enable_location.dart';
 
+// >>> START  class AmountReview
 class AmountReview extends StatefulWidget {
   const AmountReview({Key? key}) : super(key: key);
 
   @override
   State<AmountReview> createState() => _AmountReviewState();
 }
+// <<< END    class AmountReview
 
+// >>> START  class _AmountReviewState
 class _AmountReviewState extends State<AmountReview> {
+  // >>> START  _AmountReviewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _AmountReviewState.initState()
 
+  // >>> START  _AmountReviewState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -79,9 +84,7 @@ class _AmountReviewState extends State<AmountReview> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                          "tel://+917893653899",
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                         // _launchDialer("+917893653899");
                       },
                     ),
@@ -125,6 +128,7 @@ class _AmountReviewState extends State<AmountReview> {
       },
     );
   }
+  // <<< END    _AmountReviewState._showContactInfoDialog()
 
 
   // Future<void> launchURL(String url,) async {
@@ -137,6 +141,7 @@ class _AmountReviewState extends State<AmountReview> {
   //   }
   // }
 
+  // >>> START  _AmountReviewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,9 +155,11 @@ class _AmountReviewState extends State<AmountReview> {
         ),
       ),
       backgroundColor: tBackground,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 2));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 2));
         },
         child: Padding(
           padding: EdgeInsets.all(2),
@@ -257,4 +264,6 @@ class _AmountReviewState extends State<AmountReview> {
       ),
     );
   }
+  // <<< END    _AmountReviewState.build()
 }
+// <<< END    class _AmountReviewState

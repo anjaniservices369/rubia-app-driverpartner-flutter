@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ending odometer
+//
+// Driver enters the odometer reading and photo at ride end.
+// ----------------------------------------------------------------------
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
@@ -11,25 +16,30 @@ import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
 import '../../api_services/userApi.dart';
 import '../ride_info/Car_RideEndingData/DriveEndVerification_popup.dart';
-import '../ride_info/componants/verification_popup.dart';
 
+// >>> START  class EndingOdometerDetails
 class EndingOdometerDetails extends StatefulWidget {
   const EndingOdometerDetails({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<EndingOdometerDetails> createState() => _EndingOdometerDetailsState();
 }
+// <<< END    class EndingOdometerDetails
 
+// >>> START  class _EndingOdometerDetailsState
 class _EndingOdometerDetailsState extends State<EndingOdometerDetails> {
   TextEditingController _odometerController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
   var endImg;
   bool endImgLoading = false;
+  // >>> START  _EndingOdometerDetailsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
       },
       child: Form(
         key: _formKey,
@@ -266,4 +276,6 @@ class _EndingOdometerDetailsState extends State<EndingOdometerDetails> {
       ),
     );
   }
+  // <<< END    _EndingOdometerDetailsState.build()
 }
+// <<< END    class _EndingOdometerDetailsState

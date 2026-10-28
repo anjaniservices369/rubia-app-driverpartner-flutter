@@ -1,27 +1,34 @@
+// ----------------------------------------------------------------------
+// Training tutorials
+//
+// How-to guides for drivers.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../globalFuctions/globalFunctions.dart';
 
+// >>> START  class TutorialsPage
 class TutorialsPage extends StatefulWidget {
   const TutorialsPage({Key? key}) : super(key: key);
 
   @override
   _TutorialsPageState createState() => _TutorialsPageState();
 }
+// <<< END    class TutorialsPage
 
+// >>> START  class _TutorialsPageState
 class _TutorialsPageState extends State<TutorialsPage> {
   bool selected = true;
-  bool _customTileExpanded = false;
 
+  // >>> START  _TutorialsPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,9 +59,11 @@ class _TutorialsPageState extends State<TutorialsPage> {
                 color: tSecondaryColor,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
         },
         child: SingleChildScrollView(
           child: Padding(
@@ -278,4 +287,6 @@ class _TutorialsPageState extends State<TutorialsPage> {
       ),
     );
   }
+  // <<< END    _TutorialsPageState.build()
 }
+// <<< END    class _TutorialsPageState

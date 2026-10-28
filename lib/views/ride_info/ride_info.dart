@@ -1,6 +1,16 @@
+// ----------------------------------------------------------------------
+// Ride screen - pickup
+//
+// Map and customer details for an accepted ride; the driver slides 'Go for
+// pickup' then 'Arrived'.
+//
+// Developer note: Calls go-for-pickup then notify-arrived.
+// ----------------------------------------------------------------------
 import 'package:action_slider/action_slider.dart';
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
+import 'dart:async';
+
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
@@ -27,6 +37,7 @@ import 'enter_otp_ride.dart';
 
 
 
+// >>> START  class RideInfoPage
 class RideInfoPage extends StatefulWidget {
   const RideInfoPage({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
@@ -34,20 +45,81 @@ class RideInfoPage extends StatefulWidget {
   @override
   State<RideInfoPage> createState() => _RideInfoPageState();
 }
+// <<< END    class RideInfoPage
 
+// >>> START  class _RideInfoPageState
 class _RideInfoPageState extends State<RideInfoPage> {
 
+  // >>> START  _RideInfoPageState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchBookingDetails();
     super.initState();
+    // The customer can cancel while the driver is on this screen. Look again every few seconds and tell the driver at once.
+    _statusTimer = Timer.periodic(const Duration(seconds: 8), (_) => _checkStillActive());
   }
+  // <<< END    _RideInfoPageState.initState()
+
+  Timer? _statusTimer;
+  bool _cancelledShown = false;
+
+  // >>> START  _RideInfoPageState.dispose()  -  cleanup when the screen closes
+  @override
+  void dispose() {
+    _statusTimer?.cancel();
+    super.dispose();
+  }
+  // <<< END    _RideInfoPageState.dispose()
+
+  // >>> START  _RideInfoPageState._checkStillActive()  -  check still active
+  Future<void> _checkStillActive() async {
+    if (!mounted || _cancelledShown || widget.bookingDetails == null) return;
+    try {
+      final res = await RideBookingsApi().fetchBookigDetails(context, widget.bookingDetails['id'].toString());
+      if (res is Map && res['status'] == 'OK' && res['details'] is Map) {
+        _handleCancelled(res['details']);
+      }
+    } catch (_) {
+      // a missed check is fine; the next one tries again
+    }
+  }
+  // <<< END    _RideInfoPageState._checkStillActive()
+
+  // >>> START  _RideInfoPageState._handleCancelled()  -  handle cancelled
+  void _handleCancelled(dynamic details) {
+    final st = int.tryParse(details['status'].toString());
+    if (_cancelledShown || !mounted) return;
+    if (st != STATUS_USER_CANCELLED && st != STATUS_BOOKING_AUTO_CANCELLED) return;
+    _cancelledShown = true;
+    _statusTimer?.cancel();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Ride cancelled'),
+        content: Text(st == STATUS_USER_CANCELLED
+            ? 'The customer cancelled this ride. It is now under Cancelled rides in your ride history.'
+            : 'This booking was cancelled.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('OK')),
+        ],
+      ),
+    ).then((_) async {
+      // this ride is over: forget it, and go back to the Bookings list
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('trip_type');
+      await prefs.remove('booking_id');
+      if (mounted) Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    });
+  }
+  // <<< END    _RideInfoPageState._handleCancelled()
 
   var bookingDetails;
   var resNOK;
   var txt='';
   var pickUpTime ='';
 
+  // >>> START  _RideInfoPageState.fetchBookingDetails()  -  fetch booking details
   fetchBookingDetails() async {
     var res = await RideBookingsApi().fetchBookigDetails(context, widget.bookingDetails['id'].toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -71,18 +143,21 @@ class _RideInfoPageState extends State<RideInfoPage> {
         prefs.setString('trip_type', bookingDetails['trip_type'].toString());
         prefs.setString('booking_id', bookingDetails['id'].toString());
       });
+      // already cancelled when the screen opened (e.g. opened from a list that had not refreshed yet)
+      _handleCancelled(bookingDetails);
     } else {
       setState(() {
         resNOK = res['status'];
       });
     }
   }
+  // <<< END    _RideInfoPageState.fetchBookingDetails()
 
   final _controller = ActionSliderController();
   var status = 0;
   final Set<Polyline> _polylines = Set();
-  GoogleMapController? _mapController;
 
+  // >>> START  _RideInfoPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     String pickupLatitude = widget.bookingDetails['pickup_latitude'];
@@ -93,7 +168,7 @@ class _RideInfoPageState extends State<RideInfoPage> {
     LatLng dropLatLng;
     // Create LatLng objects for pickup and drop coordinates
     LatLng pickupLatLng = LatLng(double.parse(pickupLatitude), double.parse(pickupLongitude));
-    if (dropLatitude != null && dropLatitude.isNotEmpty && dropLongitude != null && dropLongitude.isNotEmpty) {
+    if (dropLatitude.isNotEmpty && dropLongitude.isNotEmpty) {
       dropLatLng = LatLng(double.parse(dropLatitude), double.parse(dropLongitude));
 
       markers.add(
@@ -205,16 +280,15 @@ class _RideInfoPageState extends State<RideInfoPage> {
                     color: tSecondaryColor,
                   ))
           : Container(
-              child: WillPopScope(
-                onWillPop: () {
-                  return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+              child: PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) {
+                  if (didPop) return;
+                  Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
                 },
                 child: Stack(
                   children: [
                     GoogleMap(
-                      onMapCreated: (controller) {
-                        _mapController = controller;
-                      },
                       initialCameraPosition: CameraPosition(
                         target: pickupLatLng,
                         zoom: 12.0,
@@ -437,9 +511,7 @@ class _RideInfoPageState extends State<RideInfoPage> {
                                                     Spacer(),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        launch(
-                                                          "tel://" + widget.bookingDetails['user_details']['contact_no'].toString(),
-                                                        );
+                                                        launchUrl(Uri.parse("tel://" + widget.bookingDetails['user_details']['contact_no'].toString()));
                                                       },
                                                       child: Container(
                                                           padding: EdgeInsets.all(10.0),
@@ -636,7 +708,9 @@ class _RideInfoPageState extends State<RideInfoPage> {
             ),
     );
   }
+  // <<< END    _RideInfoPageState.build()
 
+  // >>> START  _RideInfoPageState.showErrorDialog()  -  show error dialog
   void showErrorDialog() {
     showDialog(
       context: context,
@@ -680,7 +754,9 @@ class _RideInfoPageState extends State<RideInfoPage> {
       },
     );
   }
+  // <<< END    _RideInfoPageState.showErrorDialog()
 
+  // >>> START  _RideInfoPageState.showRadiusError()  -  show radius error
   void showRadiusError() {
     showDialog(
       context: context,
@@ -724,7 +800,9 @@ class _RideInfoPageState extends State<RideInfoPage> {
       },
     );
   }
+  // <<< END    _RideInfoPageState.showRadiusError()
 }
+// <<< END    class _RideInfoPageState
 
 
 //var time = bookingDetails['pickup_time'];

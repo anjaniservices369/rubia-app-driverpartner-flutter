@@ -1,11 +1,18 @@
-import 'dart:io';
+// ----------------------------------------------------------------------
+// Driver profile, documents & money requests
+//
+// Requests about the driver's profile: registration steps, vehicle types,
+// documents, bank details, online/offline status, joining fee, wallet and
+// subscription plans.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/ApiHelper.dart';
 import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
+// >>> START  class DriverDetailsApi
+/// Driver profile & money server calls: registration data, documents, online status, wallet, plans.
 class DriverDetailsApi {
+  // >>> START  DriverDetailsApi.getDriverVehicleTypes()  -  get driver vehicle types
   //driver/vehicle-types
   Future<dynamic> getDriverVehicleTypes(BuildContext context, String type) async {
     var jsonMap;
@@ -19,7 +26,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.getDriverVehicleTypes()
 
+  // >>> START  DriverDetailsApi.addVehicleType()  -  add vehicle type
   //vehicle type add
   addVehicleType(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -29,7 +38,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.addVehicleType()
 
+  // >>> START  DriverDetailsApi.updateProfileAPi()  -  update profile api
   //Add personal details
   updateProfileAPi(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -39,7 +50,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.updateProfileAPi()
 
+  // >>> START  DriverDetailsApi.uploadProfileImageApi()  -  upload profile image api
   //Add profile image
   uploadProfileImageApi(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -49,7 +62,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.uploadProfileImageApi()
 
+  // >>> START  DriverDetailsApi.uploadDrivingLicenceApi()  -  upload driving licence api
   //Add driving liciense
   uploadDrivingLicenceApi(
       BuildContext context, Map<String, String> param) async {
@@ -60,7 +75,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.uploadDrivingLicenceApi()
 
+  // >>> START  DriverDetailsApi.uploadAadharCardApi()  -  upload aadhar card api
   //Add aadhar card
   uploadAadharCardApi(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -70,7 +87,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.uploadAadharCardApi()
 
+  // >>> START  DriverDetailsApi.uploadPanCardApi()  -  upload pan card api
   //Add pan card
   uploadPanCardApi(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -80,7 +99,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.uploadPanCardApi()
 
+  // >>> START  DriverDetailsApi.policeVerificationAPi()  -  police verification api
   //police verification
   policeVerificationAPi(BuildContext context) async {
     var jsonMap;
@@ -90,7 +111,9 @@ class DriverDetailsApi {
     print(jsonMap);
     return jsonMap;
   }
+  // <<< END    DriverDetailsApi.policeVerificationAPi()
 
+  // >>> START  DriverDetailsApi.addEmergencyContactAPi()  -  add emergency contact api
   //Add emergency contacts
   addEmergencyContactAPi(
       BuildContext context, Map<String, String> param) async {
@@ -101,7 +124,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.addEmergencyContactAPi()
 
+  // >>> START  DriverDetailsApi.addDriverBankDetails()  -  add driver bank details
   //Add Driver BankDetails
   addDriverBankDetails(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -111,7 +136,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.addDriverBankDetails()
 
+  // >>> START  DriverDetailsApi.fetchOnlineStatusDriver()  -  fetch online status driver
   //Driver online status Update
   fetchOnlineStatusDriver(
       BuildContext context, Map<String, String> param) async {
@@ -122,7 +149,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.fetchOnlineStatusDriver()
 
+  // >>> START  DriverDetailsApi.fetchJoiningFeeStatus()  -  fetch joining fee status
   //Pay Joining fee
   fetchJoiningFeeStatus(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -132,7 +161,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.fetchJoiningFeeStatus()
 
+  // >>> START  DriverDetailsApi.createOrderApi()  -  create order api
   // Paymentgate way Apis
   createOrderApi(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -142,7 +173,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.createOrderApi()
 
+  // >>> START  DriverDetailsApi.createSubscriptionOrderApi()  -  create subscription order api
   createSubscriptionOrderApi(
       BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -152,7 +185,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.createSubscriptionOrderApi()
 
+  // >>> START  DriverDetailsApi.getDriverSubscription()  -  get driver subscription
   //Subscription Apis
   getDriverSubscription(BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);
@@ -162,7 +197,9 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.getDriverSubscription()
 
+  // >>> START  DriverDetailsApi.getDriverPlans()  -  get driver plans
   getDriverPlans(BuildContext context) async {
     var headers = await ApiHelper().getHeader(context);
     var url = DRIVER_PLAN_DETAILS + headers['auth_code'];
@@ -171,4 +208,6 @@ class DriverDetailsApi {
     print(response);
     return response;
   }
+  // <<< END    DriverDetailsApi.getDriverPlans()
 }
+// <<< END    class DriverDetailsApi

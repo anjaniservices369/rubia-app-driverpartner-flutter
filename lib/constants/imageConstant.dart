@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// Image file names
+//
+// A list of the picture files bundled with the app (logos, icons,
+// illustrations), so screens refer to them by name.
+// ----------------------------------------------------------------------
+// >>> START  class Images
+/// Names of the picture files bundled in assets/ (logos, icons, illustrations).
 class Images {
   static const String Logo = 'assets/images/driverLogo.png';
   static const String NEWBOOKINGS = 'assets/icons/newbookings.png';
@@ -125,3 +133,4 @@ class Images {
   ///payment
   static const String JOINING_QR_CODE = 'assets/images/qr_code.jpg';
 }
+// <<< END    class Images

@@ -1,16 +1,16 @@
-import 'package:base_project_flutter/api_services/userApi.dart';
+// ----------------------------------------------------------------------
+// Subscription review
+//
+// Confirm plan before paying.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/views/profilePage/subscription/subscription.dart';
-import 'package:base_project_flutter/views/profile_review/ApplicationStatus.dart';
-import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +23,7 @@ import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../responsive.dart';
 
 
+// >>> START  class SubscriptionReview
 class SubscriptionReview extends StatefulWidget {
   const SubscriptionReview({Key? key,this.param}) : super(key: key);
   final param;
@@ -30,22 +31,19 @@ class SubscriptionReview extends StatefulWidget {
   @override
   State<SubscriptionReview> createState() => _SubscriptionReviewState();
 }
+// <<< END    class SubscriptionReview
 
+// >>> START  class _SubscriptionReviewState
 class _SubscriptionReviewState extends State<SubscriptionReview> {
+  // >>> START  _SubscriptionReviewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _SubscriptionReviewState.initState()
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _SubscriptionReviewState._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -90,9 +88,7 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                          "tel://+917893653899",
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                       },
                     ),
                   ),
@@ -135,6 +131,7 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
       },
     );
   }
+  // <<< END    _SubscriptionReviewState._showContactInfoDialog()
 
 
   // Future<void> launchURL(String url,) async {
@@ -147,6 +144,7 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
   //   }
   // }
 
+  // >>> START  _SubscriptionReviewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,9 +159,11 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
         ),
       ),
       backgroundColor: tBackground,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(
               context, Subscription());
         },
         child: Padding(
@@ -278,4 +278,6 @@ class _SubscriptionReviewState extends State<SubscriptionReview> {
       ),
     );
   }
+  // <<< END    _SubscriptionReviewState.build()
 }
+// <<< END    class _SubscriptionReviewState

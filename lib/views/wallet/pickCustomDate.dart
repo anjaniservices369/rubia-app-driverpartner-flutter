@@ -1,16 +1,21 @@
+// ----------------------------------------------------------------------
+// Pick a date range
+//
+// Date range picker for transactions.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../profilePage/earnings/earnings.dart';
 
+// >>> START  class PickCustomDate
 class PickCustomDate extends StatefulWidget {
-  String filterValue;
+  final String filterValue;
 
   PickCustomDate({
     Key? key,
@@ -22,15 +27,20 @@ class PickCustomDate extends StatefulWidget {
   @override
   State<PickCustomDate> createState() => _PickCustomDateState();
 }
+// <<< END    class PickCustomDate
 
+// >>> START  class _PickCustomDateState
 class _PickCustomDateState extends State<PickCustomDate> {
+  // >>> START  _PickCustomDateState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _PickCustomDateState.initState()
 
   var startDate;
   var endDate;
+  // >>> START  _PickCustomDateState._onSelectionChanged()  -  on selection changed
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
     debugPrint(args.value.startDate.toString().substring(0, 10));
@@ -40,7 +50,9 @@ class _PickCustomDateState extends State<PickCustomDate> {
       endDate = formatter.format(args.value.endDate);
     });
   }
+  // <<< END    _PickCustomDateState._onSelectionChanged()
 
+  // >>> START  _PickCustomDateState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -53,7 +65,7 @@ class _PickCustomDateState extends State<PickCustomDate> {
             height: 300,
             width: 400,
             child: SfDateRangePicker(
-              rangeSelectionColor: tPrimaryColor.withOpacity(0.4),
+              rangeSelectionColor: tPrimaryColor.withValues(alpha: 0.4),
               startRangeSelectionColor: tPrimaryColor,
               endRangeSelectionColor: tPrimaryColor,
               rangeTextStyle: TextStyle(
@@ -75,7 +87,7 @@ class _PickCustomDateState extends State<PickCustomDate> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
-                backgroundColor: tPrimaryColor.withOpacity(0.7),
+                backgroundColor: tPrimaryColor.withValues(alpha: 0.7),
               ),
               backgroundColor: tWhite,
               onSelectionChanged: _onSelectionChanged,
@@ -105,7 +117,6 @@ class _PickCustomDateState extends State<PickCustomDate> {
                       await SharedPreferences.getInstance();
                   sharedPreferences.remove('filteredEarnigs');
                   sharedPreferences.setString('filteredEarnigs', 'Custom');
-                  var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                   print('dates');
                   print(startDate);
                   print(endDate);
@@ -113,7 +124,6 @@ class _PickCustomDateState extends State<PickCustomDate> {
                   sharedPreferences.setString('startDate', startDate);
                   sharedPreferences.setString('endDate', endDate);
                   setState(() {
-                    widget.filterValue = 'Custom';
                     widget.isEarningPage == true
                         ? Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
@@ -142,4 +152,6 @@ class _PickCustomDateState extends State<PickCustomDate> {
       ),
     );
   }
+  // <<< END    _PickCustomDateState.build()
 }
+// <<< END    class _PickCustomDateState

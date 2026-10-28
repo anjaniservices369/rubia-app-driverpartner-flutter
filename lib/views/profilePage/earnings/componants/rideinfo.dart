@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ride info (history)
+//
+// A past ride's full details and cancel option.
+// ----------------------------------------------------------------------
 import 'dart:developer';
 
 import 'package:base_project_flutter/constants/BookingStatusConstants.dart';
@@ -15,6 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:base_project_flutter/views/bill_details/route_conversion_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../constants/constants.dart';
 import '../../../../../constants/imageConstant.dart';
@@ -26,6 +32,7 @@ import '../../../../api_services/rideBookingsApi.dart';
 import '../../../bottomNavigation.dart/bottomNavigation.dart';
 import '../../../ride_info/final_bill_amount.dart';
 
+// >>> START  class RideInfo
 class RideInfo extends StatefulWidget {
   const RideInfo({Key? key, this.bookingDetails, this.isHistoryPage, this.selectedType})
       : super(key: key);
@@ -35,12 +42,15 @@ class RideInfo extends StatefulWidget {
   @override
   State<RideInfo> createState() => _RideInfoState();
 }
+// <<< END    class RideInfo
 
+// >>> START  class _RideInfoState
 class _RideInfoState extends State<RideInfo> {
 
   var bookingDetailss;
   var resNOK;
   bool loading = false;
+  // >>> START  _RideInfoState.fetchBookingDetails()  -  fetch booking details
   fetchBookingDetails() async {
     setState(() {
       loading = true;
@@ -58,60 +68,56 @@ class _RideInfoState extends State<RideInfo> {
       });
     }
   }
+  // <<< END    _RideInfoState.fetchBookingDetails()
 
+  // >>> START  _RideInfoState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
     fetchBookingDetails();
 
   }
+  // <<< END    _RideInfoState.initState()
 
+  // >>> START  _RideInfoState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    Future<void> fetchData() async {
-      setState(() {
-        loading = false;
-      });
-    }
 
     print(widget.bookingDetails['status']);
     log(widget.bookingDetails['status'].toString());
     print(widget.bookingDetails['status']);
     double? usageHours = double.parse(widget.bookingDetails['usage_hours']);
 
-    void initState() {
-      // Call the fetch data method
-      fetchData();
-    }
 
     String usageText;
-    if (usageHours != null) {
-      if (usageHours >= 1) {
-        int wholeHours = usageHours.toInt();
-        int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-        if (wholeMinutes > 0) {
-          usageText = '$wholeHours hrs $wholeMinutes mins ';
-        } else {
-          usageText = '$wholeHours hrs ';
-        }
+    if (usageHours >= 1) {
+      int wholeHours = usageHours.toInt();
+      int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+      if (wholeMinutes > 0) {
+        usageText = '$wholeHours hrs $wholeMinutes mins ';
       } else {
-        int usageMinutes = (usageHours * 60).toInt();
-        usageText = '$usageMinutes mins ';
+        usageText = '$wholeHours hrs ';
       }
     } else {
-      usageText =
-      'Usage hours not available'; // Handle the case where 'usage_hours' is null
+      int usageMinutes = (usageHours * 60).toInt();
+      usageText = '$usageMinutes mins ';
     }
 
-    return WillPopScope(
-      onWillPop: () {
-        return widget.isHistoryPage == false
-            ? bookingDetailss['status'] == STATUS_START_RIDE
-            ? Twl.forceNavigateTo(context,
-            CompleteRide(bookingDetails: bookingDetailss))
-            : Twl.forceNavigateTo(context,
-            RideInfoPage(bookingDetails: widget.bookingDetails))
-            : Twl.forceNavigateTo(context, MyRidesView(selectedType:widget.selectedType));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (widget.isHistoryPage == false) {
+          if (bookingDetailss['status'] == STATUS_START_RIDE) {
+            Twl.forceNavigateTo(context,
+                CompleteRide(bookingDetails: bookingDetailss));
+          } else {
+            Twl.forceNavigateTo(context,
+                RideInfoPage(bookingDetails: widget.bookingDetails));
+          }
+        } else {
+          Twl.forceNavigateTo(context, MyRidesView(selectedType:widget.selectedType));
+        }
       },
       child: loading
           ? Scaffold(
@@ -177,23 +183,10 @@ class _RideInfoState extends State<RideInfo> {
           ),
         ),
             )
-            : WillPopScope(
-          onWillPop: () {
-            return widget.isHistoryPage == false
-                ? bookingDetailss['status'] ==
-                STATUS_START_RIDE
-                ? Twl.forceNavigateTo(
-                context,
-                CompleteRide(
-                    bookingDetails: bookingDetailss))
-                : Twl.forceNavigateTo(
-                context,
-                RideInfoPage(
-                    bookingDetails: widget.bookingDetails))
-                : Twl.forceNavigateTo(context, MyRidesView(selectedType:widget.selectedType));
-          },
-          child: SingleChildScrollView(
+            : SingleChildScrollView(
             child: Column(children: [
+              // Booked in-city, travelled and billed outstation: the message and the route map.
+              RouteConversionCard(rideDetails: bookingDetailss),
               SizedBox(
                 height: 1.h,
               ),
@@ -305,11 +298,11 @@ class _RideInfoState extends State<RideInfo> {
                               Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  launch("tel://" +
+                                  launchUrl(Uri.parse("tel://" +
                                       widget.bookingDetails[
                                       'user_details']
                                       ['contact_no']
-                                          .toString());
+                                          .toString()));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(8),
@@ -1019,12 +1012,14 @@ class _RideInfoState extends State<RideInfo> {
               ),
             ]),
           ),
-        ),
       ),
     );
   }
+  // <<< END    _RideInfoState.build()
 }
+// <<< END    class _RideInfoState
 
+// >>> START  class CancelRideBottomSheet
 class CancelRideBottomSheet extends StatefulWidget {
   const CancelRideBottomSheet({Key? key, this.bookingDetails})
       : super(key: key);
@@ -1033,10 +1028,13 @@ class CancelRideBottomSheet extends StatefulWidget {
   @override
   State<CancelRideBottomSheet> createState() => _CancelRideBottomSheetState();
 }
+// <<< END    class CancelRideBottomSheet
 
+// >>> START  class _CancelRideBottomSheetState
 class _CancelRideBottomSheetState extends State<CancelRideBottomSheet> {
   bool _isChecked = false;
 
+  // >>> START  _CancelRideBottomSheetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1147,8 +1145,11 @@ class _CancelRideBottomSheetState extends State<CancelRideBottomSheet> {
       ]),
     );
   }
+  // <<< END    _CancelRideBottomSheetState.build()
 }
+// <<< END    class _CancelRideBottomSheetState
 
+// >>> START  class CancelReasonWidget
 class CancelReasonWidget extends StatefulWidget {
   const CancelReasonWidget({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
@@ -1156,7 +1157,9 @@ class CancelReasonWidget extends StatefulWidget {
   @override
   State<CancelReasonWidget> createState() => _CancelReasonWidgetState();
 }
+// <<< END    class CancelReasonWidget
 
+// >>> START  class _CancelReasonWidgetState
 class _CancelReasonWidgetState extends State<CancelReasonWidget> {
   TextEditingController _descriptionController = TextEditingController();
   var reasonSelectedValue;
@@ -1185,6 +1188,7 @@ class _CancelReasonWidgetState extends State<CancelReasonWidget> {
     },
   ];
   var selectedCancelReason;
+  // >>> START  _CancelReasonWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     final homePageProvider = Provider.of<HomePageProvider>(context);
@@ -1260,9 +1264,7 @@ class _CancelReasonWidgetState extends State<CancelReasonWidget> {
                             vertical: 5,
                           ),
                           child: ListTile(
-                            trailing: Radio(
-                              activeColor: tPrimaryColor,
-                              value: index,
+                            trailing: RadioGroup<int>(
                               groupValue: reasonSelectedValue,
                               onChanged: (value) {
                                 setState(() {
@@ -1275,6 +1277,10 @@ class _CancelReasonWidgetState extends State<CancelReasonWidget> {
                                   print(selectedCancelReason.toString());
                                 });
                               },
+                              child: Radio<int>(
+                                activeColor: tPrimaryColor,
+                                value: index,
+                              ),
                             ),
                             title: Text(
                               reasonsList[index]["title"],
@@ -1374,4 +1380,6 @@ class _CancelReasonWidgetState extends State<CancelReasonWidget> {
       ),
     );
   }
+  // <<< END    _CancelReasonWidgetState.build()
 }
+// <<< END    class _CancelReasonWidgetState

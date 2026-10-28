@@ -1,5 +1,15 @@
+// ----------------------------------------------------------------------
+// Push notifications (OneSignal)
+//
+// Sets up push notifications so the driver is alerted about new bookings,
+// and tells the server which phone to notify.
+//
+// Developer note: Needs oneSignalAppId; the Android FCM credentials live in
+// the OneSignal dashboard. Subscription id = device_token.
+// ----------------------------------------------------------------------
 import 'dart:async';
 
+import 'package:base_project_flutter/api_services/newBookingAlert.dart';
 import 'package:base_project_flutter/api_services/offerService.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/apiConstants.dart';
@@ -9,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class PushService
 /// Provider-neutral push entry point for the app. The backend sends through
 /// OneSignal; the `device_token` it needs is the OneSignal *subscription id*.
 ///
@@ -29,6 +40,7 @@ class PushService {
   static String? get subscriptionId =>
       _initialised ? OneSignal.User.pushSubscription.id : null;
 
+  // >>> START  PushService.init()
   static Future<void> init() async {
     if (_initialised || kIsWeb) return;
     if (oneSignalAppId.isEmpty) {
@@ -38,15 +50,26 @@ class PushService {
 
     OneSignal.initialize(oneSignalAppId);
     _initialised = true;
-    await OneSignal.Notifications.requestPermission(true);
+    // Do not await: main() calls init() before runApp, so waiting for the
+    // user's answer left a blank screen behind the permission dialog.
+    OneSignal.Notifications.requestPermission(true);
 
     // App is open: show it ourselves so the booking alert keeps its sound.
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       event.preventDefault();
-      _showLocal(event.notification);
+      final data = event.notification.additionalData;
+      final bookingId = data?['order_id']?.toString();
+      // A booking the poller already rang for stays silent here, so the driver
+      // hears noti6x once per booking, not twice.
+      final silent = NewBookingAlert.alreadyAlerted(bookingId);
+      _showLocal(event.notification, silent: silent);
+      if (_isNewBooking(event.notification)) {
+        NewBookingAlert.markAlerted(bookingId);
+        // Load it into Available Rides right away, without a refresh.
+        NewBookingAlert.pollNow();
+      }
       // Ride offer: show the accept/reject dialog right away.
-      if (event.notification.additionalData?['type']?.toString() ==
-          'newOrder') {
+      if (data?['type']?.toString() == 'newOrder') {
         OfferService.pollNow();
       }
     });
@@ -57,6 +80,7 @@ class PushService {
       if (id != null && id.isNotEmpty) _syncToken(id);
     });
   }
+  // <<< END    PushService.init()
 
   /// Used at login (`verify-otp`), where the id may not exist yet.
   static Future<String?> waitForSubscriptionId(
@@ -70,6 +94,7 @@ class PushService {
     return subscriptionId;
   }
 
+  // >>> START  PushService._syncToken()  -  sync token
   static Future<void> _syncToken(String id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -83,12 +108,17 @@ class PushService {
       print('PushService: token sync failed: $e');
     }
   }
+  // <<< END    PushService._syncToken()
 
-  static Future<void> _showLocal(OSNotification n) async {
-    // Server sends data `type=newOrder` (+ `order_id`) for ride offers.
-    final isNewBooking =
-        n.additionalData?['type']?.toString() == 'newOrder' ||
-            n.title == 'New Booking';
+  /// Server sends data `type=newOrder` (+ `order_id`) for ride offers; the
+  /// Driver service sends the title 'New Booking'.
+  static bool _isNewBooking(OSNotification n) =>
+      n.additionalData?['type']?.toString() == 'newOrder' ||
+      n.title == 'New Booking';
+
+  static Future<void> _showLocal(OSNotification n,
+      {bool silent = false}) async {
+    final isNewBooking = _isNewBooking(n);
     final details = AndroidNotificationDetails(
       isNewBooking ? _newBookingChannelId : _otherChannelId,
       isNewBooking ? _newBookingChannelName : _otherChannelName,
@@ -98,7 +128,7 @@ class PushService {
       priority: Priority.high,
       enableLights: true,
       enableVibration: true,
-      playSound: true,
+      playSound: !silent,
       sound: RawResourceAndroidNotificationSound(
           isNewBooking ? 'noti6x' : 'music'),
     );
@@ -110,3 +140,4 @@ class PushService {
     );
   }
 }
+// <<< END    class PushService

@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// Taxi ride progress screen (switched off)
+//
+// Step-by-step screen for a taxi/skipper ride: on the way, arrived, start
+// with customer code, complete.
+//
+// Developer note: Only reachable through OfferService, which is disabled.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/offerService.dart';
 import 'package:base_project_flutter/api_services/skipperApi.dart';
 import 'package:base_project_flutter/constants/apiConstants.dart';
@@ -5,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+// >>> START  class SkipperRideScreen
 /// Minimal progress screen for a ride accepted through the skipper flow:
 /// accepted(4) -> on the way(5) -> arrived(6) -> start with rider OTP(8)
 /// -> completed(9).
@@ -23,12 +32,15 @@ class SkipperRideScreen extends StatefulWidget {
   @override
   State<SkipperRideScreen> createState() => _SkipperRideScreenState();
 }
+// <<< END    class SkipperRideScreen
 
+// >>> START  class _SkipperRideScreenState
 class _SkipperRideScreenState extends State<SkipperRideScreen> {
   int _status = RIDE_ACCEPTED;
   bool _busy = false;
   final _otp = TextEditingController();
 
+  // >>> START  _SkipperRideScreenState.get _label  -  computed value
   String get _label {
     switch (_status) {
       case RIDE_ACCEPTED:
@@ -43,7 +55,9 @@ class _SkipperRideScreenState extends State<SkipperRideScreen> {
         return 'Done';
     }
   }
+  // <<< END    _SkipperRideScreenState.get _label
 
+  // >>> START  _SkipperRideScreenState._pick()
   String _pick(List<String> keys) {
     for (final k in keys) {
       final v = widget.offer[k];
@@ -51,7 +65,9 @@ class _SkipperRideScreenState extends State<SkipperRideScreen> {
     }
     return '-';
   }
+  // <<< END    _SkipperRideScreenState._pick()
 
+  // >>> START  _SkipperRideScreenState._advance()
   Future<void> _advance() async {
     setState(() => _busy = true);
     Map<String, dynamic>? res;
@@ -98,20 +114,24 @@ class _SkipperRideScreenState extends State<SkipperRideScreen> {
       Get.snackbar('Could not update ride', SkipperApi.errorOf(res));
     }
   }
+  // <<< END    _SkipperRideScreenState._advance()
 
+  // >>> START  _SkipperRideScreenState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     _otp.dispose();
     super.dispose();
   }
+  // <<< END    _SkipperRideScreenState.dispose()
 
+  // >>> START  _SkipperRideScreenState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     final user = widget.offer['user'];
     final name = widget.accepted['name'] ?? (user is Map ? user['username'] : null);
-    return WillPopScope(
+    return PopScope(
       // Leaving mid-ride would strand the ride; complete it first.
-      onWillPop: () async => false,
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
             title: const Text('Current ride'),
@@ -156,4 +176,6 @@ class _SkipperRideScreenState extends State<SkipperRideScreen> {
       ),
     );
   }
+  // <<< END    _SkipperRideScreenState.build()
 }
+// <<< END    class _SkipperRideScreenState

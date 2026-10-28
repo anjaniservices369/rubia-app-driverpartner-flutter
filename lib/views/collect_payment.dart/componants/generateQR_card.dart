@@ -1,22 +1,26 @@
+// ----------------------------------------------------------------------
+// Generate QR card
+//
+// Button to show a payment QR code.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 // import 'package:base_project_flutter/globalWidgets/buttonEG.dart';
 // import 'package:base_project_flutter/views/easyGo/collectPayment/components/paymentunderProcess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_icon_button/loading_icon_button.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../responsive.dart';
-import '../../../globalWidgets/button.dart';
 
+// >>> START  class GenerateQR
 class GenerateQR extends StatelessWidget {
   const GenerateQR({
     Key? key,
   }) : super(key: key);
 
+  // >>> START  GenerateQR.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,4 +68,6 @@ class GenerateQR extends StatelessWidget {
       ),
     );
   }
+  // <<< END    GenerateQR.build()
 }
+// <<< END    class GenerateQR

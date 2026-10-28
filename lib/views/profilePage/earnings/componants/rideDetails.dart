@@ -1,8 +1,11 @@
+// ----------------------------------------------------------------------
+// Earnings by ride
+//
+// List of rides that produced the earnings.
+// ----------------------------------------------------------------------
 
 // import 'package:base_project_flutter/views/profilePage/earnings/componants/driverRideInfo.dart';
-import 'package:base_project_flutter/views/profilePage/earnings/componants/rideinfo.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +18,7 @@ import '../../../../globalFuctions/globalFunctions.dart';
 import '../../../../responsive.dart';
 import 'driverRideInfo.dart';
 
+// >>> START  class rideDetails
 class rideDetails extends StatefulWidget {
   const rideDetails({
     Key? key,
@@ -38,9 +42,12 @@ class rideDetails extends StatefulWidget {
   @override
   State<rideDetails> createState() => _rideDetails();
 }
+// <<< END    class rideDetails
 
+// >>> START  class _rideDetails
 class _rideDetails extends State<rideDetails> {
 
+  // >>> START  _rideDetails.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -618,4 +625,6 @@ class _rideDetails extends State<rideDetails> {
       ],
     );
   }
+  // <<< END    _rideDetails.build()
 }
+// <<< END    class _rideDetails

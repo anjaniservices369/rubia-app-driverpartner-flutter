@@ -1,34 +1,36 @@
-import 'package:action_slider/action_slider.dart';
-import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
+// ----------------------------------------------------------------------
+// Accepted rides list
+//
+// Rides the driver has accepted (status 12).
+// ----------------------------------------------------------------------
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/BookingStatusConstants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/views/bill_details/bill_details.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/ride_info/Car_RideEndingData/driverEndUploadSelfie.dart';
 import 'package:base_project_flutter/views/ride_info/car_picture/driverUploadSelfie.dart';
 import 'package:base_project_flutter/views/ride_info/carnumberadd.dart';
 import 'package:base_project_flutter/views/ride_info/completer_ride.dart';
 import 'package:base_project_flutter/views/ride_info/ride_info.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:base_project_flutter/globalWidgets/viewDetailsButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:badges/badges.dart';
-import 'package:badges/badges.dart' as badges;
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 
-import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
-import 'estimated_fare.dart';
 
 // import '../../profilePage/components/notifactionPage.dart';
 // import 'rideDetailsView/rideDetailsView.dart';
 
+// >>> START  class AcceptedRides
 class AcceptedRides extends StatefulWidget {
   const AcceptedRides({
     Key? key,
@@ -39,10 +41,11 @@ class AcceptedRides extends StatefulWidget {
   @override
   State<AcceptedRides> createState() => _AcceptedRidesState();
 }
+// <<< END    class AcceptedRides
 
+// >>> START  class _AcceptedRidesState
 class _AcceptedRidesState extends State<AcceptedRides> {
   ScrollController _scrollController = ScrollController();
-  final _controller = ActionSliderController();
   List<dynamic> bookingsData = [];
   bool showBottomSheet = false;
   int page = 0;
@@ -52,7 +55,9 @@ class _AcceptedRidesState extends State<AcceptedRides> {
   bool isLoading = false;
   String errorMessage = '';
   var resNOK;
+  Timer? _refreshTimer;
 
+  // >>> START  _AcceptedRidesState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     _scrollController.addListener(_scrollListener);
@@ -64,15 +69,58 @@ class _AcceptedRidesState extends State<AcceptedRides> {
         fetchBookings();
       });
     }
+    // A ride on this list can change while it is open: the customer cancels it, or it is moved along. Ask the server again every
+    // few seconds so the list follows (a cancelled ride leaves it and shows under Cancelled rides).
+    _refreshTimer = Timer.periodic(const Duration(seconds: 8), (_) => _silentRefresh());
   }
+  // <<< END    _AcceptedRidesState.initState()
 
+  // >>> START  _AcceptedRidesState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _AcceptedRidesState.dispose()
 
+  // >>> START  _AcceptedRidesState._silentRefresh()  -  silent refresh
+  /// Skipped while a load is running or when the driver has scrolled on to later pages (their place in the list is kept).
+  Future<void> _silentRefresh() async {
+    if (!mounted || isLoading || page > 1) return;
+    try {
+      final data = await RideBookingsApi().fetchBookingsList(context, '0', widget.status.toString());
+      if (!mounted || data is! Map) return;
+      // The server answers "No Bookings found" (no list) when the last ride on this tab has moved on: that is an empty list.
+      final none = data['status'] == 'NOK' &&
+          data['details'] is! List &&
+          data.toString().toLowerCase().contains('no bookings');
+      if (!none && data['details'] is! List) return;
+      final fresh = none ? <dynamic>[] : List<dynamic>.from(data['details']);
+      if (jsonEncode(fresh) == jsonEncode(bookingsData)) return;
+      final pagination = data['pagination'];
+      setState(() {
+        bookingsData = fresh;
+        if (pagination is Map) {
+          totalPages = pagination['total_pages'] ?? totalPages;
+          totalCount = pagination['total_count'] ?? totalCount;
+        }
+        if (none) {
+          totalPages = 0;
+          totalCount = 0;
+          resNOK = 'NOK'; // makes the list show "No Bookings found"
+        }
+        page = 1;
+        errorMessage = '';
+      });
+    } catch (_) {
+      // a missed refresh is fine; the next one tries again
+    }
+  }
+  // <<< END    _AcceptedRidesState._silentRefresh()
+
+  // >>> START  _AcceptedRidesState._scrollListener()  -  scroll listener
   void _scrollListener() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
       if (page < totalPages) {
@@ -81,7 +129,9 @@ class _AcceptedRidesState extends State<AcceptedRides> {
       }
     }
   }
+  // <<< END    _AcceptedRidesState._scrollListener()
 
+  // >>> START  _AcceptedRidesState.fetchBookings()  -  fetch bookings
   Future<void> fetchBookings() async {
     setState(() {
       isLoading = true;
@@ -112,7 +162,9 @@ class _AcceptedRidesState extends State<AcceptedRides> {
       });
     }
   }
+  // <<< END    _AcceptedRidesState.fetchBookings()
 
+  // >>> START  _AcceptedRidesState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
@@ -190,21 +242,17 @@ class _AcceptedRidesState extends State<AcceptedRides> {
           double? usageHours = double.parse(booking['usage_hours']);
 
           String usageText;
-          if (usageHours != null) {
-            if (usageHours >= 1) {
-              int wholeHours = usageHours.toInt();
-              int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-              if (wholeMinutes > 0) {
-                usageText = '$wholeHours hrs $wholeMinutes mins usage';
-              } else {
-                usageText = '$wholeHours hrs usage';
-              }
+          if (usageHours >= 1) {
+            int wholeHours = usageHours.toInt();
+            int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+            if (wholeMinutes > 0) {
+              usageText = '$wholeHours hrs $wholeMinutes mins usage';
             } else {
-              int usageMinutes = (usageHours * 60).toInt();
-              usageText = '$usageMinutes mins usage';
+              usageText = '$wholeHours hrs usage';
             }
           } else {
-            usageText = 'Usage hours not available'; // Handle the case where 'usage_hours' is null
+            int usageMinutes = (usageHours * 60).toInt();
+            usageText = '$usageMinutes mins usage';
           }
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.5.w),
@@ -250,7 +298,10 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                                   decoration: BoxDecoration(color: tAppbarColor, borderRadius: BorderRadius.circular(7)),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    StatusConstants().getBookingStatusConstants(booking['status']),
+                                    // A completed ride stays here until the payment is collected and the customer is rated.
+                                    booking['status'] == STATUS_RIDE_COMPLETED
+                                        ? (booking['payment_status'] == payment_status_success ? 'Add review' : 'Collect payment')
+                                        : StatusConstants().getBookingStatusConstants(booking['status']),
                                     style: GoogleFonts.mulish(
                                       color: tSecondaryColor,
                                       fontWeight: FontWeight.w700,
@@ -626,14 +677,7 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                       SizedBox(
                         height: 1.h,
                       ),
-                      Text(
-                        'Click here to view more  than details --->>>',
-                        style: GoogleFonts.mulish(
-                          color: tPrimaryColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: isTab(context) ? 9.sp : 11.sp,
-                        ),
-                      ),
+                      const ViewDetailsButton(),
                       SizedBox(
                         height: 2.h,
                       ),
@@ -641,4 +685,6 @@ class _AcceptedRidesState extends State<AcceptedRides> {
           );
         });
   }
+  // <<< END    _AcceptedRidesState.build()
 }
+// <<< END    class _AcceptedRidesState

@@ -1,10 +1,15 @@
+// ----------------------------------------------------------------------
+// Always-allow location explainer
+//
+// Explains why 'Allow all the time' location is needed and sends the driver
+// to the phone's settings.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constants/constants.dart';
 import '../../../../globalWidgets/button.dart';
@@ -12,6 +17,7 @@ import '../../../../responsive.dart';
 import 'locationError/locationError.dart';
 import 'location_error_page/location_error_page.dart';
 
+// >>> START  class LocationPopUpPage
 class LocationPopUpPage extends StatefulWidget {
   const LocationPopUpPage({Key? key, this.details}) : super(key: key);
   final details;
@@ -19,8 +25,12 @@ class LocationPopUpPage extends StatefulWidget {
   @override
   State<LocationPopUpPage> createState() => _LocationPopUpPageState();
 }
+// <<< END    class LocationPopUpPage
 
+// >>> START  class _LocationPopUpPageState
 class _LocationPopUpPageState extends State<LocationPopUpPage> {
+  bool _permissionsGranted = false;
+
   // void initState() {
   //   super.initState();
   //   new Future.delayed(const Duration(seconds: 3), () async {}).then((value) {
@@ -30,67 +40,54 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
   //   });
   // }
 
+  // >>> START  _LocationPopUpPageState._checkLocationPermission()  -  check location permission
   Future<bool> _checkLocationPermission() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var access = await Permission.locationAlways.status;
-    var access1 = await Permission.notification.status;
-    print("status");
-    print(access);
-
-    bool locationPermissionRequested =
-        prefs.getBool('locationPermissionRequested') ?? false;
-
-    if (!locationPermissionRequested &&
-        (access1 == PermissionStatus.denied ||
-            access1 == PermissionStatus.limited ||
-            access1 == PermissionStatus.permanentlyDenied ||
-            access1 == PermissionStatus.restricted) &&
-        (access == PermissionStatus.denied ||
-            access == PermissionStatus.limited ||
-            access == PermissionStatus.permanentlyDenied ||
-            access == PermissionStatus.restricted)) {
-      final permission = await Permission.locationAlways.request();
-      final permission1 = await Permission.notification.request();
-      if (permission == PermissionStatus.granted &&
-          permission1 == PermissionStatus.granted) {
-        // await Twl.forceNavigateTo(context, LocationErrorScreen());
-        print('true');
-        return true;
-      } else {
-        _openLocationPermissionSettings();
-        prefs.setBool('locationPermissionRequested', true);
-        return false;
-      }
-    } else if (access == PermissionStatus.granted &&
-        access1 == PermissionStatus.granted) {
-      // await Twl.forceNavigateTo(context, LocationErrorScreen());
-      print('true');
-      return true;
-    } else {
-      final permission = await Permission.locationAlways.request();
-      final permission1 = await Permission.notification.request();
-      if (permission == PermissionStatus.granted &&
-          permission1 == PermissionStatus.granted) {
-        // await Twl.forceNavigateTo(context, LocationErrorScreen());
-        print('true');
-        return true;
-      } else {
-        _openLocationPermissionSettings();
-        prefs.setBool('locationPermissionRequested', true);
-        return false;
-      }
+    var foregroundLocation = await Permission.locationWhenInUse.status;
+    if (!foregroundLocation.isGranted) {
+      foregroundLocation = await Permission.locationWhenInUse.request();
     }
-  }
+    if (!foregroundLocation.isGranted) {
+      await _openLocationPermissionSettings();
+      return false;
+    }
 
-  @override
+    // Android requires foreground location to be granted before requesting
+    // background ("Allow all the time") access.
+    var backgroundLocation = await Permission.locationAlways.status;
+    if (!backgroundLocation.isGranted) {
+      backgroundLocation = await Permission.locationAlways.request();
+    }
+
+    var notifications = await Permission.notification.status;
+    if (!notifications.isGranted) {
+      notifications = await Permission.notification.request();
+    }
+
+    if (backgroundLocation.isGranted && notifications.isGranted) {
+      return true;
+    }
+
+    await _openLocationPermissionSettings();
+    return false;
+  }
+  // <<< END    _LocationPopUpPageState._checkLocationPermission()
+
   int reason = 0;
   bool ischeckbox = false;
 
+  // >>> START  _LocationPopUpPageState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    if (_permissionsGranted) {
+      // Keep consent and readiness in one route; the readiness screen retains
+      // its GPS, current-location, backend submission, and success behavior.
+      return LocationErrorScreen();
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
       },
       child: Scaffold(
         backgroundColor: tBackground,
@@ -156,8 +153,9 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                               print('true >>>.');
                               print(result);
                               print('true >>>.');
-                              await Twl.forceNavigateTo(
-                                  context, LocationErrorScreen());
+                              setState(() {
+                                _permissionsGranted = true;
+                              });
                             } else {
                               print('false >>>.');
                               await Twl.forceNavigateTo(
@@ -226,8 +224,12 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
       ),
     );
   }
+  // <<< END    _LocationPopUpPageState.build()
 
+  // >>> START  _LocationPopUpPageState._openLocationPermissionSettings()  -  open location permission settings
   Future<void> _openLocationPermissionSettings() async {
     await openAppSettings();
   }
+  // <<< END    _LocationPopUpPageState._openLocationPermissionSettings()
 }
+// <<< END    class _LocationPopUpPageState

@@ -1,6 +1,11 @@
+// ----------------------------------------------------------------------
+// Registration: vehicle types
+//
+// Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver
+// can drive.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
-import 'package:base_project_flutter/views/rider_details/add_Details.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -9,36 +14,32 @@ import 'package:sizer/sizer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../../../constants/constants.dart';
-import '../../../constants/imageConstant.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
-import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../responsive.dart';
 
-import 'documents/documents.dart';
-
+// >>> START  class VechileSelection
 class VechileSelection extends StatefulWidget {
   const VechileSelection({Key? key}) : super(key: key);
 
   @override
   State<VechileSelection> createState() => _VechileSelectionState();
 }
+// <<< END    class VechileSelection
 
+// >>> START  class _VechileSelectionState
 class _VechileSelectionState extends State<VechileSelection> {
+  // >>> START  _VechileSelectionState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     getVechileList('');
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _VechileSelectionState.initState()
 
   var entityValue = 'Vehicles you can drive';
   bool isdropdownOpwn = false;
-  List _entityList = [
-    'Car',
-    'Loader',
-    'truck',
-  ];
   List<String> improveList = [
     'Fast Delivery',
     'Customer support',
@@ -68,6 +69,7 @@ class _VechileSelectionState extends State<VechileSelection> {
   var resNOK;
   var mylanguageList;
 
+  // >>> START  _VechileSelectionState.getVechileList()  -  get vechile list
   getVechileList(String type) async {
     responce = await DriverDetailsApi().getDriverVehicleTypes(context, type);
     if (responce != null && responce['status'] == 'OK') {
@@ -91,6 +93,7 @@ class _VechileSelectionState extends State<VechileSelection> {
       });
     }
   }
+  // <<< END    _VechileSelectionState.getVechileList()
 
   var selectedIndex;
 
@@ -102,39 +105,39 @@ class _VechileSelectionState extends State<VechileSelection> {
   String radioVechileType = 'Own';
   var vehicle;
 
+  // >>> START  _VechileSelectionState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: tBackground,
-      appBar: AppBar(
-        elevation: 0.5,
-        backgroundColor: tWhite,
-        leading: BackButtonLeading(
-          onTap: () {
-            Twl.forceNavigateTo(context, AddDetailsView());
-          },
-        ),
-        centerTitle: false,
-        title: Text('vehicle_types'.tr,
-            style: TextStyle(
-              // fontFamily: 'Plus Jakarta Sans',
-                fontSize: isTab(context) ? 12.sp : 14.sp,
-                color: tSecondaryColor,
-                fontWeight: FontWeight.w700)),
-      ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, AddDetailsView());
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: Container(
+          color: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: tWhite,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+              boxShadow: [tBoxShadow],
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
+                      SizedBox(
+                        height: 1.6.h,
+                      ),
+                      Center(
+                        child: Text('vehicle_types'.tr,
+                            style: TextStyle(
+                                fontSize: isTab(context) ? 12.sp : 14.sp,
+                                color: tSecondaryColor,
+                                fontWeight: FontWeight.w700)),
+                      ),
                       SizedBox(
                         height: 1.6.h,
                       ),
@@ -494,51 +497,46 @@ class _VechileSelectionState extends State<VechileSelection> {
                       SizedBox(
                         height: 2.h,
                       ),
+                      Button(
+                        textcolor: tWhite,
+                        bottonText: 'Next'.tr,
+                        borderSide: BorderSide(
+                          color: tPrimaryColor,
+                        ),
+                        onTap: (startLoading, stopLoading, btnState) async {
+                          startLoading();
+                          Map<String, String> param = {
+                            'vehicle_type_id': vechileNewListId
+                                .toString()
+                                .replaceAll('[', '')
+                                .replaceAll(']', ''),
+                          };
+                          print(param);
+                          var res = await DriverDetailsApi()
+                              .addVehicleType(context, param);
+                          if (res != null && res['status'] == 'OK') {
+                            Twl.navigateBack(context);
+                          } else {
+                            stopLoading();
+                            Twl.createAlert(
+                                context, 'Oops', res['error'].toString());
+                            stopLoading();
+                          }
+                          stopLoading();
+                          stopLoading();
+                        },
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      )
                     ],
-                  ),
-                ),
               ),
             ),
-            Button(
-              textcolor: tWhite,
-              bottonText: 'Next'.tr,
-              borderSide: BorderSide(
-                color: tPrimaryColor,
-              ),
-              onTap: (startLoading, stopLoading, btnState) async {
-                startLoading();
-                // Twl.forceNavigateTo(context, Documents());
-                if (vechileNewList != null) {
-                  Map<String, String> param = {
-                    'vehicle_type_id': vechileNewListId
-                        .toString()
-                        .replaceAll('[', '')
-                        .replaceAll(']', ''),
-                  };
-                  print(param);
-                  var res =
-                  await DriverDetailsApi().addVehicleType(context, param);
-                  if (res != null && res['status'] == 'OK') {
-                    Twl.forceNavigateTo(context, AddDetailsView());
-                  } else {
-                    stopLoading();
-                    Twl.createAlert(context, 'Oops', res['error'].toString());
-                    stopLoading();
-                  }
-                  stopLoading();
-                } else {
-                  Twl.createAlert(
-                      context, 'Oops', 'Please select your vehicle');
-                }
-                stopLoading();
-              },
-            ),
-            SizedBox(
-              height: 2.h,
-            )
-          ],
+          ),
         ),
       ),
     );
   }
+  // <<< END    _VechileSelectionState.build()
 }
+// <<< END    class _VechileSelectionState

@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Registration: bank / UPI details
+//
+// Where the driver's earnings are paid.
+// ----------------------------------------------------------------------
 // ignore_for_file: prefer_const_constructors
 
 // import 'package:easygo_skipper_flutter/apiServices/userApi.dart';
@@ -14,23 +19,24 @@ import '../../../constants/constants.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
 // import '../../../globalWidgets/customTextFormFiels.dart';
-import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
 import '../../../responsive.dart';
-import '../add_Details.dart';
 // import '../add_details_view.dart';
 // import '../riderDetails.dart';
 
+// >>> START  class BankDetails
 class BankDetails extends StatefulWidget {
   const BankDetails({Key? key}) : super(key: key);
 
   @override
   State<BankDetails> createState() => _BankDetailsState();
 }
+// <<< END    class BankDetails
 
+// >>> START  class _BankDetailsState
 class _BankDetailsState extends State<BankDetails> {
-  @override
+  // >>> START  _BankDetailsState.UPIValidate()
   String? UPIValidate(String value) {
     String p = "[a-zA-Z0-9]{3,}@upi";
 
@@ -42,53 +48,49 @@ class _BankDetailsState extends State<BankDetails> {
       return null;
     }
   }
+  // <<< END    _BankDetailsState.UPIValidate()
 
   TextEditingController _accountHolderNameController = TextEditingController();
   TextEditingController _accountNumberController = TextEditingController();
   TextEditingController _bankNameController = TextEditingController();
-  TextEditingController _branchNameController = TextEditingController();
   TextEditingController _IFSCController = TextEditingController();
   TextEditingController _UPIController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
+  // >>> START  _BankDetailsState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: tBackground,
-      appBar: AppBar(
-        elevation: 0.5,
-        backgroundColor: tWhite,
-        leading: BackButtonLeading(
-          onTap: () {
-            Twl.forceNavigateTo(context, AddDetailsView());
-          },
-        ),
-        centerTitle: false,
-        title: Text('bank_details'.tr,
-            style: TextStyle(
-                // fontFamily: 'Plus Jakarta Sans',
-                fontSize: isTab(context) ? 14.sp : 16.sp,
-                color: tSecondaryColor,
-                fontWeight: FontWeight.w700)),
-      ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, AddDetailsView());
-        },
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 2.h,
-                        ),
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            color: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                color: tWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                boxShadow: [tBoxShadow],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(height: 2.h),
+                    Center(
+                      child: Text('bank_details'.tr,
+                          style: TextStyle(
+                              fontSize: isTab(context) ? 14.sp : 16.sp,
+                              color: tSecondaryColor,
+                              fontWeight: FontWeight.w700)),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 36.w),
-                          // ignore: prefer_const_constructors
                           child: StepProgressIndicator(
                             totalSteps: 4,
                             currentStep: 4,
@@ -306,15 +308,10 @@ class _BankDetailsState extends State<BankDetails> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 2.h,
-                        )
-                      ],
+                    SizedBox(
+                      height: 2.h,
                     ),
-                  ),
-                ),
-              ),
-              Button(
+                    Button(
                 // height: 7.h,
                 // width: 55.w,
                 // color: tBlack,
@@ -338,7 +335,7 @@ class _BankDetailsState extends State<BankDetails> {
                     var res = await DriverDetailsApi()
                         .addDriverBankDetails(context, param);
                     if (res != null && res['status'] == 'OK') {
-                      Twl.forceNavigateTo(context, AddDetailsView());
+                      Twl.navigateBack(context);
 
                       stopLoading();
                     } else {
@@ -352,13 +349,18 @@ class _BankDetailsState extends State<BankDetails> {
                   }
                 },
               ),
-              SizedBox(
-                height: 2.h,
-              )
-            ],
+                    SizedBox(
+                      height: 2.h,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+  // <<< END    _BankDetailsState.build()
 }
+// <<< END    class _BankDetailsState

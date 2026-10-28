@@ -1,4 +1,8 @@
-import 'dart:io';
+// ----------------------------------------------------------------------
+// Document: selfie
+//
+// Driver's profile selfie (uploaded to the server).
+// ----------------------------------------------------------------------
 
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
@@ -6,12 +10,8 @@ import 'package:base_project_flutter/providers/globalFunctionProvider.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../../constants/constants.dart';
@@ -21,6 +21,7 @@ import '../../../../../globalWidgets/leadingbackbtn.dart';
 import '../../../../../responsive.dart';
 import 'driving_licence.dart';
 
+// >>> START  class TakeYourSelfie
 class TakeYourSelfie extends StatefulWidget {
   const TakeYourSelfie({Key? key, this.takasefie}) : super(key: key);
   final takasefie;
@@ -28,11 +29,14 @@ class TakeYourSelfie extends StatefulWidget {
   @override
   State<TakeYourSelfie> createState() => _TakeYourSelfieState();
 }
+// <<< END    class TakeYourSelfie
 
+// >>> START  class _TakeYourSelfieState
 class _TakeYourSelfieState extends State<TakeYourSelfie> {
   var profileImage;
   bool isLoading = false;
 
+  // >>> START  _TakeYourSelfieState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     GlobalFunctionProvider _data = Provider.of<GlobalFunctionProvider>(
@@ -333,28 +337,20 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
                             isLoading = true;
                           });
                           String imageUrl = await Twl().uploadImage();
-                          if (imageUrl != null) {
-                            print('Uploaded image URL: $imageUrl');
-                            setState(() {
-                              profileImage = imageUrl;
-                              isLoading = false;
-                            });
-                            if (_storedData.rideDetailImagesList
-                                .contains({'type': 1, 'image': profileImage})) {
-                              _storedData.rideDetailImagesList
-                                  .remove({'type': 1, 'image': profileImage});
-                            } else {
-                              _storedData.rideDetailImagesList
-                                  .add({'type': 1, 'image': profileImage});
-                            }
-                            print(_storedData.rideDetailImagesList.toString());
+                          print('Uploaded image URL: $imageUrl');
+                          setState(() {
+                            profileImage = imageUrl;
+                            isLoading = false;
+                          });
+                          if (_storedData.rideDetailImagesList
+                              .contains({'type': 1, 'image': profileImage})) {
+                            _storedData.rideDetailImagesList
+                                .remove({'type': 1, 'image': profileImage});
                           } else {
-                            print('Image upload failed or no image selected.');
-                            setState(() {
-                              profileImage = null;
-                              isLoading = false;
-                            });
+                            _storedData.rideDetailImagesList
+                                .add({'type': 1, 'image': profileImage});
                           }
+                          print(_storedData.rideDetailImagesList.toString());
                         }
                       : (startLoading, stopLoading, btnState) async {
                           startLoading();
@@ -370,4 +366,6 @@ class _TakeYourSelfieState extends State<TakeYourSelfie> {
       ),
     );
   }
+  // <<< END    _TakeYourSelfieState.build()
 }
+// <<< END    class _TakeYourSelfieState

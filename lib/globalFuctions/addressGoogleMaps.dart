@@ -1,6 +1,10 @@
+// ----------------------------------------------------------------------
+// Address picker map
+//
+// A map screen where an address can be searched or chosen.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/rider_details/componants/personal_Details.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder2/geocoder2.dart';
@@ -8,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class AddressGoogleMapPage
 class AddressGoogleMapPage extends StatefulWidget {
   AddressGoogleMapPage({
     Key? key,
@@ -21,12 +26,13 @@ class AddressGoogleMapPage extends StatefulWidget {
   final Email;
   final DateOfBirth;
   final gender;
-  var address;
 
   @override
   _AddressGoogleMapPageState createState() => _AddressGoogleMapPageState();
 }
+// <<< END    class AddressGoogleMapPage
 
+// >>> START  class _AddressGoogleMapPageState
 class _AddressGoogleMapPageState extends State<AddressGoogleMapPage> {
   PickResult? selectedPlace;
   late double lat;
@@ -37,6 +43,7 @@ class _AddressGoogleMapPageState extends State<AddressGoogleMapPage> {
   late String streetName1;
   late String streetName2;
   late String streetName3;
+  // >>> START  _AddressGoogleMapPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,71 +97,46 @@ class _AddressGoogleMapPageState extends State<AddressGoogleMapPage> {
             sharedPreferences.setDouble('longitude', lng);
             // var long = sharedPreferences.getDouble('longitude');
             sharedPreferences.setString('FeatureName', first.city);
-            var featureName = sharedPreferences.getString('FeatureName');
             sharedPreferences.setString('AddressLine', first.address);
-            var addressLine = sharedPreferences.getString('AddressLine');
             sharedPreferences.setString('Locality', first.streetNumber);
-            var locality = sharedPreferences.getString('Locality');
             sharedPreferences.setString('PinCode', first.postalCode);
-            var pinCode = sharedPreferences.getString('PinCode');
-            if (first.postalCode != null) {
-              // var res =
-              //     await UserAPI().checkDelivery(context, pinCode.toString());
-              // print("ress>>>>>>>>>>>>>");
-              //   print(res);
-              //   if (res['status'] == 'OK' && res != null) {
-              //     setState(() {
-              Twl.forceNavigateTo(
-                  context,
-                  PersonalDetails(
-                    DateOfBirth: widget.DateOfBirth,
-                    Email: widget.Email,
-                    firstName: widget.firstName,
-                    gender: widget.gender,
-                    address: formattedAddress,
-                  ));
-              //     });
-              //   } else {
-              //     //
-              //     return showDialog(
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return AlertDialog(
-              //           title: Text("Select another Location"),
-              //           content:
-              //               Text('We are not able to deliver to this address'),
-              //           actions: <Widget>[
-              //             FlatButton(
-              //               child: Text('ok'),
-              //               onPressed: () {
-              //                 Twl.navigateBack(context);
-              //               },
-              //             ),
-              //           ],
-              //         );
-              //       },
-              //     );
-              //   }
-            } else {
-              //
-              return showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Check Location"),
-                    content: Text('We unable to get your Pincode'),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        child: Text('ok'),
-                        onPressed: () {
-                          Twl.navigateBack(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
+            // var res =
+            //     await UserAPI().checkDelivery(context, pinCode.toString());
+            // print("ress>>>>>>>>>>>>>");
+            //   print(res);
+            //   if (res['status'] == 'OK' && res != null) {
+            //     setState(() {
+            Twl.forceNavigateTo(
+                context,
+                PersonalDetails(
+                  DateOfBirth: widget.DateOfBirth,
+                  Email: widget.Email,
+                  firstName: widget.firstName,
+                  gender: widget.gender,
+                  address: formattedAddress,
+                ));
+            //     });
+            //   } else {
+            //     //
+            //     return showDialog(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         return AlertDialog(
+            //           title: Text("Select another Location"),
+            //           content:
+            //               Text('We are not able to deliver to this address'),
+            //           actions: <Widget>[
+            //             FlatButton(
+            //               child: Text('ok'),
+            //               onPressed: () {
+            //                 Twl.navigateBack(context);
+            //               },
+            //             ),
+            //           ],
+            //         );
+            //       },
+            //     );
+            //   }
 
             // var latLng = {
             //   'lat': lat,
@@ -294,4 +276,6 @@ class _AddressGoogleMapPageState extends State<AddressGoogleMapPage> {
       )),
     );
   }
+  // <<< END    _AddressGoogleMapPageState.build()
 }
+// <<< END    class _AddressGoogleMapPageState

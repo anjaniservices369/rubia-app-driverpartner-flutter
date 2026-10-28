@@ -1,5 +1,12 @@
-import 'package:badges/badges.dart';
+// ----------------------------------------------------------------------
+// Ride offer details
+//
+// Bottom sheet with route, fare and the Accept Ride button.
+//
+// Developer note: Calls driver/accept-ride.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
+import 'package:base_project_flutter/globalWidgets/driverFoodStayNote.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
@@ -9,22 +16,25 @@ import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
+// >>> START  class AcceptedRideDetails
 class AcceptedRideDetails extends StatefulWidget {
   const AcceptedRideDetails({Key? key, this.booking});
   final booking;
   @override
   State<AcceptedRideDetails> createState() => _AcceptedRideDetailsState();
 }
+// <<< END    class AcceptedRideDetails
 
+// >>> START  class _AcceptedRideDetailsState
 class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
   var checkDetails;
   var resNok;
+  // >>> START  _AcceptedRideDetailsState.fetchCheckDetails()  -  fetch check details
   fetchCheckDetails() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var checkRes = await UserAPI().checkApi(pref.getString('authCode')!);
@@ -40,35 +50,35 @@ class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
       });
     }
   }
+  // <<< END    _AcceptedRideDetailsState.fetchCheckDetails()
 
+  // >>> START  _AcceptedRideDetailsState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheckDetails();
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _AcceptedRideDetailsState.initState()
 
   bool isLoading = false;
+  // >>> START  _AcceptedRideDetailsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     double? usageHours = double.parse(widget.booking['usage_hours']);
 
     String usageText;
-    if (usageHours != null) {
-      if (usageHours >= 1) {
-        int wholeHours = usageHours.toInt();
-        int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-        if (wholeMinutes > 0) {
-          usageText = '$wholeHours hrs $wholeMinutes mins usage';
-        } else {
-          usageText = '$wholeHours hrs usage';
-        }
+    if (usageHours >= 1) {
+      int wholeHours = usageHours.toInt();
+      int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+      if (wholeMinutes > 0) {
+        usageText = '$wholeHours hrs $wholeMinutes mins usage';
       } else {
-        int usageMinutes = (usageHours * 60).toInt();
-        usageText = '$usageMinutes mins usage';
+        usageText = '$wholeHours hrs usage';
       }
     } else {
-      usageText = 'Usage hours not available'; // Handle the case where 'usage_hours' is null
+      int usageMinutes = (usageHours * 60).toInt();
+      usageText = '$usageMinutes mins usage';
     }
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.5.w),
@@ -82,6 +92,10 @@ class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
                     Images.LINE,
                     scale: 3,
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.5.w),
+                  child: DriverFoodStayNote(rideDetails: widget.booking),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5.h, bottom: 1.h, left: 3.5.w, right: 3.5.w),
@@ -528,7 +542,10 @@ class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
                               stopLoading();
                             } else {
                               stopLoading();
-                              Twl.createAlert(context, 'Oops', "You cannot accept another ride while you have an active ride in progress");
+                              // The server says why (an active ride, an unpaid or unrated ride, the wallet...); the old fixed text is the fallback.
+                              final why = (res is Map ? (res['error'] ?? res['details']) : null);
+                              Twl.createAlert(context, 'Oops',
+                                  (why is String && why.isNotEmpty) ? why : "You cannot accept another ride while you have an active ride in progress");
                             }
                             stopLoading();
                           } else {
@@ -551,4 +568,6 @@ class _AcceptedRideDetailsState extends State<AcceptedRideDetails> {
               ]))),
     );
   }
+  // <<< END    _AcceptedRideDetailsState.build()
 }
+// <<< END    class _AcceptedRideDetailsState

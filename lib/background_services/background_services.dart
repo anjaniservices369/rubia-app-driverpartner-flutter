@@ -1,13 +1,19 @@
+// ----------------------------------------------------------------------
+// Ride-tracking background service
+//
+// While a ride is in progress this keeps recording the driver's route even
+// if the app is minimised, and shows the 'location is being tracked'
+// notification.
+//
+// Developer note: Android 14 requires the foreground service type 'location'
+// (manifest + AndroidConfiguration.foregroundServiceTypes).
+// ----------------------------------------------------------------------
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -19,6 +25,7 @@ const int foregroundServiceNotificationId = 888;
 const String initialNotificationTitle = "TRACK YOUR LOCATION";
 const String initialNotificationContent = "Initializing...";
 
+// >>> START  pragma()
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
 
@@ -42,21 +49,10 @@ void onStart(ServiceInstance service) async {
     });
   }
 
-  int  fetchInterval = 1000;
-  String? booking_id = '';
-
-  var trip_type = await BackgroundService.getTripType();
-  if (trip_type == 1){
-    fetchInterval = 2000;
-    print("fetch interval : $fetchInterval");
-  }else if(trip_type == 2){
-    fetchInterval = 5000;
-    print("fetch interval : $fetchInterval");
-  }else{
-    fetchInterval = 1000;
-    print("fetch interval : $fetchInterval");
-  }
-  booking_id = await BackgroundService.getBookingId();
+  // A reading is taken every 20 metres. (This number used to be 2000 for an in-city ride and 5000 for an outstation ride, but the
+  // setting is a DISTANCE in metres, not a time: a short trip recorded nothing and a long one one point per 5 km.) The server adds up
+  // the distance from these readings, so the denser they are the more exact the bill; LocationPing sends one at most every 10 seconds.
+  const int fetchInterval = 20;
 
   var databasesPath = await getDatabasesPath();
   String path = join(databasesPath, 'location_database.db');
@@ -65,6 +61,10 @@ void onStart(ServiceInstance service) async {
         await db.execute(
             'CREATE TABLE locations (id INTEGER PRIMARY KEY, latitude REAL, longitude REAL, timestamp INTEGER)');
       });
+  // This service starts when a ride is about to start, so points left over from a ride that was cancelled or crashed (they are only
+  // cleared after a clean completion) must not become part of this one.
+  await database.delete('locations');
+  bool trackingNoticeShown = false;
 
 LocationSettings locationSettings = LocationSettings(
     accuracy: LocationAccuracy.best,
@@ -75,11 +75,12 @@ LocationSettings locationSettings = LocationSettings(
 
   StreamSubscription<Position?>? positionStreamSubscription;
 
+  // >>> START  addLocationToDatabase()  -  add location to database
   void addLocationToDatabase(Position position) async {
     Map<String, dynamic> locationData = {
       'latitude': position.latitude,
       'longitude': position.longitude,
-      'timestamp': position.timestamp?.millisecondsSinceEpoch,
+      'timestamp': position.timestamp.millisecondsSinceEpoch,
     };
 
     await database.insert('locations', locationData,
@@ -87,6 +88,9 @@ LocationSettings locationSettings = LocationSettings(
 
     print("coordinates added in SQLite >>>>>>> ${position.latitude},${position.longitude}");
 
+    // The 'location is being tracked' notice is shown once; with a reading every 20 m, posting it again for every point is wasted work.
+    if (trackingNoticeShown) return;
+    trackingNoticeShown = true;
     await NotificationService(FlutterLocalNotificationsPlugin())
         .showNotification(
       showNotificationId: foregroundServiceNotificationId,
@@ -106,6 +110,7 @@ LocationSettings locationSettings = LocationSettings(
       ),
     );
   }
+  // <<< END    addLocationToDatabase()
 
 
 
@@ -118,7 +123,10 @@ LocationSettings locationSettings = LocationSettings(
       addLocationToDatabase(position);
       // Keep the admin live map fresh during rides (throttled inside).
       LocationPing.send(position.latitude, position.longitude,
-          handleExpiredSession: false);
+          handleExpiredSession: false,
+          accuracy: position.accuracy,
+          speedKmh: position.speed * 3.6,
+          recordedAt: position.timestamp);
     }
   });
 
@@ -132,7 +140,10 @@ LocationSettings locationSettings = LocationSettings(
     await service.stopSelf();
   });
 }
+// <<< END    pragma()
 
+// >>> START  class BackgroundService
+/// Starts and stops the Android foreground service that records the route during a ride.
 class BackgroundService {
   final FlutterBackgroundService flutterBackgroundService =
   FlutterBackgroundService();
@@ -140,6 +151,7 @@ class BackgroundService {
   FlutterBackgroundService get instance => flutterBackgroundService;
 
 
+  // >>> START  BackgroundService.getTripType()  -  get trip type
   static Future<int> getTripType() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? tripTypeString = prefs.getString('trip_type');
@@ -162,7 +174,9 @@ class BackgroundService {
 
     return trip_type;
   }
+  // <<< END    BackgroundService.getTripType()
 
+  // >>> START  BackgroundService.getBookingId()  -  get booking id
   static Future<String?> getBookingId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? bookingIdd = prefs.getString('booking_id');
@@ -182,8 +196,10 @@ class BackgroundService {
 
     return bookingIdd;
   }
+  // <<< END    BackgroundService.getBookingId()
 
 
+  // >>> START  BackgroundService.initializeService()  -  initialize service
   Future<void> initializeService() async {
     await NotificationService(FlutterLocalNotificationsPlugin()).createChannel(
         const AndroidNotificationChannel(
@@ -193,6 +209,7 @@ class BackgroundService {
         onStart: onStart,
         autoStart: false,
         isForegroundMode: true,
+        foregroundServiceTypes: [AndroidForegroundType.location],
         notificationChannelId: notificationChannelId,
         foregroundServiceNotificationId: foregroundServiceNotificationId,
         initialNotificationTitle: initialNotificationTitle,
@@ -205,12 +222,18 @@ class BackgroundService {
     );
     await flutterBackgroundService.startService();
   }
+  // <<< END    BackgroundService.initializeService()
 
+  // >>> START  BackgroundService.setServiceAsForeground()  -  set service as foreground
   void setServiceAsForeground() async {
     flutterBackgroundService.invoke('setAsForeground');
   }
+  // <<< END    BackgroundService.setServiceAsForeground()
 
+  // >>> START  BackgroundService.stopService()  -  stop service
   void stopService() {
     flutterBackgroundService.invoke('stop_service');
   }
+  // <<< END    BackgroundService.stopService()
 }
+// <<< END    class BackgroundService

@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------
+// Support
+//
+// Support phone / chat.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/profilePage/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -12,14 +16,18 @@ import '../../../globalFuctions/globalFunctions.dart';
 import '../../../responsive.dart';
 // import 'components/customerSupport.dart';
 
+// >>> START  class Support
 class Support extends StatefulWidget {
   const Support({Key? key}) : super(key: key);
 
   @override
   State<Support> createState() => _SupportState();
 }
+// <<< END    class Support
 
+// >>> START  class _SupportState
 class _SupportState extends State<Support> {
+  // >>> START  _SupportState.launchURL()  -  launch url
   Future<void> launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(
@@ -29,7 +37,9 @@ class _SupportState extends State<Support> {
       print('Could not launch $url');
     }
   }
+  // <<< END    _SupportState.launchURL()
 
+  // >>> START  _SupportState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,16 +71,21 @@ class _SupportState extends State<Support> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-          onWillPop: () {
-            return Twl.forceNavigateTo(
+      body: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.forceNavigateTo(
                 context, BottomNavigation(tabIndexId: 3));
           },
           child: CustomerSupport()),
     );
   }
+  // <<< END    _SupportState.build()
 }
+// <<< END    class _SupportState
 
+// >>> START  class CustomerSupport
 class CustomerSupport extends StatefulWidget {
   const CustomerSupport({
     Key? key,
@@ -79,8 +94,11 @@ class CustomerSupport extends StatefulWidget {
   @override
   State<CustomerSupport> createState() => _CustomerSupportState();
 }
+// <<< END    class CustomerSupport
 
+// >>> START  class _CustomerSupportState
 class _CustomerSupportState extends State<CustomerSupport> {
+  // >>> START  _CustomerSupportState.launchURL()  -  launch url
   Future<void> launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(
@@ -90,7 +108,9 @@ class _CustomerSupportState extends State<CustomerSupport> {
       print('Could not launch $url');
     }
   }
+  // <<< END    _CustomerSupportState.launchURL()
 
+  // >>> START  _CustomerSupportState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -152,4 +172,6 @@ class _CustomerSupportState extends State<CustomerSupport> {
       ),
     );
   }
+  // <<< END    _CustomerSupportState.build()
 }
+// <<< END    class _CustomerSupportState

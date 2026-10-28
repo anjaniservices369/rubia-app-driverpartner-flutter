@@ -1,22 +1,24 @@
+// ----------------------------------------------------------------------
+// Transaction details
+//
+// One wallet transaction in detail.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
-import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 
 import 'package:base_project_flutter/responsive.dart';
 
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 import '../../../constants/imageConstant.dart';
 
 import '../../constants/stetuesConstant.dart';
 import 'HistoryBottomSheet.dart';
 
+// >>> START  class TransactionDetailsWidget
 class TransactionDetailsWidget extends StatefulWidget {
   const TransactionDetailsWidget({
     Key? key,
@@ -27,7 +29,9 @@ class TransactionDetailsWidget extends StatefulWidget {
   _TransactionDetailsWidgetState createState() =>
       _TransactionDetailsWidgetState();
 }
+// <<< END    class TransactionDetailsWidget
 
+// >>> START  class _TransactionDetailsWidgetState
 class _TransactionDetailsWidgetState extends State<TransactionDetailsWidget> {
   RideBookingsApi rideAPI = RideBookingsApi();
   List<dynamic> transactonData = [];
@@ -44,6 +48,7 @@ class _TransactionDetailsWidgetState extends State<TransactionDetailsWidget> {
   ];
   List title = ["Debit".tr, "Credit".tr, "Debit".tr, "Credit".tr];
   List amount = ["-₹4.0", "+₹100.0", "-₹4.0", "+₹100.0"];
+  // >>> START  _TransactionDetailsWidgetState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
@@ -57,7 +62,9 @@ class _TransactionDetailsWidgetState extends State<TransactionDetailsWidget> {
       }
     });
   }
+  // <<< END    _TransactionDetailsWidgetState.initState()
 
+  // >>> START  _TransactionDetailsWidgetState.fetchTransaction()  -  fetch transaction
   Future<void> fetchTransaction() async {
     print('hhiii');
     if (isLoading) {
@@ -88,13 +95,17 @@ class _TransactionDetailsWidgetState extends State<TransactionDetailsWidget> {
       });
     }
   }
+  // <<< END    _TransactionDetailsWidgetState.fetchTransaction()
 
+  // >>> START  _TransactionDetailsWidgetState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _TransactionDetailsWidgetState.dispose()
 
+  // >>> START  _TransactionDetailsWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -313,4 +324,6 @@ class _TransactionDetailsWidgetState extends State<TransactionDetailsWidget> {
       ],
     );
   }
+  // <<< END    _TransactionDetailsWidgetState.build()
 }
+// <<< END    class _TransactionDetailsWidgetState

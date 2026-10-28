@@ -1,23 +1,27 @@
+// ----------------------------------------------------------------------
+// Enable location prompt
+//
+// Asks the driver to turn on location.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/homePage/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
 
+// >>> START  class EnableLocationView
 class EnableLocationView extends StatelessWidget {
   const EnableLocationView({
     Key? key,
   }) : super(key: key);
 
+  // >>> START  EnableLocationView.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,4 +166,6 @@ class EnableLocationView extends StatelessWidget {
       ),
     );
   }
+  // <<< END    EnableLocationView.build()
 }
+// <<< END    class EnableLocationView

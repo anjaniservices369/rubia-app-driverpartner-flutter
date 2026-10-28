@@ -1,4 +1,24 @@
-// @dart=3.2.6
+// ----------------------------------------------------------------------
+// App entry point
+//
+// Starts the driver app: sets up push notifications, checks whether the
+// driver is already logged in, and decides which screen to show first
+// (login, the next unfinished registration step, or the home screen).
+//
+// Developer note: Routing order is in MyApp.build. Contains MyHttpOverrides
+// which accepts ANY TLS certificate - remove before release.
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// App entry point
+//
+// Starts the driver app: sets up push notifications, checks whether the
+// driver is already logged in, and decides which screen to show first
+// (login, the next unfinished registration step, or the home screen).
+//
+// Developer note: Routing order is in MyApp.build. The saved language is
+// re-applied here (see _savedLocale). MyHttpOverrides (accepts any TLS
+// certificate) is installed in DEBUG builds only.
+// ----------------------------------------------------------------------
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:base_project_flutter/api_services/ApiHelper.dart';
 import 'package:base_project_flutter/api_services/pushService.dart';
@@ -14,12 +34,11 @@ import 'package:base_project_flutter/providers/notifactionProvider.dart';
 import 'package:base_project_flutter/providers/themeProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/joiningfees/joining%20_fees.dart';
-import 'package:base_project_flutter/views/locationError/locationError.dart';
+import 'package:base_project_flutter/views/location_popup_page.dart';
 import 'package:base_project_flutter/views/onBoardingpage/onBoardingPage.dart';
 import 'package:base_project_flutter/views/profile_review/profile_review.dart';
 import 'package:base_project_flutter/views/rider_Details/add_Details.dart';
 import 'package:base_project_flutter/views/translate.dart';
-import 'package:camera/camera.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +75,14 @@ AndroidNotificationChannel? channel2;
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
 FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+// >>> START  main()  -  app entry point
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = MyHttpOverrides();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
+  // Debug builds only: lets the app talk to a local self-signed test server.
+  // Release builds keep normal HTTPS certificate checking.
+  if (kDebugMode) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
 
 
 
@@ -110,6 +132,15 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  await _startApp();
+}
+// <<< END    main()
+
+// >>> START  _startApp()  -  start app
+/// Reads the saved login, asks the server how far the driver is in registration and
+/// shows the app. If the server cannot be reached it shows a retry screen, so a
+/// logged-in driver is not sent back to onboarding just because of bad network.
+Future<void> _startApp() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   SharedPreferences pref = await SharedPreferences.getInstance();
   var authCode = sharedPreferences.getString('authCode');
@@ -118,6 +149,11 @@ void main() async {
 
   if (authCode != null) {
       var check = await UserAPI().checkApi(authCode);
+      if (check == null) {
+        // No answer (offline / server error): do not treat this as 'logged out'.
+        runApp(_StartupRetryApp(onRetry: _startApp));
+        return;
+      }
       print("authCode>>>>> " + authCode);
       if (check != null && check['status'] == 'OK') {
         if (check['detail']['email'] != null) {
@@ -165,10 +201,29 @@ void main() async {
       isAllDetailsFilled: isAllDetailsFilled,
       isPaidJoiningFee: isPaidJoiningFee,
       isProfileVerified: isProfileVerified,
+      locale: _savedLocale(sharedPreferences.getString('language_code')),
     ),
   );
 }
+// <<< END    _startApp()
 
+// >>> START  _savedLocale()  -  saved locale
+/// Turns the saved `language_code` ("hi_IN", "tl_in" ...) back into a [Locale].
+/// Only languages that have translations in translate.dart are honoured; anything
+/// else falls back to English.
+Locale _savedLocale(String? code) {
+  const translated = {'en', 'hi', 'tl'};
+  final parts = (code ?? '').split('_');
+  if (parts.length != 2 || !translated.contains(parts[0].toLowerCase())) {
+    return const Locale('en', 'US');
+  }
+  return Locale(parts[0].toLowerCase(), parts[1].toUpperCase());
+}
+// <<< END    _savedLocale()
+
+
+// >>> START  class MyApp
+/// Root widget: registers the providers and picks the first screen from the driver's registration progress.
 class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
@@ -183,6 +238,7 @@ class MyApp extends StatefulWidget {
     this.isAllDetailsFilled,
     this.isPaidJoiningFee,
     this.isProfileVerified,
+    this.locale,
   }) : super(key: key);
 
   final checkAuth;
@@ -194,17 +250,23 @@ class MyApp extends StatefulWidget {
   final isAllDetailsFilled;
   final isPaidJoiningFee;
   final isProfileVerified;
+  final Locale? locale;
 
   static final GlobalKey<NavigatorState> navigatorKey =
   GlobalKey<NavigatorState>();
 }
+// <<< END    class MyApp
 
+// >>> START  class _MyAppState
 class _MyAppState extends State<MyApp> {
+  // >>> START  _MyAppState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _MyAppState.initState()
 
+  // >>> START  _MyAppState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -235,9 +297,31 @@ class _MyAppState extends State<MyApp> {
         return GetMaterialApp(
           color: tPrimaryColor,
           title: 'Rubia Driver',
+          // Phones on Android 15+ draw apps edge to edge, so the on-screen navigation bar sits on top of the bottom of every
+          // screen (buttons such as Next, Cancel Ride and Later were half hidden). Keep the whole app above it, and take the
+          // same amount off the keyboard inset so screens with a keyboard still fit.
+          builder: (context, child) {
+            final mq = MediaQuery.of(context);
+            final navBar = mq.viewPadding.bottom;
+            if (child == null) return const SizedBox.shrink();
+            if (navBar <= 0) return child;
+            return Padding(
+              padding: EdgeInsets.only(bottom: navBar),
+              child: MediaQuery(
+                data: mq.copyWith(
+                  padding: mq.padding.copyWith(bottom: 0),
+                  viewPadding: mq.viewPadding.copyWith(bottom: 0),
+                  viewInsets: mq.viewInsets.copyWith(
+                      bottom: (mq.viewInsets.bottom - navBar) < 0 ? 0 : mq.viewInsets.bottom - navBar),
+                ),
+                child: child,
+              ),
+            );
+          },
           defaultTransition: Transition.native,
           translations: LanguageTranslations(),
-          locale: const Locale('en', "US"),
+          locale: widget.locale ?? const Locale('en', 'US'),
+          fallbackLocale: const Locale('en', 'US'),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             textTheme: GoogleFonts.mulishTextTheme(
@@ -269,7 +353,7 @@ class _MyAppState extends State<MyApp> {
                   : isProfileVerified !=
                   profile_verified_yes
                   ? ProfileReview()
-                  : LocationErrorScreen(),
+                  : LocationPopUpPage(),
               splashTransition: SplashTransition.scaleTransition,
               backgroundColor: Colors.white,
             ),
@@ -286,8 +370,12 @@ class _MyAppState extends State<MyApp> {
       }),
     );
   }
+  // <<< END    _MyAppState.build()
 }
+// <<< END    class _MyAppState
 
+// >>> START  class ConnectivityWrapper
+/// Shows a 'No internet' screen instead of the app whenever the phone is offline.
 class ConnectivityWrapper extends StatefulWidget {
   final Widget child;
 
@@ -296,9 +384,12 @@ class ConnectivityWrapper extends StatefulWidget {
   @override
   _ConnectivityWrapperState createState() => _ConnectivityWrapperState();
 }
+// <<< END    class ConnectivityWrapper
 
+// >>> START  class _ConnectivityWrapperState
 class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   late ConnectivityResult _connectivityResult = ConnectivityResult.none;
+  // >>> START  _ConnectivityWrapperState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
@@ -309,33 +400,43 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
       });
     });
   }
+  // <<< END    _ConnectivityWrapperState.initState()
 
+  // >>> START  _ConnectivityWrapperState.checkConnectivity()  -  check connectivity
   void checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {
       _connectivityResult = connectivityResult;
     });
   }
+  // <<< END    _ConnectivityWrapperState.checkConnectivity()
 
+  // >>> START  _ConnectivityWrapperState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return _connectivityResult == ConnectivityResult.none
         ? NoInternetDialog()
         : widget.child;
   }
+  // <<< END    _ConnectivityWrapperState.build()
 }
+// <<< END    class _ConnectivityWrapperState
 
+// >>> START  class NoInternetDialog
 class NoInternetDialog extends StatelessWidget {
 
   const NoInternetDialog({Key? key}) : super(key: key);
 
+  // >>> START  NoInternetDialog.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tBlue,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.willpopAlert(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.willpopAlert(context);
         },
         child: Stack(
           children: [
@@ -393,14 +494,68 @@ class NoInternetDialog extends StatelessWidget {
       ),
     );
   }
+  // <<< END    NoInternetDialog.build()
 }
+// <<< END    class NoInternetDialog
 
 
+// >>> START  class MyHttpOverrides
+/// Accepts every TLS certificate (turns off HTTPS verification). Only installed in
+/// debug builds (see main()); never active in a release build.
 class MyHttpOverrides extends HttpOverrides {
+  // >>> START  MyHttpOverrides.createHttpClient()  -  create http client
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
   }
+  // <<< END    MyHttpOverrides.createHttpClient()
 }
+// <<< END    class MyHttpOverrides
+
+// >>> START  class _StartupRetryApp
+/// Shown at launch when the server cannot be reached.
+class _StartupRetryApp extends StatelessWidget {
+  final Future<void> Function() onRetry;
+
+  const _StartupRetryApp({required this.onRetry});
+
+  // >>> START  _StartupRetryApp.build()  -  draws this screen / widget (its layout)
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.wifi_off, size: 56),
+                const SizedBox(height: 16),
+                const Text(
+                  "Can't reach Rubia right now",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Please check your internet connection and try again.',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: onRetry,
+                  child: const Text('Try again'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  // <<< END    _StartupRetryApp.build()
+}
+// <<< END    class _StartupRetryApp

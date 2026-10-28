@@ -1,8 +1,12 @@
+// ----------------------------------------------------------------------
+// Back button
+//
+// The round back arrow shown at the top-left of screens.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import '../constants/constants.dart';
-import '../responsive.dart';
 
+// >>> START  class BackButtonLeading
 class BackButtonLeading extends StatelessWidget {
   const BackButtonLeading({
     Key? key,
@@ -12,6 +16,7 @@ class BackButtonLeading extends StatelessWidget {
 
  
   final onTap;
+  // >>> START  BackButtonLeading.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,4 +44,6 @@ class BackButtonLeading extends StatelessWidget {
             ),
           );
   }
+  // <<< END    BackButtonLeading.build()
 }
+// <<< END    class BackButtonLeading

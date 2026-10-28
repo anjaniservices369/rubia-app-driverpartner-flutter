@@ -45,3 +45,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python tooling caches
+__pycache__/
+*.pyc
+
+# Signing keystore must never be committed (back it up somewhere safe)
+jks/
+*.jks
+*.keystore
+key.properties

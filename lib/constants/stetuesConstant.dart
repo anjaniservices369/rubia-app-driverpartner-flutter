@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// Status codes
+//
+// The numbers the server uses for states: ride status, payment type,
+// online/offline, profile approved/rejected, image types.
+//
+// Developer note: Typo in the file name is historical.
+// ----------------------------------------------------------------------
 //Add details status
 const PERSONAL_DETAIL = 1;
 const VEHICAL_SELECTION = 2;

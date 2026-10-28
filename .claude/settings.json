@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python tools/annotate_code.py && python tools/update_docs.py"
+          }
+        ]
+      }
+    ]
+  }
+}

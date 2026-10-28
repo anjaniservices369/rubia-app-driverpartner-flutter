@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:location_permissions/src/permission_enums.dart';
 import 'package:meta/meta.dart';
 
+/// Checks and requests location permissions through the platform plugin.
 class LocationPermissions {
+  /// Returns the shared instance.
   factory LocationPermissions() {
     if (_instance == null) {
       const MethodChannel methodChannel =
@@ -20,6 +22,7 @@ class LocationPermissions {
     return _instance!;
   }
 
+  /// Creates an instance with custom channels. Only for tests.
   @visibleForTesting
   LocationPermissions.private(this._methodChannel, this._eventChannel);
 

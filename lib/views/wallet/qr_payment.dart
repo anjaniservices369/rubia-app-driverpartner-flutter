@@ -1,5 +1,8 @@
-import 'package:base_project_flutter/views/wallet/walletpage.dart';
-import 'package:flutter/cupertino.dart';
+// ----------------------------------------------------------------------
+// Wallet top-up by QR
+//
+// Pay by QR and confirm with support.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,19 +10,16 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../api_services/DriverDetailApis.dart';
 import '../../constants/constants.dart';
 import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../../responsive.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
-import '../collect_payment.dart/componants/collect_cash_botomsheet.dart';
-import '../profile_review/profile_review.dart';
 import 'AmountReview.dart';
-import 'components.dart';
 
 
+// >>> START  class QRPayment
 class QRPayment extends StatefulWidget {
   const QRPayment({Key? key}) : super(key: key);
 
@@ -28,21 +28,16 @@ class QRPayment extends StatefulWidget {
   @override
   State<QRPayment> createState() => _QRPayment();
 }
+// <<< END    class QRPayment
 
 
 
 
+// >>> START  class _QRPayment
 class _QRPayment extends State<QRPayment> {
 
-  void _launchDialer(String phoneNumber) async {
-    final url = 'tel://$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
+  // >>> START  _QRPayment._showContactInfoDialog()  -  show contact info dialog
   void _showContactInfoDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -87,9 +82,7 @@ class _QRPayment extends State<QRPayment> {
                       bottonText: 'Call'.tr,
                       borderSide: BorderSide(color: tPrimaryColor),
                       onTap: (startLoading, stopLoading, btnState) async {
-                        launch(
-                            "tel://+917893653899"
-                        );
+                        launchUrl(Uri.parse("tel://+917893653899"));
                       },
                     ),
                   ),
@@ -132,7 +125,9 @@ class _QRPayment extends State<QRPayment> {
       },
     );
   }
+  // <<< END    _QRPayment._showContactInfoDialog()
 
+  // >>> START  _QRPayment.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
 
@@ -164,9 +159,11 @@ class _QRPayment extends State<QRPayment> {
                 color: tBlue,
                 fontWeight: FontWeight.w700)),
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 2));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 2));
         },
         child: SingleChildScrollView(
           child : Column(
@@ -261,8 +258,10 @@ class _QRPayment extends State<QRPayment> {
     );
 
   }
+  // <<< END    _QRPayment.build()
 
 }
+// <<< END    class _QRPayment
 
 
 

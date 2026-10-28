@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// End of ride: car photos & completion
+//
+// Photos of the car after the ride, confirms the drop address and completes
+// the ride.
+//
+// Developer note: Calls driver/complete-ride with the recorded route.
+// ----------------------------------------------------------------------
 import 'dart:developer';
 import 'dart:isolate';
 import 'dart:ui';
@@ -11,8 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoder2/geocoder2.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:convert';
@@ -28,18 +34,14 @@ import '../../../providers/locationProvider.dart';
 import '../../../responsive.dart';
 import '../../bill_details/bill_details.dart';
 import 'package:location/location.dart' as loct;
-import '../location_callback_handler.dart';
 import '../location_service_repository.dart';
 
-import 'package:background_locator_2/settings/android_settings.dart';
-import 'package:background_locator_2/settings/ios_settings.dart';
-import 'package:background_locator_2/settings/locator_settings.dart';
-import 'package:location_permissions/location_permissions.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'driverEndUploadSelfie.dart';
 
+// >>> START  class DriveEndCarSides
 class DriveEndCarSides extends StatefulWidget {
   const DriveEndCarSides({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
@@ -47,7 +49,9 @@ class DriveEndCarSides extends StatefulWidget {
   @override
   State<DriveEndCarSides> createState() => _DriveEndCarSidesState();
 }
+// <<< END    class DriveEndCarSides
 
+// >>> START  class _DriveEndCarSidesState
 class _DriveEndCarSidesState extends State<DriveEndCarSides> {
   late BackgroundService backgroundService;
   final _formKey = new GlobalKey<FormState>();
@@ -68,7 +72,6 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
   // final Location location = Location();
   var _locationAddress;
 
-  @override
   // void dispose() {
   //   BackgroundLocation.stopLocationService();
   //   super.dispose();
@@ -79,6 +82,7 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
   bool isRunning = false;
   LocationDto? lastLocation;
 
+  // >>> START  _DriveEndCarSidesState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
@@ -122,7 +126,9 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
 //       transformedLog.add({"lat": lat, "lng": lng});
 //     }
   }
+  // <<< END    _DriveEndCarSidesState.initState()
 
+  // >>> START  _DriveEndCarSidesState.updateUI()  -  update ui
   Future<void> updateUI(dynamic data) async {
     final log = await FileManager.readLogFile();
 
@@ -138,23 +144,25 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
         logStr = log;
       });
   }
+  // <<< END    _DriveEndCarSidesState.updateUI()
 
+  // >>> START  _DriveEndCarSidesState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     super.dispose();
   }
+  // <<< END    _DriveEndCarSidesState.dispose()
 
+  // >>> START  _DriveEndCarSidesState._updateNotificationText()  -  update notification text
   Future<void> _updateNotificationText(LocationDto data) async {
-    if (data == null) {
-      return;
-    }
-
     await BackgroundLocator.updateNotificationText(
         title: "new location received",
         msg: "${DateTime.now()}",
         bigMsg: "${data.latitude}, ${data.longitude}");
   }
+  // <<< END    _DriveEndCarSidesState._updateNotificationText()
 
+  // >>> START  _DriveEndCarSidesState.initPlatformState()  -  init platform state
   Future<void> initPlatformState() async {
     print('Initializing...');
     await BackgroundLocator.initialize();
@@ -166,11 +174,14 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
     });
     print('Running ${isRunning.toString()}');
   }
+  // <<< END    _DriveEndCarSidesState.initPlatformState()
 
+  // >>> START  _DriveEndCarSidesState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
 
-    LocationProvider _locationData = Provider.of<LocationProvider>(context);
+    // Keep rebuilding this widget when LocationProvider changes.
+    context.watch<LocationProvider>();
     return Scaffold(
       backgroundColor: tBackground,
       appBar: AppBar(
@@ -184,9 +195,11 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
         ),
         centerTitle: false,
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context,
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context,
               DriverEndUploadSelfie(bookingDetails: widget.bookingDetails));
         },
         child: Form(
@@ -254,35 +267,27 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             });
                                             String imageUrl =
                                             await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print(
-                                                  'Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                firstImg = imageUrl;
-                                                firstImgLoading = false;
-                                              });
-                                              _storedData.rideEndedImagesList
-                                                  .add({
-                                                "booking_id": widget
-                                                    .bookingDetails['id']
-                                                    .toString(),
-                                                "image": firstImg,
-                                                "image_type":
-                                                image_type_front.toString(),
-                                                "type":
-                                                type_after_ride.toString()
-                                              });
+                                            print(
+                                                'Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              firstImg = imageUrl;
+                                              firstImgLoading = false;
+                                            });
+                                            _storedData.rideEndedImagesList
+                                                .add({
+                                              "booking_id": widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              "image": firstImg,
+                                              "image_type":
+                                              image_type_front.toString(),
+                                              "type":
+                                              type_after_ride.toString()
+                                            });
 
-                                              print(_storedData
-                                                  .rideEndedImagesList
-                                                  .toString());
-                                            } else {
-                                              print(
-                                                  'Image upload failed or no image selected.');
-                                              setState(() {
-                                                firstImg = null;
-                                              });
-                                            }
+                                            print(_storedData
+                                                .rideEndedImagesList
+                                                .toString());
                                           },
                                           child: firstImg == null
                                               ? firstImgLoading == false
@@ -384,35 +389,27 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
 
                                               String imageUrl =
                                               await Twl().uploadImage();
-                                              if (imageUrl != null) {
-                                                print(
-                                                    'Uploaded image URL: $imageUrl');
-                                                setState(() {
-                                                  secoundImg = imageUrl;
-                                                  secoundImgLoading = false;
-                                                });
-                                                _storedData.rideEndedImagesList
-                                                    .add({
-                                                  "booking_id": widget
-                                                      .bookingDetails['id']
-                                                      .toString(),
-                                                  "image": secoundImg,
-                                                  "image_type": image_type_back
-                                                      .toString(),
-                                                  "type":
-                                                  type_after_ride.toString()
-                                                });
+                                              print(
+                                                  'Uploaded image URL: $imageUrl');
+                                              setState(() {
+                                                secoundImg = imageUrl;
+                                                secoundImgLoading = false;
+                                              });
+                                              _storedData.rideEndedImagesList
+                                                  .add({
+                                                "booking_id": widget
+                                                    .bookingDetails['id']
+                                                    .toString(),
+                                                "image": secoundImg,
+                                                "image_type": image_type_back
+                                                    .toString(),
+                                                "type":
+                                                type_after_ride.toString()
+                                              });
 
-                                                print(_storedData
-                                                    .rideEndedImagesList
-                                                    .toString());
-                                              } else {
-                                                print(
-                                                    'Image upload failed or no image selected.');
-                                                setState(() {
-                                                  secoundImg = null;
-                                                });
-                                              }
+                                              print(_storedData
+                                                  .rideEndedImagesList
+                                                  .toString());
                                             },
                                             child: secoundImg == null
                                                 ? secoundImgLoading == false
@@ -524,36 +521,28 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             });
                                             String imageUrl =
                                             await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print(
-                                                  'Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                thirdImg = imageUrl;
-                                                thirdImgLoading = false;
-                                              });
-                                              _storedData.rideEndedImagesList
-                                                  .add({
-                                                "booking_id": widget
-                                                    .bookingDetails['id']
-                                                    .toString(),
-                                                "image": thirdImg,
-                                                "image_type":
-                                                image_type_side_one
-                                                    .toString(),
-                                                "type":
-                                                type_after_ride.toString()
-                                              });
+                                            print(
+                                                'Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              thirdImg = imageUrl;
+                                              thirdImgLoading = false;
+                                            });
+                                            _storedData.rideEndedImagesList
+                                                .add({
+                                              "booking_id": widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              "image": thirdImg,
+                                              "image_type":
+                                              image_type_side_one
+                                                  .toString(),
+                                              "type":
+                                              type_after_ride.toString()
+                                            });
 
-                                              print(_storedData
-                                                  .rideEndedImagesList
-                                                  .toString());
-                                            } else {
-                                              print(
-                                                  'Image upload failed or no image selected.');
-                                              setState(() {
-                                                thirdImg = null;
-                                              });
-                                            }
+                                            print(_storedData
+                                                .rideEndedImagesList
+                                                .toString());
                                           },
                                           child: thirdImg == null
                                               ? thirdImgLoading == false
@@ -654,36 +643,28 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             });
                                             String imageUrl =
                                             await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print(
-                                                  'Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                fourthImg = imageUrl;
-                                                fourthImgLoading = false;
-                                              });
-                                              _storedData.rideEndedImagesList
-                                                  .add({
-                                                "booking_id": widget
-                                                    .bookingDetails['id']
-                                                    .toString(),
-                                                "image": fourthImg,
-                                                "image_type":
-                                                image_type_side_two
-                                                    .toString(),
-                                                "type":
-                                                type_after_ride.toString()
-                                              });
+                                            print(
+                                                'Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              fourthImg = imageUrl;
+                                              fourthImgLoading = false;
+                                            });
+                                            _storedData.rideEndedImagesList
+                                                .add({
+                                              "booking_id": widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              "image": fourthImg,
+                                              "image_type":
+                                              image_type_side_two
+                                                  .toString(),
+                                              "type":
+                                              type_after_ride.toString()
+                                            });
 
-                                              print(_storedData
-                                                  .rideEndedImagesList
-                                                  .toString());
-                                            } else {
-                                              print(
-                                                  'Image upload failed or no image selected.');
-                                              setState(() {
-                                                firstImg = null;
-                                              });
-                                            }
+                                            print(_storedData
+                                                .rideEndedImagesList
+                                                .toString());
                                           },
                                           child: fourthImg == null
                                               ? fourthImgLoading == false
@@ -804,35 +785,27 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             });
                                             String imageUrl =
                                             await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print(
-                                                  'Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                fivthImg = imageUrl;
-                                                fivthImgLoading = false;
-                                              });
-                                              _storedData.rideEndedImagesList
-                                                  .add({
-                                                "booking_id": widget
-                                                    .bookingDetails['id']
-                                                    .toString(),
-                                                "image": fivthImg,
-                                                "image_type": image_type_damages
-                                                    .toString(),
-                                                "type":
-                                                type_after_ride.toString()
-                                              });
+                                            print(
+                                                'Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              fivthImg = imageUrl;
+                                              fivthImgLoading = false;
+                                            });
+                                            _storedData.rideEndedImagesList
+                                                .add({
+                                              "booking_id": widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              "image": fivthImg,
+                                              "image_type": image_type_damages
+                                                  .toString(),
+                                              "type":
+                                              type_after_ride.toString()
+                                            });
 
-                                              print(_storedData
-                                                  .rideEndedImagesList
-                                                  .toString());
-                                            } else {
-                                              print(
-                                                  'Image upload failed or no image selected.');
-                                              setState(() {
-                                                fivthImg = null;
-                                              });
-                                            }
+                                            print(_storedData
+                                                .rideEndedImagesList
+                                                .toString());
                                           },
                                           child: fivthImg == null
                                               ? fivthImgLoading == false
@@ -933,62 +906,54 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
                                             });
                                             String imageUrl =
                                             await Twl().uploadImage();
-                                            if (imageUrl != null) {
-                                              print(
-                                                  'Uploaded image URL: $imageUrl');
-                                              setState(() {
-                                                sixthImg = imageUrl;
-                                                sixthImgLoading = false;
-                                              });
-                                              if (_storedData
-                                                  .rideEndedImagesList
-                                                  .contains({
+                                            print(
+                                                'Uploaded image URL: $imageUrl');
+                                            setState(() {
+                                              sixthImg = imageUrl;
+                                              sixthImgLoading = false;
+                                            });
+                                            if (_storedData
+                                                .rideEndedImagesList
+                                                .contains({
+                                              "booking_id": widget
+                                                  .bookingDetails['id']
+                                                  .toString(),
+                                              "image": sixthImg,
+                                              "image_type": image_type_damages
+                                                  .toString(),
+                                              "type":
+                                              type_after_ride.toString()
+                                            })) {
+                                              _storedData.rideEndedImagesList
+                                                  .remove({
                                                 "booking_id": widget
                                                     .bookingDetails['id']
                                                     .toString(),
                                                 "image": sixthImg,
-                                                "image_type": image_type_damages
+                                                "image_type":
+                                                image_type_damages
                                                     .toString(),
                                                 "type":
                                                 type_after_ride.toString()
-                                              })) {
-                                                _storedData.rideEndedImagesList
-                                                    .remove({
-                                                  "booking_id": widget
-                                                      .bookingDetails['id']
-                                                      .toString(),
-                                                  "image": sixthImg,
-                                                  "image_type":
-                                                  image_type_damages
-                                                      .toString(),
-                                                  "type":
-                                                  type_after_ride.toString()
-                                                });
-                                              } else {
-                                                _storedData.rideEndedImagesList
-                                                    .add({
-                                                  "booking_id": widget
-                                                      .bookingDetails['id']
-                                                      .toString(),
-                                                  "image": sixthImg,
-                                                  "image_type":
-                                                  image_type_damages
-                                                      .toString(),
-                                                  "type":
-                                                  type_after_ride.toString()
-                                                });
-                                              }
-
-                                              print(_storedData
-                                                  .rideEndedImagesList
-                                                  .toString());
+                                              });
                                             } else {
-                                              print(
-                                                  'Image upload failed or no image selected.');
-                                              setState(() {
-                                                sixthImg = null;
+                                              _storedData.rideEndedImagesList
+                                                  .add({
+                                                "booking_id": widget
+                                                    .bookingDetails['id']
+                                                    .toString(),
+                                                "image": sixthImg,
+                                                "image_type":
+                                                image_type_damages
+                                                    .toString(),
+                                                "type":
+                                                type_after_ride.toString()
                                               });
                                             }
+
+                                            print(_storedData
+                                                .rideEndedImagesList
+                                                .toString());
                                           },
                                           child: sixthImg == null
                                               ? sixthImgLoading == false
@@ -1181,7 +1146,11 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
 
                             List<Map<String, String>> formattedCoordinates = [];
 
-                            for (int i = 0; i < result.length; i++) {
+                            // The server has been adding up the distance from the positions this phone reported during the
+                            // ride, so this uploaded route is only a backup and a few hundred points are plenty. (A long ride has
+                            // tens of thousands of points; sending them all in one request is too large.)
+                            final int step = result.length > 300 ? (result.length / 300).ceil() : 1;
+                            for (int i = 0; i < result.length; i += step) {
                               double lat = result[i]['latitude'];
                               double lng = result[i]['longitude'];
 
@@ -1301,7 +1270,9 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
       ),
     );
   }
+  // <<< END    _DriveEndCarSidesState.build()
 
+  // >>> START  _DriveEndCarSidesState.onStop()  -  on stop
   void onStop() async {
     // await BackgroundLocator.unRegisterLocationUpdate();
     // final _isRunning = await BackgroundLocator.isServiceRunning();
@@ -1309,70 +1280,9 @@ class _DriveEndCarSidesState extends State<DriveEndCarSides> {
     //   isRunning = _isRunning;
     // });
   }
+  // <<< END    _DriveEndCarSidesState.onStop()
 
-  void _onStart() async {
-    if (await _checkLocationPermission()) {
-      await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
 
-      setState(() {
-        isRunning = _isRunning;
-        lastLocation = null;
-      });
-    } else {
-      // show error
-    }
-  }
 
-  Future<bool> _checkLocationPermission() async {
-    final access = await LocationPermissions().checkPermissionStatus();
-    switch (access) {
-      case PermissionStatus.unknown:
-      case PermissionStatus.denied:
-      case PermissionStatus.restricted:
-        final permission = await LocationPermissions().requestPermissions(
-          permissionLevel: LocationPermissionLevel.locationAlways,
-        );
-        if (permission == PermissionStatus.granted) {
-          return true;
-        } else {
-          return false;
-        }
-        break;
-      case PermissionStatus.granted:
-        return true;
-        break;
-      default:
-        return false;
-        break;
-    }
-  }
-
-  Future<void> _startLocator() async {
-    Map<String, dynamic> data = {'countInit': 1};
-    return await BackgroundLocator.registerLocationUpdate(
-        LocationCallbackHandler.callback,
-        initCallback: LocationCallbackHandler.initCallback,
-        initDataCallback: data,
-        disposeCallback: LocationCallbackHandler.disposeCallback,
-        iosSettings: IOSSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            distanceFilter: 0,
-            stopWithTerminate: true),
-        autoStop: false,
-        androidSettings: AndroidSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            interval: 5,
-            distanceFilter: 0,
-            client: LocationClient.google,
-            androidNotificationSettings: AndroidNotificationSettings(
-                notificationChannelName: 'Location tracking',
-                notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Track location in background',
-                notificationBigMsg:
-                'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-                notificationIconColor: Colors.grey,
-                notificationTapCallback:
-                LocationCallbackHandler.notificationCallback)));
-  }
 }
+// <<< END    class _DriveEndCarSidesState

@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Login (mobile number)
+//
+// The driver types their mobile number; an SMS code is sent.
+// ----------------------------------------------------------------------
 // import 'package:easygo_skipper_flutter/apiServices/userApi.dart';
 // import 'package:easygo_skipper_flutter/constants/constants.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
@@ -18,24 +23,30 @@ import '../../globalWidgets/customTextFiled.dart';
 import '../../responsive.dart';
 import '../otpPage/otpPage.dart';
 
+// >>> START  class LoginPageView
 class LoginPageView extends StatefulWidget {
   @override
   State<LoginPageView> createState() => _LoginPageViewState();
 }
+// <<< END    class LoginPageView
 
+// >>> START  class _LoginPageViewState
 class _LoginPageViewState extends State<LoginPageView> {
   final TextEditingController _usernumbercontroller = TextEditingController();
 
   final _formKey = new GlobalKey<FormState>();
 
   late String username;
+  // >>> START  _LoginPageViewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tBlue,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.willpopAlert(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.willpopAlert(context);
         },
         child: Form(
           key: _formKey,
@@ -64,7 +75,8 @@ class _LoginPageViewState extends State<LoginPageView> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 28),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,25 +90,33 @@ class _LoginPageViewState extends State<LoginPageView> {
                             ),
                           ),
                           SizedBox(height: 2.h),
-                          TextFormFieldWidgets(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "mobile_Number_Can't_Be_Empty".tr;
-                                //
-                              } else if (value.length != 10 && value.length < 10) {
-                                return "mobile_Number_Must_Be_10_Digits".tr;
-                              }
-                            },
-                            onChanged: (text) {},
-                            inputFormater: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(
-                                "[0-9]",
-                              )),
-                              LengthLimitingTextInputFormatter(10),
-                            ],
-                            keyboardTyp: TextInputType.number,
-                            hinttext: 'Enter Mobile Number'.tr,
-                            controller: _usernumbercontroller,
+                          MergeSemantics(
+                            child: Semantics(
+                              label: 'Mobile number',
+                              textField: true,
+                              child: TextFormFieldWidgets(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "mobile_Number_Can't_Be_Empty".tr;
+                                    //
+                                  } else if (value.length != 10 &&
+                                      value.length < 10) {
+                                    return "mobile_Number_Must_Be_10_Digits".tr;
+                                  }
+                                },
+                                onChanged: (text) {},
+                                inputFormater: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(RegExp(
+                                    "[0-9]",
+                                  )),
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                keyboardTyp: TextInputType.number,
+                                label: Text('Mobile Number'.tr),
+                                hinttext: 'Enter Mobile Number'.tr,
+                                controller: _usernumbercontroller,
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -110,24 +130,31 @@ class _LoginPageViewState extends State<LoginPageView> {
                         onTap: (startLoading, stopLoading, btnState) async {
                           startLoading();
                           if (_formKey.currentState!.validate()) {
-                            print(_usernumbercontroller.text);
-                            print('_usernumbercontroller');
-                            Map<String, String> param = {'contact_no': _usernumbercontroller.text};
-                            print(param.toString());
+                            Map<String, String> param = {
+                              'contact_no': _usernumbercontroller.text
+                            };
                             var res = await UserAPI().sendOtp(context, param);
                             if (res != null && res['status'] == 'OK') {
                               SharedPreferences sharedPreferences =
                                   await SharedPreferences.getInstance();
                               sharedPreferences.setString(
                                   "sessionId", res['details']['Details']);
-                              print(sharedPreferences.getString('sessionId'));
-                              Twl.navigateTo(context, OtpPageView(mobileNumber: _usernumbercontroller.text, sessionCode: res['details']['Details']));
+                              Twl.navigateTo(
+                                  context,
+                                  OtpPageView(
+                                      mobileNumber: _usernumbercontroller.text,
+                                      sessionCode: res['details']['Details']));
                             } else {
                               stopLoading();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(res['error'].toString()),
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  res == null
+                                      ? 'Unable to send OTP. Please try again.'
+                                      : (res['error']?.toString() ??
+                                          'Unable to send OTP. Please try again.'),
+                                ),
                               ));
-                              stopLoading();
                             }
 
                             stopLoading();
@@ -146,4 +173,6 @@ class _LoginPageViewState extends State<LoginPageView> {
       ),
     );
   }
+  // <<< END    _LoginPageViewState.build()
 }
+// <<< END    class _LoginPageViewState

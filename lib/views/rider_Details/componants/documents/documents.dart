@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Registration: documents hub
+//
+// List of documents to upload and their status.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
@@ -25,6 +30,7 @@ import 'componants/driving_licence.dart';
 import 'componants/panCard.dart';
 import 'componants/take_your_selfie.dart';
 
+// >>> START  class Documents
 class Documents extends StatefulWidget {
   const Documents({
     Key? key,
@@ -32,18 +38,23 @@ class Documents extends StatefulWidget {
   @override
   State<Documents> createState() => _DocumentsState();
 }
+// <<< END    class Documents
 
+// >>> START  class _DocumentsState
 class _DocumentsState extends State<Documents> {
   var takasefie;
+  // >>> START  _DocumentsState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheck();
     super.initState();
   }
+  // <<< END    _DocumentsState.initState()
 
   var authCode;
   var checkDetails;
   var check;
+  // >>> START  _DocumentsState.fetchCheck()  -  fetch check
   fetchCheck() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authCode = sharedPreferences.getString('authCode');
@@ -56,13 +67,16 @@ class _DocumentsState extends State<Documents> {
       });
     }
   }
+  // <<< END    _DocumentsState.fetchCheck()
 
-  @override
   bool isselie = false;
+  // >>> START  _DocumentsState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, AddDetailsView());
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, AddDetailsView());
       },
       child: Scaffold(
         appBar: AppBar(
@@ -88,11 +102,7 @@ class _DocumentsState extends State<Documents> {
                   size: 20.0,
                 ),
               )
-            : WillPopScope(
-                onWillPop: () {
-                  return Twl.forceNavigateTo(context, AddDetailsView());
-                },
-                child: Column(
+            : Column(
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
@@ -393,10 +403,13 @@ class _DocumentsState extends State<Documents> {
                     )
                   ],
                 ),
-              ),
       ),
     );
   }
+  // <<< END    _DocumentsState.build()
 }
+// <<< END    class _DocumentsState
 
+// >>> START  class VehicleRegistration
 class VehicleRegistration {}
+// <<< END    class VehicleRegistration

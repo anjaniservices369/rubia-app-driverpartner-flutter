@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------
+// Refer & earn
+//
+// Share the app and see referral earnings.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
-import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
@@ -9,23 +13,25 @@ import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigatio
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// >>> START  class ReferAndEarnView
 class ReferAndEarnView extends StatefulWidget {
   @override
   State<ReferAndEarnView> createState() => _ReferAndEarnViewState();
 }
+// <<< END    class ReferAndEarnView
 
+// >>> START  class _ReferAndEarnViewState
 class _ReferAndEarnViewState extends State<ReferAndEarnView> {
   var authCode;
   var earningDetails;
   var resNOK;
+  // >>> START  _ReferAndEarnViewState.fetchCheckDetails()  -  fetch check details
   fetchCheckDetails() async {
     var res = await RideBookingsApi().fetchMyReferalEarnings(context);
     if (res != null && res['status'] == 'OK') {
@@ -41,23 +47,29 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
       });
     }
   }
+  // <<< END    _ReferAndEarnViewState.fetchCheckDetails()
   final Uri whatsappUrl = Uri.parse('https://api.whatsapp.com/send?phone=+917893653899&text=Hello%20there!');
   final Uri facebookUrl = Uri.parse('https://www.facebook.com/profile.php?id=61550853734341&mibextid=ZbWKwL');
   final Uri instagramUrl = Uri.parse('https://instagram.com/rubia.services?igshid=OGQ5ZDc2ODk2ZA==');
   final Uri twitterUrl = Uri.parse('https://x.com/RubiaServices?t=9Tr7ip8vD6euUPD5YfCSGQ&s=08');
+  // >>> START  _ReferAndEarnViewState._launchUrl()  -  launch url
   // final uri TERMS_AND_CONDITIONS = Uri.parse(uri)
   Future<void> _launchUrl(Uri _url) async {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
   }
+  // <<< END    _ReferAndEarnViewState._launchUrl()
 
+  // >>> START  _ReferAndEarnViewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchCheckDetails();
     super.initState();
   }
+  // <<< END    _ReferAndEarnViewState.initState()
 
+  // >>> START  _ReferAndEarnViewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,9 +115,11 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
                   child: CircularProgressIndicator(
                     color: tSecondaryColor,
                   ))
-          : WillPopScope(
-              onWillPop: () {
-                return Twl.forceNavigateTo(
+          : PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) {
+                if (didPop) return;
+                Twl.forceNavigateTo(
                     context, BottomNavigation(tabIndexId: 3));
               },
               child: RefreshIndicator(
@@ -426,9 +440,10 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
                             ),
                             onTap: (startLoading, stopLoading, btnState) async {
                               startLoading();
-                              Share.share('Here\'s my referral code ' +
-                                  earningDetails['referral_code'].toString() +
-                                  ' and refer your friend to get earnings \n https://play.google.com/store/apps/details?id=com.rubia.driver');
+                              SharePlus.instance.share(ShareParams(
+                                  text: 'Here\'s my referral code ' +
+                                      earningDetails['referral_code'].toString() +
+                                      ' and refer your friend to get earnings \n https://play.google.com/store/apps/details?id=com.rubia.driver'));
                               stopLoading();
                             },
                           ),
@@ -441,4 +456,6 @@ class _ReferAndEarnViewState extends State<ReferAndEarnView> {
             ),
     );
   }
+  // <<< END    _ReferAndEarnViewState.build()
 }
+// <<< END    class _ReferAndEarnViewState

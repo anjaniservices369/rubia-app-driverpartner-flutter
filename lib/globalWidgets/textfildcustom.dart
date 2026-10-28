@@ -1,8 +1,12 @@
+// ----------------------------------------------------------------------
+// Text input (style B)
+//
+// Second variant of the styled text box for forms.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import '../constants/constants.dart';
-import '../responsive.dart';
 
+// >>> START  class TextFieldWidgets
 class TextFieldWidgets extends StatelessWidget {
   const TextFieldWidgets({
     Key? key,
@@ -47,6 +51,7 @@ class TextFieldWidgets extends StatelessWidget {
   final inputFormatters;
 
   final contentPadding;
+  // >>> START  TextFieldWidgets.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -74,7 +79,7 @@ class TextFieldWidgets extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 20),
           filled: true,
-          fillColor: tlightGray.withOpacity(0.4),
+          fillColor: tlightGray.withValues(alpha: 0.4),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(8.0),
@@ -98,4 +103,6 @@ class TextFieldWidgets extends StatelessWidget {
       ),
     );
   }
+  // <<< END    TextFieldWidgets.build()
 }
+// <<< END    class TextFieldWidgets

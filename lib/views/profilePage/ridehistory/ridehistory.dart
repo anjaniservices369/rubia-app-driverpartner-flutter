@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ride history
+//
+// Completed and cancelled rides.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
@@ -10,16 +15,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../bottomNavigation.dart/bottomNavigation.dart';
 
+// >>> START  class MyRidesView
 class MyRidesView extends StatefulWidget {
   const MyRidesView({Key? key, this.selectedType}) : super(key: key);
   final selectedType;
   @override
   State<MyRidesView> createState() => _MyRidesViewState();
 }
+// <<< END    class MyRidesView
 
+// >>> START  class _MyRidesViewState
 class _MyRidesViewState extends State<MyRidesView> {
   var selectedindex;
 
+  // >>> START  _MyRidesViewState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,9 +107,11 @@ class _MyRidesViewState extends State<MyRidesView> {
                   ],
                 )))
           ]),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 3));
         },
         child: DefaultTabController(
             length: 3,
@@ -172,4 +183,6 @@ class _MyRidesViewState extends State<MyRidesView> {
       ),
     );
   }
+  // <<< END    _MyRidesViewState.build()
 }
+// <<< END    class _MyRidesViewState

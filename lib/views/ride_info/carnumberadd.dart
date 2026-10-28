@@ -1,17 +1,21 @@
+// ----------------------------------------------------------------------
+// Enter car number
+//
+// Driver types the car number and taps Start ride.
+//
+// Developer note: Calls driver/start-ride.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/providers/locationProvider.dart';
-import 'package:base_project_flutter/views/bill_details/bill_details.dart';
 import 'package:base_project_flutter/views/ride_info/completer_ride.dart';
 import 'package:flutter/material.dart';
 
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder2/geocoder2.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -21,32 +25,40 @@ import '../../../../../globalFuctions/globalFunctions.dart';
 
 import '../../../../../responsive.dart';
 
-import '../../constants/imageConstant.dart';
 import '../../globalWidgets/button.dart';
 import '../../globalWidgets/textfildcustom.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as GeoLatLng;
-import 'enter_otp_ride.dart';
 
+// >>> START  class AddCarNumber
 class AddCarNumber extends StatefulWidget {
   const AddCarNumber({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<AddCarNumber> createState() => _AddCarNumberState();
 }
+// <<< END    class AddCarNumber
 
+// >>> START  class _AddCarNumberState
 class _AddCarNumberState extends State<AddCarNumber> {
   final _formKey = new GlobalKey<FormState>();
+  // Lives as long as this screen. It must NOT be created inside build(): every
+  // rebuild (e.g. the keyboard closing) would otherwise empty the field.
+  final TextEditingController _reletivenameController = TextEditingController();
 
   var status = 0;
   GoogleMapController? mapController;
   GeoLatLng.LatLng? startLocation;
+  // >>> START  _AddCarNumberState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
+    _reletivenameController.dispose();
     mapController?.dispose();
     super.dispose();
   }
+  // <<< END    _AddCarNumberState.dispose()
 
+  // >>> START  _AddCarNumberState.licenseValidate()  -  license validate
   String? licenseValidate(String value) {
     String p = "[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1}";
 
@@ -60,10 +72,12 @@ class _AddCarNumberState extends State<AddCarNumber> {
 
     // return regExp.hasMatch(em);
   }
+  // <<< END    _AddCarNumberState.licenseValidate()
 
   Set<Marker> markers = Set();
+  // >>> START  _AddCarNumberState.addMarkers()  -  add markers
   addMarkers() async {
-    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.fromAssetImage(
+    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.asset(
       ImageConfiguration(),
       'assets/icons/back.png',
     );
@@ -79,9 +93,9 @@ class _AddCarNumberState extends State<AddCarNumber> {
       icon: markerbitmapdrop, //Icon for Marker
     ));
   }
+  // <<< END    _AddCarNumberState.addMarkers()
 
   final Set<Polyline> _polylines = Set();
-  GoogleMapController? _mapController;
 
   //map lat long fetching
 
@@ -89,6 +103,7 @@ class _AddCarNumberState extends State<AddCarNumber> {
   var dropLng;
   var dropPincode;
   var dropAddress;
+  // >>> START  _AddCarNumberState.fetchLocation()  -  fetch location
   void fetchLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -136,7 +151,9 @@ class _AddCarNumberState extends State<AddCarNumber> {
     print('Address: $dropPincode');
     print('pincode: $dropAddress');
   }
+  // <<< END    _AddCarNumberState.fetchLocation()
 
+  // >>> START  _AddCarNumberState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
@@ -146,7 +163,9 @@ class _AddCarNumberState extends State<AddCarNumber> {
       });
     }
   }
+  // <<< END    _AddCarNumberState.initState()
 
+  // >>> START  _AddCarNumberState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     LocationProvider locationProvider = Provider.of<LocationProvider>(context);
@@ -158,7 +177,7 @@ class _AddCarNumberState extends State<AddCarNumber> {
     LatLng dropLatLng;
     // Create LatLng objects for pickup and drop coordinates
     LatLng pickupLatLng = LatLng(double.parse(pickupLatitude), double.parse(pickupLongitude));
-    if (dropLatitude != null && dropLatitude.isNotEmpty && dropLongitude != null && dropLongitude.isNotEmpty) {
+    if (dropLatitude.isNotEmpty && dropLongitude.isNotEmpty) {
       dropLatLng = LatLng(double.parse(dropLatitude), double.parse(dropLongitude));
 
       markers.add(
@@ -193,20 +212,18 @@ class _AddCarNumberState extends State<AddCarNumber> {
         ),
       );
     }
-    final TextEditingController _reletivenameController = TextEditingController();
     return Scaffold(
       backgroundColor: tBackground,
       body: Container(
-        child: WillPopScope(
-          onWillPop: () {
-            return Twl.navigateBack(context);
+        child: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.navigateBack(context);
           },
           child: Stack(
             children: [
               GoogleMap(
-                onMapCreated: (controller) {
-                  _mapController = controller;
-                },
                 initialCameraPosition: CameraPosition(
                   target: pickupLatLng,
                   zoom: 12.0,
@@ -327,9 +344,7 @@ class _AddCarNumberState extends State<AddCarNumber> {
                                                       Spacer(),
                                                       GestureDetector(
                                                         onTap: () {
-                                                          launch(
-                                                            "tel://" + widget.bookingDetails['user_details']['contact_no'].toString(),
-                                                          );
+                                                          launchUrl(Uri.parse("tel://" + widget.bookingDetails['user_details']['contact_no'].toString()));
                                                         },
                                                         child: Container(
                                                             padding: EdgeInsets.all(10.0),
@@ -404,11 +419,10 @@ class _AddCarNumberState extends State<AddCarNumber> {
                                                     print(param);
                                                     var res = await RideBookingsApi().getStartRideAPi(context, param);
                                                     if (res != null && res['status'] == 'OK') {
-                                                      //here Data will store in firebase and starts rendering
                                                       locationProvider.startLocationUpdates(widget.bookingDetails);
                                                       Twl.forceNavigateTo(context, CompleteRide(bookingDetails: widget.bookingDetails));
                                                     } else {
-                                                      Twl.createAlert(context, 'Oops', res['error'].toString());
+                                                      Twl.createAlert(context, 'Oops', (res is Map && res['error'] != null) ? res['error'].toString() : 'Could not start the ride. Please try again.');
                                                     }
 
                                                     stopLoading();
@@ -438,4 +452,6 @@ class _AddCarNumberState extends State<AddCarNumber> {
       ),
     );
   }
+  // <<< END    _AddCarNumberState.build()
 }
+// <<< END    class _AddCarNumberState

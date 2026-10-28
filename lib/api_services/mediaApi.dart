@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------
+// Photo / document upload
+//
+// Sends one picture (selfie, car photo, licence...) to the Rubia server and
+// gets back the web address where it is stored on the Rubia server.
+//
+// Developer note: POST media/upload with the auth_code header; the returned
+// URL goes in the existing form field.
+// ----------------------------------------------------------------------
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,12 +15,14 @@ import 'package:base_project_flutter/constants/apiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class MediaApi
 /// Uploads images/PDFs to the backend's own storage (`POST media/upload`),
-/// replacing Firebase Storage. The returned `url` is posted in the same
-/// fields that used to receive the Firebase download URL.
+/// on the Rubia server itself. The returned `url` is posted in the same
+/// form fields that carry image addresses (profile_image, documents ...).
 ///
 /// Server accepts JPEG/PNG/WebP/GIF/PDF, max ~4 MB by default.
 class MediaApi {
+  // >>> START  MediaApi.upload()
   /// Returns the stored file's URL, or null if the upload failed.
   static Future<String?> upload(File file) async {
     try {
@@ -45,4 +56,6 @@ class MediaApi {
     }
     return null;
   }
+  // <<< END    MediaApi.upload()
 }
+// <<< END    class MediaApi

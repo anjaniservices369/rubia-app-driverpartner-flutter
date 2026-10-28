@@ -1,8 +1,16 @@
+// ----------------------------------------------------------------------
+// Transaction history filter sheet
+//
+// Bottom sheet to filter wallet transactions by today / yesterday / week /
+// custom dates.
+//
+// Developer note: Imported as HistoryBottomSheet.dart by
+// wallet/transactiondetails.dart (file name case differs).
+// ----------------------------------------------------------------------
 // ignore_for_file: override_on_non_overriding_member
 
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/wallet/pickCustomDate.dart';
-import 'package:base_project_flutter/views/wallet/walletpage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +21,7 @@ import '../../../constants/constants.dart';
 import '../../../providers/earningsProvider.dart';
 import '../../../responsive.dart';
 
+// >>> START  class HistoryBottomSheet
 class HistoryBottomSheet extends StatefulWidget {
   const HistoryBottomSheet({Key? key, this.walletTranscation})
       : super(key: key);
@@ -21,13 +30,16 @@ class HistoryBottomSheet extends StatefulWidget {
   @override
   State<HistoryBottomSheet> createState() => _HistoryBottomSheetState();
 }
+// <<< END    class HistoryBottomSheet
 
+// >>> START  class _HistoryBottomSheetState
 class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
   String filterValue = "Today";
 
   @override
   List<String> searchlist = ['Today', 'yesterday', 'Last Week', 'Custom'];
   var dayslist;
+  // >>> START  _HistoryBottomSheetState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
     return Consumer<EarningsProvider>(builder: (context, provider, _) {
       return Padding(
@@ -169,7 +181,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
                         sharedPreferences.setString(
                             'filteredValue', 'Last 7 Days');
 
-                        var now = new DateTime.now();
                         var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                         String endDate = formatter
                             .format(DateTime.now().add(Duration(days: 1)));
@@ -218,7 +229,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
                             return Container();
                           },
                           transitionBuilder: (ctx, a1, a2, child) {
-                            var curve = Curves.easeInOut.transform(a1.value);
                             return PickCustomDate(
                               filterValue: filterValue,
                             );
@@ -236,4 +246,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
       );
     });
   }
+  // <<< END    _HistoryBottomSheetState.build()
 }
+// <<< END    class _HistoryBottomSheetState

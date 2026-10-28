@@ -78,7 +78,7 @@ class AndroidSettings extends LocatorSettings {
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON:
           androidNotificationSettings.notificationIcon,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR:
-          androidNotificationSettings.notificationIconColor.value,
+          androidNotificationSettings.notificationIconColor.toARGB32(),
       Keys.SETTINGS_ANDROID_LOCATION_CLIENT: client.index
     };
   }

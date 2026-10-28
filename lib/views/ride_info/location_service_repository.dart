@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Background locator storage
+//
+// Stores location updates received from the background plugin.
+// ----------------------------------------------------------------------
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:math';
@@ -7,19 +12,23 @@ import 'package:background_locator_2/location_dto.dart';
 
 import 'file_manager.dart';
 
+// >>> START  class LocationServiceRepository
 class LocationServiceRepository {
   static LocationServiceRepository _instance = LocationServiceRepository._();
 
   LocationServiceRepository._();
 
+  // >>> START  LocationServiceRepository.LocationServiceRepository()  -  constructor (receives the values this class needs)
   factory LocationServiceRepository() {
     return _instance;
   }
+  // <<< END    LocationServiceRepository.LocationServiceRepository()
 
   static const String isolateName = 'LocatorIsolate';
 
   int _count = -1;
 
+  // >>> START  LocationServiceRepository.init()
   Future<void> init(Map<dynamic, dynamic> params) async {
     //TODO change logs
     print("***********Init callback handler");
@@ -42,7 +51,9 @@ class LocationServiceRepository {
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
+  // <<< END    LocationServiceRepository.init()
 
+  // >>> START  LocationServiceRepository.dispose()  -  cleanup when the screen closes
   Future<void> dispose() async {
     print("***********Dispose callback handler");
     print("$_count");
@@ -50,7 +61,9 @@ class LocationServiceRepository {
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
+  // <<< END    LocationServiceRepository.dispose()
 
+  // >>> START  LocationServiceRepository.callback()
   Future<void> callback(LocationDto locationDto) async {
     print('$_count location in dart: ${locationDto.toString()}');
     await setLogPosition(_count, locationDto);
@@ -58,11 +71,14 @@ class LocationServiceRepository {
     send?.send(locationDto.toJson());
     _count++;
   }
+  // <<< END    LocationServiceRepository.callback()
 
+  // >>> START  LocationServiceRepository.setLogLabel()  -  set log label
   static Future<void> setLogLabel(String label) async {
     final date = DateTime.now();
     await FileManager.writeToLogFile('------------\n$label: ${formatDateLog(date)}\n------------\n');
   }
+  // <<< END    LocationServiceRepository.setLogLabel()
 
   // static List<Map<String, double>> logPositions = [];
   // static Future<void> setLogPosition(int count, LocationDto data) async {
@@ -81,8 +97,8 @@ class LocationServiceRepository {
   // }
   static List<Map<String, String>> logPositions = [];
 
+  // >>> START  LocationServiceRepository.setLogPosition()  -  set log position
   static Future<void> setLogPosition(int count, LocationDto data) async {
-    final date = DateTime.now();
     // logPositions.add({
     //   "lat": data.latitude.toString(),
     //   "lng": data.longitude.toString(),
@@ -97,17 +113,25 @@ class LocationServiceRepository {
     print("last value >>>>" + logText.toString());
     await FileManager.writeToLogFile(logText);
   }
+  // <<< END    LocationServiceRepository.setLogPosition()
 
+  // >>> START  LocationServiceRepository.dp()
   static double dp(double val, int places) {
     num mod = pow(10.0, places);
     return ((val * mod).round().toDouble() / mod);
   }
+  // <<< END    LocationServiceRepository.dp()
 
+  // >>> START  LocationServiceRepository.formatDateLog()  -  format date log
   static String formatDateLog(DateTime date) {
     return date.hour.toString() + ":" + date.minute.toString() + ":" + date.second.toString();
   }
+  // <<< END    LocationServiceRepository.formatDateLog()
 
+  // >>> START  LocationServiceRepository.formatLog()  -  format log
   static String formatLog(LocationDto locationDto) {
     return dp(locationDto.latitude, 4).toString() + " " + dp(locationDto.longitude, 4).toString();
   }
+  // <<< END    LocationServiceRepository.formatLog()
 }
+// <<< END    class LocationServiceRepository

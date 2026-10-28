@@ -1,11 +1,19 @@
+// ----------------------------------------------------------------------
+// Theme (day / night)
+//
+// Remembers whether the app uses day or night colours.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
+// >>> START  class ThemeProvider
+/// Holds the day / night colour choice.
 class ThemeProvider with ChangeNotifier {
   bool _swithValue = false;
 
   bool get swithValue => _swithValue;
+  // >>> START  ThemeProvider.setDayMode()  -  set day mode
   void setDayMode(value) async {
     ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: tWhite);
     // tPrimaryColor = Color(0XFFFB6E1F);
@@ -19,6 +27,7 @@ class ThemeProvider with ChangeNotifier {
     // tOrange =Color(0XFF6B0BE4);
     notifyListeners();
   }
+  // <<< END    ThemeProvider.setDayMode()
 
   ThemeData lightTheme =
       ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: tWhite);
@@ -34,6 +43,7 @@ class ThemeProvider with ChangeNotifier {
         bodyMedium: TextStyle(color: Colors.white),
         titleMedium: TextStyle(color: Colors.white),
       ));
+  // >>> START  ThemeProvider.setNightMode()  -  set night mode
   void setNightMode(value) async {
     darkTheme;
 
@@ -45,4 +55,6 @@ class ThemeProvider with ChangeNotifier {
     _swithValue = value;
     notifyListeners();
   }
+  // <<< END    ThemeProvider.setNightMode()
 }
+// <<< END    class ThemeProvider

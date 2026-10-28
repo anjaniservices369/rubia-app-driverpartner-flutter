@@ -1,34 +1,33 @@
-import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
+// ----------------------------------------------------------------------
+// Available rides list
+//
+// Rides offered to this driver, with a summary card and 'view details'.
+//
+// Developer note: Calls driver/bookings with status=1.
+// ----------------------------------------------------------------------
+import 'package:base_project_flutter/api_services/newBookingAlert.dart';
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/views/bookingsPage/componats/AcceptedRideDetails.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/profilePage/earnings/componants/rideinfo.dart';
 import 'package:base_project_flutter/views/profilePage/subscription/subscription.dart';
-import 'package:base_project_flutter/views/ride_info/car_picture/driverUploadSelfie.dart';
-import 'package:base_project_flutter/views/ride_info/ride_info.dart';
 import 'package:flutter/material.dart';
+import 'package:base_project_flutter/globalWidgets/viewDetailsButton.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:badges/badges.dart';
-import 'package:badges/badges.dart' as badges;
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
 import '../../profile_review/profile_block.dart';
-import '../../profile_review/profile_review.dart';
-import 'estimated_fare.dart';
-import 'package:geolocator/geolocator.dart';
-import 'dart:math' show cos, sqrt, asin, pi, sin, pow;
 
+// >>> START  class AvalableRide
 class AvalableRide extends StatefulWidget {
 
   const AvalableRide({
@@ -42,7 +41,9 @@ class AvalableRide extends StatefulWidget {
   @override
   State<AvalableRide> createState() => _AvalableRideState();
 }
+// <<< END    class AvalableRide
 
+// >>> START  class _AvalableRideState
 class _AvalableRideState extends State<AvalableRide> {
   late final BottomNavigation bottomNavigation;
   ScrollController _scrollController = ScrollController();
@@ -62,6 +63,7 @@ class _AvalableRideState extends State<AvalableRide> {
 
   late Duration difference = d1.difference(d2);
 
+  // >>> START  _AvalableRideState.parseDate()  -  parse date
   DateTime parseDate(String dateString) {
     List<String> parts = dateString.split('-');
     int year = int.parse(parts[0]);
@@ -70,7 +72,9 @@ class _AvalableRideState extends State<AvalableRide> {
     DateTime parsedDate = DateTime(year, month, day, 23, 59, 59);
     return parsedDate;
   }
+  // <<< END    _AvalableRideState.parseDate()
 
+  // >>> START  _AvalableRideState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     _scrollController.addListener(_scrollListener);
@@ -81,16 +85,39 @@ class _AvalableRideState extends State<AvalableRide> {
       bottomNavigation = BottomNavigation();
       fetchCheckDetails();
       fetchBookings();
+      NewBookingAlert.changes.addListener(_reloadForNewBookings);
     }
   }
+  // <<< END    _AvalableRideState.initState()
 
+  // >>> START  _AvalableRideState._reloadForNewBookings()  -  reload for new bookings
+  // New, taken or expired offers: start the list again from page 0.
+  void _reloadForNewBookings() {
+    // Only the Available tab (status 1) follows the live offers.
+    if (!mounted || widget.status.toString() != '1') return;
+    // A load is already running: try again in a moment instead of dropping it.
+    if (isLoading) {
+      Future.delayed(const Duration(seconds: 1), _reloadForNewBookings);
+      return;
+    }
+    page = 0;
+    bookingsData = [];
+    bookingsFilterData = [];
+    fetchBookings();
+  }
+  // <<< END    _AvalableRideState._reloadForNewBookings()
+
+  // >>> START  _AvalableRideState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
+    NewBookingAlert.changes.removeListener(_reloadForNewBookings);
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _AvalableRideState.dispose()
 
+  // >>> START  _AvalableRideState._scrollListener()  -  scroll listener
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -100,8 +127,10 @@ class _AvalableRideState extends State<AvalableRide> {
       }
     }
   }
+  // <<< END    _AvalableRideState._scrollListener()
 
   List<dynamic> bookingsFilterData = [];
+  // >>> START  _AvalableRideState.fetchBookings()  -  fetch bookings
   Future<void> fetchBookings() async {
     setState(() {
       isLoading = true;
@@ -111,24 +140,11 @@ class _AvalableRideState extends State<AvalableRide> {
       dynamic data = await RideBookingsApi().fetchBookingsList(
           context, page.toString(), widget.status.toString());
 
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      print(position.latitude);
-
+      // Which drivers see a booking is decided by the server: every online driver within the radius set in the
+      // admin dashboard. Each booking carries the driver's distance and travel time to the customer.
       for (var bdata in data['details']) {
-        double distanceInMeters = Geolocator.distanceBetween(
-            position.latitude,
-            position.longitude,
-            double.parse(bdata['pickup_latitude']),
-            double.parse(bdata['pickup_longitude']));
-        print("*******************");
-        double distanceInKms = distanceInMeters / 1000;
-        print(distanceInKms);
-        if (distanceInKms < MAX_DISTANCE) {
-          bookingsFilterData.add(bdata);
-        }
+        bookingsFilterData.add(bdata);
       }
-
       print(bookingsFilterData);
       final List<dynamic> newBookings = bookingsFilterData;
       print('newBookings>>>>>>>>>>>>>');
@@ -152,11 +168,13 @@ class _AvalableRideState extends State<AvalableRide> {
       });
     }
   }
+  // <<< END    _AvalableRideState.fetchBookings()
 
 
 
   var checkDetails;
   var resNok;
+  // >>> START  _AvalableRideState.fetchCheckDetails()  -  fetch check details
   fetchCheckDetails() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var checkRes = await UserAPI().checkApi(pref.getString('authCode')!);
@@ -196,10 +214,13 @@ class _AvalableRideState extends State<AvalableRide> {
       });
     }
   }
+  // <<< END    _AvalableRideState.fetchCheckDetails()
 
+  // >>> START  _AvalableRideState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
+    // Keep rebuilding this widget when HomePageProvider changes.
+    context.watch<HomePageProvider>();
     return isLoading ?
     Scaffold(
       body: Center(
@@ -279,22 +300,17 @@ class _AvalableRideState extends State<AvalableRide> {
                 double? usageHours = double.parse(booking['usage_hours']);
 
                 String usageText;
-                if (usageHours != null) {
-                  if (usageHours >= 1) {
-                    int wholeHours = usageHours.toInt();
-                    int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-                    if (wholeMinutes > 0) {
-                      usageText = '$wholeHours hrs $wholeMinutes mins usage';
-                    } else {
-                      usageText = '$wholeHours hrs usage';
-                    }
+                if (usageHours >= 1) {
+                  int wholeHours = usageHours.toInt();
+                  int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+                  if (wholeMinutes > 0) {
+                    usageText = '$wholeHours hrs $wholeMinutes mins usage';
                   } else {
-                    int usageMinutes = (usageHours * 60).toInt();
-                    usageText = '$usageMinutes mins usage';
+                    usageText = '$wholeHours hrs usage';
                   }
                 } else {
-                  usageText =
-                  'Usage hours not available'; // Handle the case where 'usage_hours' is null
+                  int usageMinutes = (usageHours * 60).toInt();
+                  usageText = '$usageMinutes mins usage';
                 }
 
 
@@ -571,14 +587,27 @@ class _AvalableRideState extends State<AvalableRide> {
                                     SizedBox(
                                       height: 1.h,
                                     ),
-                                    Text(
-                                      'Click here to view more details --->>>',
-                                      style: GoogleFonts.mulish(
-                                        color: tPrimaryColor,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: isTab(context) ? 9.sp : 11.sp,
+                                    // How far the customer is from this driver and how long it takes to get there.
+                                    if (booking['distance_to_pickup_km'] != null)
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 1.h),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.near_me, size: 16, color: tPrimaryColor),
+                                            SizedBox(width: 1.w),
+                                            Text(
+                                              '${booking['distance_to_pickup_km']} km from you  |  about ${booking['eta_to_pickup_min']} min to reach',
+                                              style: GoogleFonts.mulish(
+                                                color: tBlack,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: isTab(context) ? 9.sp : 11.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    const ViewDetailsButton(),
                                     SizedBox(
                                       height: 2.h,
                                     ),
@@ -639,7 +668,9 @@ class _AvalableRideState extends State<AvalableRide> {
                 ],
               );
     }
+  // <<< END    _AvalableRideState.build()
 
+  // >>> START  _AvalableRideState.goOnlinealert()  -  go onlinealert
   void goOnlinealert() {
     showDialog(
       context: context,
@@ -683,6 +714,8 @@ class _AvalableRideState extends State<AvalableRide> {
       },
     );
   }
+  // <<< END    _AvalableRideState.goOnlinealert()
 
   }
+// <<< END    class _AvalableRideState
 

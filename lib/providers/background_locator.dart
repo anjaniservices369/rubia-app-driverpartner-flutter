@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Background locator state
+//
+// Starts/stops the background location plugin and checks permission.
+// ----------------------------------------------------------------------
 import 'package:background_locator_2/background_locator.dart';
 import 'package:background_locator_2/settings/android_settings.dart';
 import 'package:background_locator_2/settings/ios_settings.dart';
@@ -7,18 +12,22 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:location_permissions/location_permissions.dart' as locPermission;
 import '../views/ride_info/location_callback_handler.dart';
 
+// >>> START  class BackgroundLocationProvider
 class BackgroundLocationProvider with ChangeNotifier {
   bool isRunning = false;
   // LocationPermissionStatus permissionStatus = LocationPermissionStatus.denied;
   PermissionStatus permissionStatus = PermissionStatus.denied;
 
+  // >>> START  BackgroundLocationProvider.onStop()  -  on stop
   Future<void> onStop() async {
     await BackgroundLocator.unRegisterLocationUpdate();
     final _isRunning = await BackgroundLocator.isServiceRunning();
     isRunning = _isRunning;
     notifyListeners();
   }
+  // <<< END    BackgroundLocationProvider.onStop()
 
+  // >>> START  BackgroundLocationProvider.onStart()  -  on start
   Future<bool> onStart() async {
     permissionStatus = (await checkLocationPermission()) as PermissionStatus;
 
@@ -32,8 +41,9 @@ class BackgroundLocationProvider with ChangeNotifier {
       return false;
     }
   }
+  // <<< END    BackgroundLocationProvider.onStart()
 
-  late final Permission _permission;
+  // >>> START  BackgroundLocationProvider.checkLocationPermission()  -  check location permission
   Future<bool> checkLocationPermission() async {
     // final access = await LocationPermissions().checkPermissionStatus();
     var access = await Permission.locationAlways.status;
@@ -68,8 +78,11 @@ class BackgroundLocationProvider with ChangeNotifier {
       }
     }
   }
+  // <<< END    BackgroundLocationProvider.checkLocationPermission()
 }
+// <<< END    class BackgroundLocationProvider
 
+// >>> START  startLocator()  -  start locator
 Future<void> startLocator() async {
   Map<String, dynamic> data = {'countInit': 1};
   await BackgroundLocator.registerLocationUpdate(
@@ -102,3 +115,4 @@ Future<void> startLocator() async {
     ),
   );
 }
+// <<< END    startLocator()

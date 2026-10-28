@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Amount to collect card
+//
+// Shows the amount and View Bill button.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -7,8 +12,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../responsive.dart';
-import '../../../globalWidgets/button.dart';
 
+// >>> START  class CollectAmountCard
 class CollectAmountCard extends StatefulWidget {
   const CollectAmountCard({
     Key? key,
@@ -17,8 +22,11 @@ class CollectAmountCard extends StatefulWidget {
   @override
   State<CollectAmountCard> createState() => _CollectAmountCardState();
 }
+// <<< END    class CollectAmountCard
 
+// >>> START  class _CollectAmountCardState
 class _CollectAmountCardState extends State<CollectAmountCard> {
+  // >>> START  _CollectAmountCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -83,4 +91,6 @@ class _CollectAmountCardState extends State<CollectAmountCard> {
       ),
     );
   }
+  // <<< END    _CollectAmountCardState.build()
 }
+// <<< END    class _CollectAmountCardState

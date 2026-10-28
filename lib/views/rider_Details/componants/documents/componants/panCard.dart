@@ -1,15 +1,15 @@
-import 'dart:io';
+// ----------------------------------------------------------------------
+// Document: PAN card
+//
+// Photo of the PAN card.
+// ----------------------------------------------------------------------
 
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../../constants/constants.dart';
 import '../../../../../globalFuctions/globalFunctions.dart';
@@ -20,6 +20,7 @@ import '../../../../../globalWidgets/textfildcustom.dart';
 import '../../../../../responsive.dart';
 import '../documents.dart';
 
+// >>> START  class PanCard
 class PanCard extends StatefulWidget {
   const PanCard({Key? key, this.chasisNumber}) : super(key: key);
   final chasisNumber;
@@ -27,11 +28,14 @@ class PanCard extends StatefulWidget {
   @override
   State<PanCard> createState() => _PanCardState();
 }
+// <<< END    class PanCard
 
+// >>> START  class _PanCardState
 class _PanCardState extends State<PanCard> {
   TextEditingController _panNumberController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
 
+  // >>> START  _PanCardState.panValidate()  -  pan validate
   String? panValidate(String value) {
     String p = "[A-Z]{5}[0-9]{4}[A-Z]{1}";
 
@@ -45,9 +49,11 @@ class _PanCardState extends State<PanCard> {
 
     // return regExp.hasMatch(em);
   }
+  // <<< END    _PanCardState.panValidate()
 
   var panImg;
   bool panImgLoading = false;
+  // >>> START  _PanCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,4 +328,6 @@ class _PanCardState extends State<PanCard> {
       ),
     );
   }
+  // <<< END    _PanCardState.build()
 }
+// <<< END    class _PanCardState

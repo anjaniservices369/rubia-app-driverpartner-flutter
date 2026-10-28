@@ -1,19 +1,16 @@
-import 'dart:io';
+// ----------------------------------------------------------------------
+// Before ride: driver selfie
+//
+// Selfie next to the car number plate before starting.
+// ----------------------------------------------------------------------
 
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
-import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../constants/constants.dart';
@@ -22,20 +19,23 @@ import '../../../globalFuctions/globalFunctions.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../responsive.dart';
-import '../carNumberadd.dart';
 import 'all_car_sides_pictures.dart';
 
+// >>> START  class DriverUploadSelfie
 class DriverUploadSelfie extends StatefulWidget {
   const DriverUploadSelfie({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<DriverUploadSelfie> createState() => _DriverUploadSelfieState();
 }
+// <<< END    class DriverUploadSelfie
 
+// >>> START  class _DriverUploadSelfieState
 class _DriverUploadSelfieState extends State<DriverUploadSelfie> {
   var selfeImage;
   bool isLoading = false;
 
+  // >>> START  _DriverUploadSelfieState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
@@ -51,9 +51,11 @@ class _DriverUploadSelfieState extends State<DriverUploadSelfie> {
         ),
         centerTitle: false,
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.navigateBack(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.navigateBack(context);
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: tDefaultPadding),
@@ -227,43 +229,34 @@ class _DriverUploadSelfieState extends State<DriverUploadSelfie> {
                           _storedData.rideDetailImagesList.clear();
                           String imageUrl = await Twl().uploadImage();
 
-                          if (imageUrl != null) {
-                            print('Uploaded image URL: $imageUrl');
-                            setState(() {
-                              selfeImage = imageUrl;
-                              isLoading = false;
-                              stopLoading();
-                            });
-                            if (_storedData.rideDetailImagesList.contains({
+                          print('Uploaded image URL: $imageUrl');
+                          setState(() {
+                            selfeImage = imageUrl;
+                            isLoading = false;
+                            stopLoading();
+                          });
+                          if (_storedData.rideDetailImagesList.contains({
+                            "booking_id": widget.bookingDetails['id'].toString(),
+                            "image": selfeImage,
+                            "image_type": image_type_selfie.toString(),
+                            "type": type_before_ride.toString()
+                          })) {
+                            _storedData.rideDetailImagesList.remove({
                               "booking_id": widget.bookingDetails['id'].toString(),
                               "image": selfeImage,
                               "image_type": image_type_selfie.toString(),
                               "type": type_before_ride.toString()
-                            })) {
-                              _storedData.rideDetailImagesList.remove({
-                                "booking_id": widget.bookingDetails['id'].toString(),
-                                "image": selfeImage,
-                                "image_type": image_type_selfie.toString(),
-                                "type": type_before_ride.toString()
-                              });
-                            } else {
-                              _storedData.rideDetailImagesList.add({
-                                "booking_id": widget.bookingDetails['id'].toString(),
-                                "image": selfeImage,
-                                "image_type": image_type_selfie.toString(),
-                                "type": type_before_ride.toString()
-                              });
-                            }
-
-                            print(_storedData.rideDetailImagesList.toString());
+                            });
                           } else {
-                            print('Image upload failed or no image selected.');
-                            setState(() {
-                              selfeImage = null;
-                              isLoading = false;
-                              stopLoading();
+                            _storedData.rideDetailImagesList.add({
+                              "booking_id": widget.bookingDetails['id'].toString(),
+                              "image": selfeImage,
+                              "image_type": image_type_selfie.toString(),
+                              "type": type_before_ride.toString()
                             });
                           }
+
+                          print(_storedData.rideDetailImagesList.toString());
                         }
                       : (startLoading, stopLoading, btnState) async {
                           startLoading();
@@ -279,4 +272,6 @@ class _DriverUploadSelfieState extends State<DriverUploadSelfie> {
       ),
     );
   }
+  // <<< END    _DriverUploadSelfieState.build()
 }
+// <<< END    class _DriverUploadSelfieState

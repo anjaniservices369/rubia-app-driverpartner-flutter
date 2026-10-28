@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------
+// Ride screen - customer OTP
+//
+// The driver asks the customer for their 4-digit ride code and enters it;
+// this confirms pickup and starts the trip checks.
+//
+// Developer note: Calls driver/arrived-location; on success starts the
+// BackgroundService (location FGS).
+// ----------------------------------------------------------------------
 import 'dart:developer';
 
 import 'package:base_project_flutter/background_services/background_services.dart';
@@ -12,7 +21,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../globalFuctions/globalFunctions.dart';
@@ -20,33 +28,33 @@ import '../../../../../responsive.dart';
 import '../../api_services/rideBookingsApi.dart';
 import '../../globalWidgets/button.dart';
 import '../../providers/background_locator.dart';
-import '../odometer/starting_odometer_details.dart';
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 import 'package:background_locator_2/background_locator.dart';
 import 'package:background_locator_2/location_dto.dart';
-import 'package:background_locator_2/settings/android_settings.dart';
-import 'package:background_locator_2/settings/ios_settings.dart';
 import 'package:location_permissions/location_permissions.dart'
 as locPermission;
-import 'location_callback_handler.dart';
 import 'location_service_repository.dart';
 import 'file_manager.dart';
 
+// >>> START  class OtpDetailCard
 class OtpDetailCard extends StatefulWidget {
   const OtpDetailCard({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<OtpDetailCard> createState() => _OtpDetailCardState();
 }
+// <<< END    class OtpDetailCard
 
+// >>> START  class _OtpDetailCardState
 class _OtpDetailCardState extends State<OtpDetailCard> {
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _otpCodeController = TextEditingController();
   var flag = null;
 
 
+  // >>> START  _OtpDetailCardState.notifyArrivedLocation()  -  notify arrived location
   notifyArrivedLocation() async {
     var res = await RideBookingsApi().notifyArrivedLocation(context, widget.bookingDetails['id'].toString());
     if (res != null && res['status'] == 'OK') {
@@ -62,6 +70,7 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       });
     }
   }
+  // <<< END    _OtpDetailCardState.notifyArrivedLocation()
 
   // Future<void> initLocationService() async {
   //   await BackgroundLocation.startLocationService();
@@ -80,6 +89,7 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
   //bg service
   late BackgroundService backgroundService;
 
+  // >>> START  _OtpDetailCardState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
@@ -111,12 +121,16 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       print('Error: $e');
     }
   }
+  // <<< END    _OtpDetailCardState.initState()
 
+  // >>> START  _OtpDetailCardState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     super.dispose();
   }
+  // <<< END    _OtpDetailCardState.dispose()
 
+  // >>> START  _OtpDetailCardState.updateUI()  -  update ui
   Future<void> updateUI(dynamic data) async {
 
     final log = await FileManager.readLogFile();
@@ -134,18 +148,18 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
         logStr = log;
       });
   }
+  // <<< END    _OtpDetailCardState.updateUI()
 
+  // >>> START  _OtpDetailCardState._updateNotificationText()  -  update notification text
   Future<void> _updateNotificationText(LocationDto data) async {
-    if (data == null) {
-      return;
-    }
-
     await BackgroundLocator.updateNotificationText(
         title: "new location received",
         msg: "${DateTime.now()}",
         bigMsg: "${data.latitude}, ${data.longitude}");
   }
+  // <<< END    _OtpDetailCardState._updateNotificationText()
 
+  // >>> START  _OtpDetailCardState.initPlatformState()  -  init platform state
   Future<void> initPlatformState() async {
     print('Initializing...');
 
@@ -158,9 +172,11 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     });
     print('Running ${isRunning.toString()}');
   }
+  // <<< END    _OtpDetailCardState.initPlatformState()
 
   final FlutterLocalNotificationsPlugin f = FlutterLocalNotificationsPlugin();
 
+  // >>> START  _OtpDetailCardState.pragma()
   @pragma('vm:entry-point')
   @override
   Future<void> didChangeDependencies() async {
@@ -208,8 +224,10 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       }
     });
   }
+  // <<< END    _OtpDetailCardState.pragma()
 
   bool hasError = false;
+  // >>> START  _OtpDetailCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     // List<dynamic> locationData = [];
@@ -217,12 +235,14 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     // print("Array converted ");
     // print(locationData.toString());
     final homePageProvider = Provider.of<HomePageProvider>(context);
-    BackgroundLocationProvider _data =
-    Provider.of<BackgroundLocationProvider>(context);
+    // Keep rebuilding this widget when BackgroundLocationProvider changes.
+    context.watch<BackgroundLocationProvider>();
     return Container(
-      child: WillPopScope(
-        onWillPop: () {
-          return Twl.navigateBack(context);
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.navigateBack(context);
         },
         child: Stack(
           children: [
@@ -325,13 +345,11 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () {
-                                                launch(
-                                                  "tel://" +
+                                                launchUrl(Uri.parse("tel://" +
                                                       widget.bookingDetails[
                                                       'user_details']
                                                       ['contact_no']
-                                                          .toString(),
-                                                );
+                                                          .toString()));
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -530,7 +548,9 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       ),
     );
   }
+  // <<< END    _OtpDetailCardState.build()
 
+  // >>> START  _OtpDetailCardState.onStop()  -  on stop
   void onStop() async {
     await BackgroundLocator.unRegisterLocationUpdate();
     final _isRunning = await BackgroundLocator.isServiceRunning();
@@ -538,7 +558,9 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       isRunning = _isRunning;
     });
   }
+  // <<< END    _OtpDetailCardState.onStop()
 
+  // >>> START  _OtpDetailCardState._onStart()  -  on start
 // this is function to backgrpung locater
   Future<bool> _onStart() async {
     if (await _checkLocationPermission()) {
@@ -556,8 +578,9 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
       return false;
     }
   }
+  // <<< END    _OtpDetailCardState._onStart()
 
-  late final Permission _permission;
+  // >>> START  _OtpDetailCardState._checkLocationPermission()  -  check location permission
   Future<bool> _checkLocationPermission() async {
     // final access = await LocationPermissions().checkPermissionStatus();
     var access = await Permission.locationAlways.status;
@@ -632,6 +655,7 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
     //     break;
     // }
   }
+  // <<< END    _OtpDetailCardState._checkLocationPermission()
 
 // Future<void> _startLocator() async {
 //   Map<String, dynamic> data = {'countInit': 1};
@@ -663,7 +687,9 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
 //                   LocationCallbackHandler.notificationCallback)));
 // }
 }
+// <<< END    class _OtpDetailCardState
 
+// >>> START  class CustomOtpPinwidget
 class CustomOtpPinwidget extends StatelessWidget {
   const CustomOtpPinwidget(
       {Key? key,
@@ -684,11 +710,11 @@ class CustomOtpPinwidget extends StatelessWidget {
   final fieldWidth;
   final inactiveColor;
 
+  // >>> START  CustomOtpPinwidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     final TextEditingController _otpCodeController = TextEditingController();
 
-    bool hasError = false;
     return PinCodeTextField(
       textStyle: TextStyle(
           color: tBlack,
@@ -756,16 +782,22 @@ class CustomOtpPinwidget extends StatelessWidget {
       },
     );
   }
+  // <<< END    CustomOtpPinwidget.build()
 }
+// <<< END    class CustomOtpPinwidget
 
+// >>> START  class OrderIdCard
 class OrderIdCard extends StatefulWidget {
   const OrderIdCard({Key? key}) : super(key: key);
 
   @override
   State<OrderIdCard> createState() => _OrderIdCardState();
 }
+// <<< END    class OrderIdCard
 
+// >>> START  class _OrderIdCardState
 class _OrderIdCardState extends State<OrderIdCard> {
+  // >>> START  _OrderIdCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -834,4 +866,6 @@ class _OrderIdCardState extends State<OrderIdCard> {
       ],
     );
   }
+  // <<< END    _OrderIdCardState.build()
 }
+// <<< END    class _OrderIdCardState

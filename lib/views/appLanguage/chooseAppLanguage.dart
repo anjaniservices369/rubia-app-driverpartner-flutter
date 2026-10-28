@@ -1,12 +1,17 @@
+// ----------------------------------------------------------------------
+// Choose language (first run)
+//
+// First screen of a new install: the driver picks the app language.
+//
+// Developer note: Only English, Hindi and Telugu (tl) are offered; they are the
+// languages with translations. See _offeredLanguageIndexes.
+// ----------------------------------------------------------------------
 // import 'package:base_project_flutter/views/bottomNavigation/bottomNavigation.dart';
-import 'package:base_project_flutter/views/profilePage/profilePage.dart';
 import 'package:base_project_flutter/views/rider_Details/componants/personal_Details.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,13 +19,12 @@ import '../../constants/constants.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
-import '../../providers/bookingProvider.dart';
 import '../../responsive.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
 import '../rider_details/add_Details.dart';
 
+// >>> START  class ChooseAppLanguageView
 class ChooseAppLanguageView extends StatefulWidget {
-  @override
   const ChooseAppLanguageView({
     Key? key,
     this.isReferalPage,
@@ -28,15 +32,20 @@ class ChooseAppLanguageView extends StatefulWidget {
   final isReferalPage;
   State<ChooseAppLanguageView> createState() => _ChooseAppLanguageViewState();
 }
+// <<< END    class ChooseAppLanguageView
 
+// >>> START  class Fruit
 enum Fruit { English, Hindi, Kannada, Telugu, Tamil, Gujarati }
+// <<< END    class Fruit
 
+// >>> START  class _ChooseAppLanguageViewState
 class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
   Fruit? _fruit = Fruit.English;
 
   bool isChecked = false;
   bool hasError = false;
   var resultHolder = 'Checkbox is UN-CHECKED';
+  // >>> START  _ChooseAppLanguageViewState.toggleCheckbox()  -  toggle checkbox
   void toggleCheckbox(bool value) {
     if (isChecked == false) {
       setState(() {
@@ -50,8 +59,13 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
       });
     }
   }
+  // <<< END    _ChooseAppLanguageViewState.toggleCheckbox()
 
-  @override
+  /// Positions (in the lists below) of the languages that really have translations in
+  /// translate.dart: 0 English, 1 Hindi, 3 Telugu. Add 2 (Kannada), 4 (Tamil) or 5
+  /// (Gujarati) back here once their translations exist.
+  final List<int> _offeredLanguageIndexes = [0, 1, 3];
+
   List<String> language = [
     'english'.tr,
     'hindi'.tr,
@@ -69,13 +83,16 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
     'સુપ્રભાત'.tr,
   ];
 
+  // >>> START  _ChooseAppLanguageViewState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     getAppLang();
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _ChooseAppLanguageViewState.initState()
 
+  // >>> START  _ChooseAppLanguageViewState.getAppLang()  -  get app lang
   getAppLang() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -96,16 +113,15 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
         case 'gu_in':
           lang = 5;
           break;
-        case 'gu_in':
-          lang = 5;
-          break;
         default:
           lang = 0;
       }
     });
   }
+  // <<< END    _ChooseAppLanguageViewState.getAppLang()
 
   var lang;
+  // >>> START  _ChooseAppLanguageViewState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -122,9 +138,11 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
                   color: tSecondaryColor,
                   fontWeight: FontWeight.w700)),
         ),
-        body: WillPopScope(
-          onWillPop: () {
-            return Twl.forceNavigateTo(
+        body: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.forceNavigateTo(
                 context, BottomNavigation(tabIndexId: 3));
           },
           child: Column(children: [
@@ -145,12 +163,13 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
                             childAspectRatio: 1 / 0.9,
                             crossAxisSpacing: 15,
                             mainAxisSpacing: 20),
-                        itemCount: language.length,
+                        itemCount: _offeredLanguageIndexes.length,
                         padding:
                             EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         shrinkWrap: true,
                         physics: ScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
+                        itemBuilder: (BuildContext context, int gridIndex) {
+                          final int index = _offeredLanguageIndexes[gridIndex];
                           return GestureDetector(
                             onTap: () {
                               print('object');
@@ -351,4 +370,6 @@ class _ChooseAppLanguageViewState extends State<ChooseAppLanguageView> {
           ]),
         ));
   }
+  // <<< END    _ChooseAppLanguageViewState.build()
 }
+// <<< END    class _ChooseAppLanguageViewState

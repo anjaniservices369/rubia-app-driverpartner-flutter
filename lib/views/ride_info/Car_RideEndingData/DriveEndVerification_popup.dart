@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// End of ride checklist pop-up
+//
+// Reminder to take selfie and car photos before ending.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/ride_info/Car_RideEndingData/driverEndUploadSelfie.dart';
@@ -10,21 +15,26 @@ import '../../../constants/imageConstant.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
 
+// >>> START  class DriveEndVerificationPopUp
 class DriveEndVerificationPopUp extends StatefulWidget {
   const DriveEndVerificationPopUp({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<DriveEndVerificationPopUp> createState() => _DriveEndVerificationPopUpState();
 }
+// <<< END    class DriveEndVerificationPopUp
 
+// >>> START  class _DriveEndVerificationPopUpState
 class _DriveEndVerificationPopUpState extends State<DriveEndVerificationPopUp> {
-  @override
   int reason = 0;
   bool ischeckbox = false;
+  // >>> START  _DriveEndVerificationPopUpState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
       },
       child: Dialog(
         backgroundColor: tWhite,
@@ -58,7 +68,7 @@ class _DriveEndVerificationPopUpState extends State<DriveEndVerificationPopUp> {
                   child: Column(
                     children: [
                       Text(
-                        "before_you_start_ride_please_take_selfies_&".tr,
+                        "before_you_end_ride_please_take_selfies_&".tr,
                         style: GoogleFonts.mulish(
                           color: tBrown,
                           fontWeight: FontWeight.w500,
@@ -146,4 +156,6 @@ class _DriveEndVerificationPopUpState extends State<DriveEndVerificationPopUp> {
       ),
     );
   }
+  // <<< END    _DriveEndVerificationPopUpState.build()
 }
+// <<< END    class _DriveEndVerificationPopUpState

@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Accept-ride & distance helper
+//
+// Helper for accepting a ride and for measuring the distance between two GPS
+// points.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -5,7 +11,9 @@ import 'package:geolocator/geolocator.dart';
 
 import '../api_services/userApi.dart';
 
+// >>> START  class GlobalFunctionProvider
 class GlobalFunctionProvider with ChangeNotifier {
+  // >>> START  GlobalFunctionProvider.accpetRideProvider()  -  accpet ride provider
   accpetRideProvider(
     context,
   ) async {
@@ -17,7 +25,9 @@ class GlobalFunctionProvider with ChangeNotifier {
     notifyListeners();
     return res;
   }
+  // <<< END    GlobalFunctionProvider.accpetRideProvider()
 
+  // >>> START  GlobalFunctionProvider.calculateDistance()  -  calculate distance
   double calculateDistance(Position position1, Position position2) {
     final distance = Geolocator.distanceBetween(
       position1.latitude,
@@ -27,7 +37,9 @@ class GlobalFunctionProvider with ChangeNotifier {
     );
     return distance;
   }
+  // <<< END    GlobalFunctionProvider.calculateDistance()
 
+  // >>> START  GlobalFunctionProvider.sendCurrentLocation()  -  send current location
   sendCurrentLocation(BuildContext context) async {
     print("Getting current Location");
     LocationPermission permission;
@@ -75,4 +87,6 @@ class GlobalFunctionProvider with ChangeNotifier {
       }
     }
   }
+  // <<< END    GlobalFunctionProvider.sendCurrentLocation()
 }
+// <<< END    class GlobalFunctionProvider

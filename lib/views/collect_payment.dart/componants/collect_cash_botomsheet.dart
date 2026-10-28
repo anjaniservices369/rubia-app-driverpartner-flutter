@@ -1,8 +1,13 @@
+// ----------------------------------------------------------------------
+// Rate the customer
+//
+// Star rating and review sheet shown after cash is collected.
+//
+// Developer note: Calls driver/add-review.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/views/collect_payment.dart/collect_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -11,20 +16,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_icon_button/loading_icon_button.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../responsive.dart';
-import '../../../globalWidgets/button.dart';
 import '../../order_completed/order_completed.dart';
 
+// >>> START  class DriverAddReviews
 class DriverAddReviews extends StatefulWidget {
   const DriverAddReviews({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<DriverAddReviews> createState() => _DriverAddReviewsState();
 }
+// <<< END    class DriverAddReviews
 
+// >>> START  class _DriverAddReviewsState
 class _DriverAddReviewsState extends State<DriverAddReviews> {
   final _formKey = new GlobalKey<FormState>();
   var givenRating;
   final TextEditingController _ratingController = TextEditingController();
+  // >>> START  _DriverAddReviewsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -122,11 +130,16 @@ class _DriverAddReviewsState extends State<DriverAddReviews> {
                 ),
               ),
               onTap: (startLoading, stopLoading, btnState) async {
+                // Stars and a written review are both compulsory before the driver can go on.
+                if (givenRating == null || givenRating == 0 || _ratingController.text.trim().isEmpty) {
+                  Twl.createAlert(context, 'Review needed', 'Please give a rating and write a review for the customer to continue.');
+                  return;
+                }
                 startLoading();
                 Map<String, String> param = {
                   'booking_id': widget.bookingDetails['id'].toString(),
                   'rating': givenRating.toString(),
-                  'review': _ratingController.text
+                  'review': _ratingController.text.trim()
                 };
                 var res = await RideBookingsApi()
                     .getAddReviewsAndRatings(context, param);
@@ -146,4 +159,6 @@ class _DriverAddReviewsState extends State<DriverAddReviews> {
       ),
     );
   }
+  // <<< END    _DriverAddReviewsState.build()
 }
+// <<< END    class _DriverAddReviewsState

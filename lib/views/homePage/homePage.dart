@@ -1,16 +1,22 @@
+// ----------------------------------------------------------------------
+// Home screen
+//
+// Map with the Online/Offline switch, today's earnings and notifications.
+// Going online starts sending the driver's position to the server.
+//
+// Developer note: fetchCheckDetails() starts/stops LocationPing and
+// OfferService.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/main.dart';
 import 'package:base_project_flutter/providers/hoempageProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/homePage/componats/notifactionPage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 // import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -21,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:base_project_flutter/api_services/locationPing.dart';
+import 'package:base_project_flutter/api_services/newBookingAlert.dart';
 import 'package:base_project_flutter/api_services/offerService.dart';
 import '../../constants/imageConstant.dart';
 import '../../providers/notifactionProvider.dart';
@@ -28,26 +35,32 @@ import '../profile_review/profile_block.dart';
 import 'componats/earning_card.dart';
 // import 'package:audioplayers/audioplayers.dart';
 
+// >>> START  class HomePage
+/// Driver home: map, Online/Offline switch, earnings tiles.
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, this.status}) : super(key: key);
   final status;
   _HomePageState createState() => _HomePageState();
 }
+// <<< END    class HomePage
 
-final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+// >>> START  class _HomePageState
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   GoogleMapController? mapController;
   LatLng? startLocation;
+  // >>> START  _HomePageState.dispose()  -  cleanup when the screen closes
   @override
   void dispose() {
     mapController?.dispose();
     _animationController.dispose();
     super.dispose();
   }
+  // <<< END    _HomePageState.dispose()
 
+  // >>> START  _HomePageState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     // //    WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -56,65 +69,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     // //         AwesomeAssertUtils.toSimpleEnumString(receivedNotification.createdSource);
     // //  print('object..........');
 
-    // //   });
-    // // });
-    // // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    // //   if (isAllowed) {
-    // //     print('vijaya');
-    // //     // This is just a basic example. For real apps, you must show some
-    // //     // friendly dialog box before call the request method.
-    // //     // This is very important to not harm the user experience
-    // //     AwesomeNotifications().requestPermissionToSendNotifications();
-    // //   }
-    // // });
-    // FirebaseMessaging.instance.getInitialMessage();
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null && !kIsWeb) {
-    //     // addNotification(message.notification.title, message.notification.body,
-    //     //     message.notification.android.imageUrl);
-    //     const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-    //       'channel!.id',
-    //       'channel!.name',
-    //       channelDescription: 'your other channel description',
-    //       importance: Importance.max,
-    //       priority: Priority.high,
-    //       icon: '@mipmap/ic_launcher',
-    //       enableLights: true,
-    //       sound: RawResourceAndroidNotificationSound('noti'),
-    //     );
-    //     final NotificationDetails notificationDetails = NotificationDetails(
-    //       android: androidNotificationDetails,
-    //       // iOS: darwinNotificationDetails,
-    //       // macOS: darwinNotificationDetails,
-    //       // linux: linuxPlatformChannelSpecifics,
-    //     );
-    //     await flutterLocalNotificationsPlugin.show(
-    //       notification.hashCode,
-    //       notification.title,
-    //       notification.body,
-    //       notificationDetails,
-    //     );
-    //     // flutterLocalNotificationsPlugin!.show(
-    //     // notification.hashCode,
-    //     // notification.title,
-    //     // notification.body,
-    //     // NotificationDetails(
-    //     //   android: AndroidNotificationDetails(
-    //     // channel!.id,
-    //     // channel!.name,
-    //     //     playSound: true,
-    //     //     sound: RawResourceAndroidNotificationSound('noti'),
-    //     //     // sound: 'resource://raw/noti',
-    //     //     // channel!.description,
-    //     //     // TODO add a proper drawable resource to android, for now using
-    //     //     //      one that already exists in example app.
-    //     //     icon: 'launch_background',
-    //     //     importance: Importance.max,
-    //     //     priority: Priority.high,
-    //     //   ),
-    //     // ));
 
     //     print('Message data: ${message.data}');
     //     if (message.notification != null) {
@@ -141,10 +95,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
     print("Started listening");
   }
+  // <<< END    _HomePageState.initState()
 
   var driverLat;
   var driverLng;
 
+  // >>> START  _HomePageState.fetchDriverExactLocation()  -  fetch driver exact location
   fetchDriverExactLocation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
@@ -152,10 +108,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       driverLng = sharedPreferences.getDouble('longitude');
     });
   }
+  // <<< END    _HomePageState.fetchDriverExactLocation()
 
   var onlineStatus;
   var statusNOK;
   var checkDetails;
+  // >>> START  _HomePageState.fetchCheckDetails()  -  fetch check details
   fetchCheckDetails() async {
     print('i have startd exicuting');
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -172,9 +130,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       // Admin live map needs online + a recent position from this driver.
       if (onlineStatus == online_status_yes) {
         LocationPing.start();
+        NewBookingAlert.start();
         OfferService.start();
       } else {
         LocationPing.stop();
+        NewBookingAlert.stop();
         OfferService.stop();
       }
 
@@ -184,6 +144,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       });
     }
   }
+  // <<< END    _HomePageState.fetchCheckDetails()
 
   var userId;
   var userName;
@@ -193,28 +154,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   // var checkDetails;
   var vechileType;
   var _locationData;
+  // >>> START  _HomePageState.getlatlong()
   getlatlong() {
     print('object');
     print(_locationData!.latitude.toString());
     print(_locationData!.longitude.toString());
     startLocation = LatLng(_locationData!.latitude, _locationData!.longitude);
   }
+  // <<< END    _HomePageState.getlatlong()
 
 
   // Geoflutterfire geo = Geoflutterfire();
   // PermissionStatus? _permissionGranted;
 
   Location location = new Location();
-  Future<void> _incrementCounter() async {
-    final SharedPreferences prefs = await _prefs;
-    final int counter = (prefs.getInt('counter') ?? 0) + 1;
-
-    setState(() {});
-  }
 
   Set<Marker> markers = Set();
+  // >>> START  _HomePageState.addMarkers()  -  add markers
   addMarkers() async {
-    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.fromAssetImage(
+    BitmapDescriptor markerbitmapdrop = await BitmapDescriptor.asset(
       ImageConfiguration(),
       'assets/icons/back.png',
     );
@@ -233,41 +191,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       icon: markerbitmapdrop,
     ));
   }
+  // <<< END    _HomePageState.addMarkers()
 
   int id = 0;
 
-  void _showNotificationCustomSound() async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channel2!.id,
-      channel2!.name,
-      importance: Importance.max,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-      enableLights: true,
-      sound: RawResourceAndroidNotificationSound("noti"),
-      enableVibration: true,
-      playSound: true,
-    );
-
-    // var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
-
-    await flutterLocalNotificationsPlugin?.show(
-      0,
-      'Notification Title',
-      'Notification Body',
-      platformChannelSpecifics,
-      payload: 'notification_payload',
-    );
-  }
 
   var status = 0;
   MyNotifactionProvider myNotificationProvider = MyNotifactionProvider();
+  // >>> START  _HomePageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    HomePageProvider _storedData = Provider.of<HomePageProvider>(context);
+    // Keep rebuilding this widget when HomePageProvider changes.
+    context.watch<HomePageProvider>();
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: onlineStatus == null
@@ -535,7 +470,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(color: Color.fromARGB(255, 51, 187, 56), width: 2),
-                                      color: tWhite.withOpacity(0.4)),
+                                      color: tWhite.withValues(alpha: 0.4)),
                                   child: Container(
                                     height: 16.9.h,
                                     width: 16.9.h,
@@ -543,7 +478,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(color: Color.fromARGB(255, 51, 187, 56), width: 2),
-                                        color: tWhite.withOpacity(0.4)),
+                                        color: tWhite.withValues(alpha: 0.4)),
                                     child: Container(
                                       height: 16.h,
                                       width: 16.h,
@@ -568,4 +503,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
     );
   }
+  // <<< END    _HomePageState.build()
 }
+// <<< END    class _HomePageState

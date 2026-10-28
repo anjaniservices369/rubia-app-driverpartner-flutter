@@ -1,19 +1,22 @@
+// ----------------------------------------------------------------------
+// Registration: emergency contacts
+//
+// Two people to contact in an emergency.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
-import 'package:base_project_flutter/views/rider_details/add_Details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import '../../../constants/constants.dart';
 import '../../../globalWidgets/button.dart';
-import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
 import '../../../responsive.dart';
 
+// >>> START  class EmergencyContact
 class EmergencyContact extends StatefulWidget {
   EmergencyContact({
     Key? key,
@@ -24,26 +27,29 @@ class EmergencyContact extends StatefulWidget {
     this.gender,
     this.address,
   }) : super(key: key);
-  var firstName;
-  var lastName;
-  var Email;
+  final firstName;
+  final lastName;
+  final Email;
   final DateOfBirth;
-  var gender;
-  var address;
+  final gender;
+  final address;
 
   @override
   State<EmergencyContact> createState() => _EmergencyContactState();
 }
+// <<< END    class EmergencyContact
 
+// >>> START  class _EmergencyContactState
 class _EmergencyContactState extends State<EmergencyContact> {
+  // >>> START  _EmergencyContactState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fectData();
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _EmergencyContactState.initState()
 
-  @override
   var gender1;
 
   final TextEditingController _personOneNameController =
@@ -71,63 +77,54 @@ class _EmergencyContactState extends State<EmergencyContact> {
   bool isdropdownOpwn = false;
   var dob;
   var yearDiff;
-  var _selectedDate;
   var formattedTemporaryDate;
 
+  // >>> START  _EmergencyContactState.fectData()  -  fect data
   fectData() {
     setState(() {});
   }
+  // <<< END    _EmergencyContactState.fectData()
 
   String phoneNumber = '123456789';
   RegExp phoneNumberPattern = RegExp(r'^[0-9]{10}$');
+  // >>> START  _EmergencyContactState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: tBackground,
-      appBar: AppBar(
-        elevation: 1,
-        backgroundColor: tWhite,
-        leading: BackButtonLeading(
-          onTap: () {
-            Twl.forceNavigateTo(context, AddDetailsView());
-          },
-        ),
-        title: Text('emergency_contacts'.tr,
-            style: TextStyle(
-                fontSize: isTab(context) ? 14.sp : 16.sp,
-                color: tSecondaryColor,
-                fontWeight: FontWeight.w800)),
-      ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, AddDetailsView());
-        },
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 2.h,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 36.w),
-                child: StepProgressIndicator(
-                  totalSteps: 4,
-                  currentStep: 1,
-                  size: 8,
-                  padding: 0,
-                  selectedColor: tSecondaryColor,
-                  unselectedColor: tlightGray,
-                  roundedEdges: Radius.circular(10),
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            color: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                color: tWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
+                boxShadow: [tBoxShadow],
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Center(
+                      child: Text('emergency_contacts'.tr,
+                          style: TextStyle(
+                              fontSize: isTab(context) ? 14.sp : 16.sp,
+                              color: tSecondaryColor,
+                              fontWeight: FontWeight.w800)),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
                         Text(
                           "Person".tr + " 1",
                           style: GoogleFonts.mulish(
@@ -395,12 +392,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
                                 // ),
                               ],
                             )),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Button(
+                    Button(
                   textcolor: tWhite,
                   bottonText: 'next'.tr,
                   borderSide: BorderSide(
@@ -429,7 +421,7 @@ class _EmergencyContactState extends State<EmergencyContact> {
                       var res = await DriverDetailsApi()
                           .addEmergencyContactAPi(context, param);
                       if (res != null && res['status'] == 'OK') {
-                        Twl.forceNavigateTo(context, AddDetailsView());
+                        Twl.navigateBack(context);
                         stopLoading();
                       } else {
                         stopLoading();
@@ -447,13 +439,18 @@ class _EmergencyContactState extends State<EmergencyContact> {
 
                     // }
                   }),
-              SizedBox(
-                height: 2.h,
-              )
-            ],
+                    SizedBox(
+                      height: 2.h,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+  // <<< END    _EmergencyContactState.build()
 }
+// <<< END    class _EmergencyContactState

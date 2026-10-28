@@ -1,8 +1,11 @@
+// ----------------------------------------------------------------------
+// Earnings summary
+//
+// Totals and chart for the selected period.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/profilePage/earnings/componants/rideDetails.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,16 +15,17 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../api_services/rideBookingsApi.dart';
 import '../../../../api_services/userApi.dart';
-import '../../../../constants/imageConstant.dart';
-import '../../../../constants/stetuesConstant.dart';
 
+// >>> START  class TodaysEarnings
 class TodaysEarnings extends StatefulWidget {
   const TodaysEarnings({Key? key, this.status}) : super(key: key);
   final status;
   @override
   State<TodaysEarnings> createState() => _TodaysEarningsState();
 }
+// <<< END    class TodaysEarnings
 
+// >>> START  class _TodaysEarningsState
 class _TodaysEarningsState extends State<TodaysEarnings> {
   ScrollController _scrollController = ScrollController();
   List<dynamic> earningsData = [];
@@ -57,6 +61,7 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
     'assets/icons/reject_rides.png',
   ];
 
+  // >>> START  _TodaysEarningsState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchEarnings();
@@ -66,8 +71,10 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
     // getTotalEarnings();
     super.initState();
   }
+  // <<< END    _TodaysEarningsState.initState()
   num sumCancellation = 0;
 
+  // >>> START  _TodaysEarningsState.calculateCancellationSum()  -  calculate cancellation sum
   void calculateCancellationSum() {
     for (var booking in earningsData) {
         sumCancellation += (booking['cancellation_charges'] ?? 0);
@@ -77,14 +84,18 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
       print("sum cancellation : $sumCancellation");
     });
   }
+  // <<< END    _TodaysEarningsState.calculateCancellationSum()
 
 
+  // >>> START  _TodaysEarningsState.dispose()  -  cleanup when the screen closes
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
+  // <<< END    _TodaysEarningsState.dispose()
 
+  // >>> START  _TodaysEarningsState._scrollListener()  -  scroll listener
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -94,6 +105,7 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
       }
     }
   }
+  // <<< END    _TodaysEarningsState._scrollListener()
 
   var earningList = [];
   var earning;
@@ -101,7 +113,6 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
   DateTime current_date = DateTime.now();
   var date = new DateTime.now();
 
-  bool _load = false;
   var startDate;
   var endDate;
   var dashboardData;
@@ -117,6 +128,7 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
   //       dashboardData = res['details'];
   //       resNOK = res['status'];
 
+  // >>> START  _TodaysEarningsState.fetcDashboardDetails()  -  fetc dashboard details
   //     });
   //   } else {
   //     setState(() {
@@ -141,6 +153,7 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
     //   isLoading = true;
     // });
   }
+  // <<< END    _TodaysEarningsState.fetcDashboardDetails()
   // var dashboard;
   // getTotalEarnings() async {
   //   var newDate = new DateTime(date.year, date.month, date.day + 1);
@@ -156,6 +169,7 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
   //   //     ? sharedPreferences.getString('endDate')
   //   //     : endDate;
 
+  // >>> START  _TodaysEarningsState.fetchEarnings()  -  fetch earnings
   //   startDate = Twl.dateFormate(DateTime.now()) + ' 00:00:00';
   //   endDate =
   //       Twl.dateFormate(DateTime.now().add(Duration(days: 1))) + ' 00:00:00';
@@ -226,11 +240,13 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
       });
     }
   }
+  // <<< END    _TodaysEarningsState.fetchEarnings()
 
 
 
   var checkDetails;
   var resNok;
+  // >>> START  _TodaysEarningsState.fetchEarningDetails()  -  fetch earning details
   fetchEarningDetails() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var checkRes = await UserAPI().checkApi(pref.getString('authCode')!);
@@ -246,7 +262,9 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
       });
     }
   }
+  // <<< END    _TodaysEarningsState.fetchEarningDetails()
 
+  // >>> START  _TodaysEarningsState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return
@@ -760,4 +778,6 @@ class _TodaysEarningsState extends State<TodaysEarnings> {
                 ),
               );
   }
+  // <<< END    _TodaysEarningsState.build()
 }
+// <<< END    class _TodaysEarningsState

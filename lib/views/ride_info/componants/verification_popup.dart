@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Start of ride checklist pop-up
+//
+// Reminder to take selfie and car photos before starting.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/ride_info/car_picture/driverUploadSelfie.dart';
@@ -10,21 +15,26 @@ import '../../../constants/imageConstant.dart';
 import '../../../globalWidgets/button.dart';
 import '../../../responsive.dart';
 
+// >>> START  class VerificationPopUp
 class VerificationPopUp extends StatefulWidget {
   const VerificationPopUp({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<VerificationPopUp> createState() => _VerificationPopUpState();
 }
+// <<< END    class VerificationPopUp
 
+// >>> START  class _VerificationPopUpState
 class _VerificationPopUpState extends State<VerificationPopUp> {
-  @override
   int reason = 0;
   bool ischeckbox = false;
+  // >>> START  _VerificationPopUpState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Twl.forceNavigateTo(context, BottomNavigation(tabIndexId: 1));
       },
       child: Dialog(
         backgroundColor: tWhite,
@@ -143,4 +153,6 @@ class _VerificationPopUpState extends State<VerificationPopUp> {
       ),
     );
   }
+  // <<< END    _VerificationPopUpState.build()
 }
+// <<< END    class _VerificationPopUpState

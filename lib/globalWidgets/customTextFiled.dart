@@ -1,8 +1,14 @@
+// ----------------------------------------------------------------------
+// Text input (style A)
+//
+// Standard styled text box for forms.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/constants.dart';
 import '../responsive.dart';
 
+// >>> START  class TextFormFieldWidgets
 class TextFormFieldWidgets extends StatelessWidget {
   const TextFormFieldWidgets({
     Key? key,
@@ -40,6 +46,7 @@ class TextFormFieldWidgets extends StatelessWidget {
   final keyboardTyp;
   final contentPadding;
   final onChanged;
+  // >>> START  TextFormFieldWidgets.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -68,11 +75,11 @@ class TextFormFieldWidgets extends StatelessWidget {
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 17),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: tgreen.withOpacity(0.40), width: 1.5),
+            borderSide: BorderSide(color: tgreen.withValues(alpha: 0.40), width: 1.5),
             borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: tgreen.withOpacity(0.40), width: 1.5),
+            borderSide: BorderSide(color: tgreen.withValues(alpha: 0.40), width: 1.5),
             borderRadius: BorderRadius.circular(12),
           ),
           errorBorder: OutlineInputBorder(
@@ -87,4 +94,6 @@ class TextFormFieldWidgets extends StatelessWidget {
       ),
     );
   }
+  // <<< END    TextFormFieldWidgets.build()
 }
+// <<< END    class TextFormFieldWidgets

@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Intro slides
+//
+// Three welcome slides shown before login.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/views/logiPage/loginPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,13 +13,16 @@ import '../../constants/imageConstant.dart';
 import '../../globalFuctions/globalFunctions.dart';
 import '../../responsive.dart';
 
+// >>> START  class OnboardingPage
 class OnboardingPage extends StatefulWidget {
   OnboardingPage({Key? key}) : super(key: key);
 
   @override
   _OnboardingPageState createState() => _OnboardingPageState();
 }
+// <<< END    class OnboardingPage
 
+// >>> START  class _OnboardingPageState
 class _OnboardingPageState extends State<OnboardingPage> {
   var currentPage = 0;
 
@@ -43,6 +51,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
   ];
 
+  // >>> START  _OnboardingPageState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,20 +102,24 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             currentPage == 0
-                                ? GestureDetector(
-                                    onTap: () {
-                                      Twl.forceNavigateTo(
-                                          context, LoginPageView());
-                                    },
-                                    child: Text(
-                                      'Skip Now',
-                                      style: TextStyle(
-                                        fontSize: isTab(context) ? 7.sp : 14.sp,
-                                        color: tBlack,
-                                        fontWeight: FontWeight.w700,
+                                ? Semantics(
+                                    button: true,
+                                    label: 'Skip introduction and go to login',
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Twl.forceNavigateTo(
+                                            context, LoginPageView());
+                                      },
+                                      child: Text(
+                                        'Skip Now',
+                                        style: TextStyle(
+                                          fontSize:
+                                              isTab(context) ? 7.sp : 14.sp,
+                                          color: tBlack,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
-                                    ),
-                                  )
+                                    ))
                                 : Container(
                                     width: isTab(context) ? 10.w : 16.5.w,
                                   ),
@@ -131,45 +144,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               ),
                             ),
                             currentPage == 0
-                                ? GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        currentPage = 1;
-                                      });
-                                      pageControll.nextPage(
-                                          duration: Duration(seconds: 1),
-                                          curve: Curves.ease);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(
-                                          isTab(context) ? 18 : 14),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: tPrimaryColor,
-                                          boxShadow: [tBoxShadow]),
-                                      child: Icon(
-                                        Icons.arrow_forward_rounded,
-                                        color: tWhite,
-                                        size: isTab(context) ? 45 : 34,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    alignment: Alignment.centerRight,
-                                    // width: 30.w,
+                                ? Semantics(
+                                    button: true,
+                                    label: 'Next introduction page',
                                     child: GestureDetector(
                                       onTap: () {
-                                        if (currentPage == 1) {
-                                          pageControll.nextPage(
-                                              duration: Duration(seconds: 1),
-                                              curve: Curves.ease);
-                                          setState(() {
-                                            currentPage = 2;
-                                          });
-                                        } else {
-                                          Twl.forceNavigateTo(
-                                              context, LoginPageView());
-                                        }
+                                        setState(() {
+                                          currentPage = 1;
+                                        });
+                                        pageControll.nextPage(
+                                            duration: Duration(seconds: 1),
+                                            curve: Curves.ease);
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(
@@ -182,6 +167,43 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                           Icons.arrow_forward_rounded,
                                           color: tWhite,
                                           size: isTab(context) ? 45 : 34,
+                                        ),
+                                      ),
+                                    ))
+                                : Container(
+                                    alignment: Alignment.centerRight,
+                                    // width: 30.w,
+                                    child: Semantics(
+                                      button: true,
+                                      label: currentPage == 2
+                                          ? 'Continue to login'
+                                          : 'Next introduction page',
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (currentPage == 1) {
+                                            pageControll.nextPage(
+                                                duration: Duration(seconds: 1),
+                                                curve: Curves.ease);
+                                            setState(() {
+                                              currentPage = 2;
+                                            });
+                                          } else {
+                                            Twl.forceNavigateTo(
+                                                context, LoginPageView());
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(
+                                              isTab(context) ? 18 : 14),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: tPrimaryColor,
+                                              boxShadow: [tBoxShadow]),
+                                          child: Icon(
+                                            Icons.arrow_forward_rounded,
+                                            color: tWhite,
+                                            size: isTab(context) ? 45 : 34,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -199,8 +221,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     );
   }
+  // <<< END    _OnboardingPageState.build()
 }
+// <<< END    class _OnboardingPageState
 
+// >>> START  class OnboardingWidget
 class OnboardingWidget extends StatelessWidget {
   const OnboardingWidget(
       {Key? key,
@@ -223,6 +248,7 @@ class OnboardingWidget extends StatelessWidget {
   final index;
   get tprimaryColor => null;
 
+  // >>> START  OnboardingWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     print(index);
@@ -310,4 +336,6 @@ class OnboardingWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    OnboardingWidget.build()
 }
+// <<< END    class OnboardingWidget

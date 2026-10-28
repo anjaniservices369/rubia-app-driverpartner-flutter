@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------
+// Collect payment
+//
+// After the ride: shows the amount to collect, lets the driver view the bill
+// and confirm cash received.
+//
+// Developer note: Calls driver/collect-cash then shows the review sheet.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/stetuesConstant.dart';
@@ -9,23 +17,22 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_icon_button/loading_icon_button.dart';
 import 'package:sizer/sizer.dart';
-import '../../../constants/imageConstant.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import '../../../responsive.dart';
 import '../../globalWidgets/button.dart';
-import 'componants/amountCard.dart';
 import 'componants/collect_cash_botomsheet.dart';
-import 'componants/generateQR_card.dart';
-import 'componants/orderid.dart';
 
+// >>> START  class CollectPayment
 class CollectPayment extends StatefulWidget {
   CollectPayment({Key? key, this.bookingDetails}) : super(key: key);
   final bookingDetails;
   @override
   State<CollectPayment> createState() => _CollectPaymentState();
 }
+// <<< END    class CollectPayment
 
+// >>> START  class _CollectPaymentState
 class _CollectPaymentState extends State<CollectPayment> {
+  // >>> START  _CollectPaymentState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,9 +76,11 @@ class _CollectPaymentState extends State<CollectPayment> {
           )
         ],
       ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, BillDetailsPage(bookingDetails: widget.bookingDetails));
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.forceNavigateTo(context, BillDetailsPage(bookingDetails: widget.bookingDetails));
         },
         child: SingleChildScrollView(
           child: Container(
@@ -256,20 +265,21 @@ class _CollectPaymentState extends State<CollectPayment> {
                               showModalBottomSheet(
                                   context: context,
                                   isScrollControlled: true,
-                                  enableDrag: true,
-                                  isDismissible: true,
+                                  // The review is compulsory: the sheet cannot be dragged, tapped or backed away.
+                                  enableDrag: false,
+                                  isDismissible: false,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   builder: (context) {
-                                    return Padding(
+                                    return PopScope(canPop: false, child: Padding(
                                       padding: MediaQuery.of(context).viewInsets,
                                       child: Container(
                                         child: Wrap(
                                           children: [DriverAddReviews(bookingDetails: widget.bookingDetails)],
                                         ),
                                       ),
-                                    );
+                                    ));
                                   });
                               stopLoading();
                             },
@@ -306,20 +316,21 @@ class _CollectPaymentState extends State<CollectPayment> {
                             showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                enableDrag: true,
-                                isDismissible: true,
+                                // The review is compulsory: the sheet cannot be dragged, tapped or backed away.
+                                enableDrag: false,
+                                isDismissible: false,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 builder: (context) {
-                                  return Padding(
+                                  return PopScope(canPop: false, child: Padding(
                                     padding: MediaQuery.of(context).viewInsets,
                                     child: Container(
                                       child: Wrap(
                                         children: [DriverAddReviews(bookingDetails: widget.bookingDetails)],
                                       ),
                                     ),
-                                  );
+                                  ));
                                 });
                           } else {
                             stopLoading();
@@ -335,4 +346,6 @@ class _CollectPaymentState extends State<CollectPayment> {
       ),
     );
   }
+  // <<< END    _CollectPaymentState.build()
 }
+// <<< END    class _CollectPaymentState

@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Standard buttons
+//
+// The orange buttons used throughout the app (loading spinner included).
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:loading_icon_button/loading_icon_button.dart';
@@ -7,6 +12,8 @@ import 'package:sizer/sizer.dart';
 
 import '../responsive.dart';
 
+// >>> START  class Button
+/// Standard orange action button with a loading spinner.
 class Button extends StatelessWidget {
   const Button({
     Key? key,
@@ -24,6 +31,7 @@ class Button extends StatelessWidget {
   final textcolor;
   final loadingColor;
 
+  // >>> START  Button.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return ArgonButton(
@@ -50,8 +58,11 @@ class Button extends StatelessWidget {
       onTap: onTap,
     );
   }
+  // <<< END    Button.build()
 }
+// <<< END    class Button
 
+// >>> START  class PopupButton
 class PopupButton extends StatelessWidget {
   const PopupButton({
     Key? key,
@@ -67,6 +78,7 @@ class PopupButton extends StatelessWidget {
   final borderSide;
   final textcolor;
 
+  // >>> START  PopupButton.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return ArgonButton(
@@ -94,11 +106,15 @@ class PopupButton extends StatelessWidget {
       onTap: onTap,
     );
   }
+  // <<< END    PopupButton.build()
 }
+// <<< END    class PopupButton
 
+// >>> START  class LeadingBackButton
 class LeadingBackButton extends StatelessWidget {
   const LeadingBackButton({Key? key, this.onPressed}) : super(key: key);
   final onPressed;
+  // >>> START  LeadingBackButton.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -111,8 +127,11 @@ class LeadingBackButton extends StatelessWidget {
         // iconSize: 20,
         onPressed: onPressed);
   }
+  // <<< END    LeadingBackButton.build()
 }
+// <<< END    class LeadingBackButton
 
+// >>> START  class ButtonWidget
 class ButtonWidget extends StatelessWidget {
   const ButtonWidget({
     Key? key,
@@ -132,6 +151,7 @@ class ButtonWidget extends StatelessWidget {
   final borderSide;
   final textcolor;
 
+  // >>> START  ButtonWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -166,8 +186,11 @@ class ButtonWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    ButtonWidget.build()
 }
+// <<< END    class ButtonWidget
 
+// >>> START  class SmallButton
 class SmallButton extends StatelessWidget {
   const SmallButton({
     Key? key,
@@ -185,6 +208,7 @@ class SmallButton extends StatelessWidget {
   final textcolor;
   final loadingColor;
 
+  // >>> START  SmallButton.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return ArgonButton(
@@ -211,4 +235,6 @@ class SmallButton extends StatelessWidget {
       onTap: onTap,
     );
   }
+  // <<< END    SmallButton.build()
 }
+// <<< END    class SmallButton

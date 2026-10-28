@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Today's earnings tiles
+//
+// Today's earnings and cash collected.
+// ----------------------------------------------------------------------
 // import 'package:taxigo_rider_flutter/apiServices/userApi.dart';
 // import 'package:taxigo_rider_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
@@ -9,22 +14,28 @@ import 'package:sizer/sizer.dart';
 import '../../../constants/constants.dart';
 import '../../../responsive.dart';
 
+// >>> START  class EarningsCard
 class EarningsCard extends StatefulWidget {
   const EarningsCard({Key? key}) : super(key: key);
 
   @override
   State<EarningsCard> createState() => _EarningsCardState();
 }
+// <<< END    class EarningsCard
 
+// >>> START  class _EarningsCardState
 class _EarningsCardState extends State<EarningsCard> {
+  // >>> START  _EarningsCardState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fetchPayOuts();
     super.initState();
   }
+  // <<< END    _EarningsCardState.initState()
 
   var dashBordDetails;
   var resNOK;
+  // >>> START  _EarningsCardState.fetchPayOuts()  -  fetch pay outs
   fetchPayOuts() async {
     var res = await RideBookingsApi().getDashBoardDetails(context);
     if (res != null && res['status'] == 'OK') {
@@ -37,10 +48,12 @@ class _EarningsCardState extends State<EarningsCard> {
       });
     }
   }
+  // <<< END    _EarningsCardState.fetchPayOuts()
 
   DateTime current_date = DateTime.now();
   var date = new DateTime.now();
 
+  // >>> START  _EarningsCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return dashBordDetails == null
@@ -196,4 +209,6 @@ class _EarningsCardState extends State<EarningsCard> {
             ),
           );
   }
+  // <<< END    _EarningsCardState.build()
 }
+// <<< END    class _EarningsCardState

@@ -1,6 +1,9 @@
-import 'package:base_project_flutter/views/profilePage/earnings/componants/rideDetails.dart';
+// ----------------------------------------------------------------------
+// Earnings: ride info
+//
+// A past ride with what the driver earned.
+// ----------------------------------------------------------------------
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -14,14 +17,12 @@ import '../../../../constants/constants.dart';
 import '../../../../constants/imageConstant.dart';
 import '../../../../constants/stetuesConstant.dart';
 import '../../../../globalFuctions/globalFunctions.dart';
-import '../../../../globalWidgets/button.dart';
 import '../../../../responsive.dart';
-import '../../../ride_info/final_bill_amount.dart';
 import '../../support/support.dart';
 import '../earnings.dart';
 import 'driver_final_bill.dart';
-import 'earn_container.dart';
 
+// >>> START  class driverRideInfo
 class driverRideInfo extends StatefulWidget {
   const driverRideInfo({Key? key,
   this.bookingDetails,
@@ -38,34 +39,34 @@ class driverRideInfo extends StatefulWidget {
   State<driverRideInfo> createState() => _driverRideInfoState();
 
 }
+// <<< END    class driverRideInfo
 
+// >>> START  class _driverRideInfoState
 class _driverRideInfoState extends State<driverRideInfo> {
 
 
+  // >>> START  _driverRideInfoState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     double? usageHours = double.parse(widget.bookingDetails['usage_hours']);
     String usageText;
-    if (usageHours != null) {
-      if (usageHours >= 1) {
-        int wholeHours = usageHours.toInt();
-        int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
-        if (wholeMinutes > 0) {
-          usageText = '$wholeHours hrs $wholeMinutes mins ';
-        } else {
-          usageText = '$wholeHours hrs ';
-        }
+    if (usageHours >= 1) {
+      int wholeHours = usageHours.toInt();
+      int wholeMinutes = ((usageHours - wholeHours) * 60).toInt();
+      if (wholeMinutes > 0) {
+        usageText = '$wholeHours hrs $wholeMinutes mins ';
       } else {
-        int usageMinutes = (usageHours * 60).toInt();
-        usageText = '$usageMinutes mins ';
+        usageText = '$wholeHours hrs ';
       }
     } else {
-      usageText =
-      'Usage hours not available'; // Handle the case where 'usage_hours' is null
+      int usageMinutes = (usageHours * 60).toInt();
+      usageText = '$usageMinutes mins ';
     }
-    return WillPopScope(
-          onWillPop: () {
-            return Twl.forceNavigateTo(context, EarningPage(tabindex:widget.Status));
+    return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Twl.forceNavigateTo(context, EarningPage(tabindex:widget.Status));
           },
       child: Scaffold(
         appBar: AppBar(
@@ -215,11 +216,11 @@ class _driverRideInfoState extends State<driverRideInfo> {
                               Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  launch("tel://" +
+                                  launchUrl(Uri.parse("tel://" +
                                       widget.bookingDetails[
                                       'user_details']
                                       ['contact_no']
-                                          .toString());
+                                          .toString()));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(8),
@@ -990,4 +991,6 @@ class _driverRideInfoState extends State<driverRideInfo> {
       ),
     );
   }
+  // <<< END    _driverRideInfoState.build()
 }
+// <<< END    class _driverRideInfoState

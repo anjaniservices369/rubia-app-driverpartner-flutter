@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Document: driving licence
+//
+// Front and back photo of the licence.
+// ----------------------------------------------------------------------
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
@@ -18,21 +23,21 @@ import '../../../../../globalWidgets/leadingbackbtn.dart';
 import '../../../../../globalWidgets/texfildtital.dart';
 import '../../../../../globalWidgets/textfildcustom.dart';
 
+// >>> START  class DrivingLicense
 class DrivingLicense extends StatefulWidget {
   const DrivingLicense({Key? key}) : super(key: key);
 
   @override
   State<DrivingLicense> createState() => _DrivingLicenseState();
 }
+// <<< END    class DrivingLicense
 
+// >>> START  class _DrivingLicenseState
 class _DrivingLicenseState extends State<DrivingLicense> {
   TextEditingController _drivingLicenseNumberController =
       TextEditingController();
-  TextEditingController _licencessuDateControllar = TextEditingController();
-  TextEditingController _licenceExpiryDateControllar = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
   TextEditingController _DOB = TextEditingController();
-  var _selectedDate;
 
   bool isChecked = false;
   DateTime selectedDate = DateTime.now();
@@ -40,6 +45,7 @@ class _DrivingLicenseState extends State<DrivingLicense> {
   DateTime selectedIssueDate = DateTime.now();
   DateTime initialIssueDate = DateTime.now();
 
+  // >>> START  _DrivingLicenseState._selectIssueDate()  -  select issue date
   Future<void> _selectIssueDate(BuildContext context) async {
     selectedIssueDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
@@ -80,9 +86,11 @@ class _DrivingLicenseState extends State<DrivingLicense> {
       });
     }
   }
+  // <<< END    _DrivingLicenseState._selectIssueDate()
 
   var selectedExpiryDate;
   var selectedIssuedDate;
+  // >>> START  _DrivingLicenseState._selectDate()  -  select date
   Future<void> _selectDate(BuildContext context) async {
     selectedDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
@@ -123,9 +131,11 @@ class _DrivingLicenseState extends State<DrivingLicense> {
       print(selectedExpiryDate);
     }
   }
+  // <<< END    _DrivingLicenseState._selectDate()
 
   var formattedTemporaryDate;
 
+  // >>> START  _DrivingLicenseState.DrivingValidate()  -  driving validate
   String? DrivingValidate(String value) {
     String p = "[A-Z]{2}[0-9]{2}[A-Z]{3}[0-9]{5}";
 
@@ -139,17 +149,18 @@ class _DrivingLicenseState extends State<DrivingLicense> {
 
     // return regExp.hasMatch(em);
   }
+  // <<< END    _DrivingLicenseState.DrivingValidate()
 
   var dlFrontImg;
   var dlBackImg;
 
   bool dlFrontImgLoading = false;
   bool dlBackImgLoading = false;
+  // >>> START  _DrivingLicenseState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    GlobalFunctionProvider _data = Provider.of<GlobalFunctionProvider>(
-      context,
-    );
+    // Keep rebuilding this widget when GlobalFunctionProvider changes.
+    context.watch<GlobalFunctionProvider>();
     return Scaffold(
       backgroundColor: tBackground,
       appBar: AppBar(
@@ -614,4 +625,6 @@ class _DrivingLicenseState extends State<DrivingLicense> {
       ),
     );
   }
+  // <<< END    _DrivingLicenseState.build()
 }
+// <<< END    class _DrivingLicenseState

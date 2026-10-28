@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------
+// Live location reporting
+//
+// While the driver is Online, reports their position to the server about
+// every 20 seconds so the admin map can show them.
+//
+// Developer note: Posts driver/update-lat-lng; started and stopped from
+// HomePage.fetchCheckDetails().
+// ----------------------------------------------------------------------
 import 'dart:async';
 import 'dart:convert';
 
@@ -7,8 +16,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class LocationPing
 /// Posts the driver's position to `driver/update-lat-lng` so the admin live map
-/// (which now reads from the backend DB, not Firebase) can show the driver.
+/// (which reads from the backend database) can show the driver.
 ///
 /// The map needs the driver to be online (`driver-status`) AND to have posted a
 /// position, so [start] is called while online and [stop] when going offline.
@@ -19,17 +29,22 @@ class LocationPing {
   static Timer? _timer;
   static DateTime? _lastSent;
 
+  // >>> START  LocationPing.start()
   static void start() {
     stop();
     _pingCurrentPosition();
     _timer = Timer.periodic(interval, (_) => _pingCurrentPosition());
   }
+  // <<< END    LocationPing.start()
 
+  // >>> START  LocationPing.stop()
   static void stop() {
     _timer?.cancel();
     _timer = null;
   }
+  // <<< END    LocationPing.stop()
 
+  // >>> START  LocationPing._pingCurrentPosition()  -  ping current position
   static Future<void> _pingCurrentPosition() async {
     try {
       final permission = await Geolocator.checkPermission();
@@ -38,17 +53,25 @@ class LocationPing {
         return;
       }
       final position = await Geolocator.getCurrentPosition();
-      final sent = await send(position.latitude, position.longitude);
+      final sent = await send(position.latitude, position.longitude,
+          accuracy: position.accuracy, speedKmh: position.speed * 3.6, recordedAt: position.timestamp);
       if (sent == _Result.noSession) stop();
     } catch (e) {
       print('LocationPing error: $e');
     }
   }
+  // <<< END    LocationPing._pingCurrentPosition()
 
   /// Safe to call from the background-service isolate (no BuildContext/UI);
   /// [handleExpiredSession] must only be true on the main isolate.
+  ///
+  /// [accuracy] (metres), [speedKmh] and [recordedAt] (when the phone took the reading) let the server's real-time distance tracking
+  /// ignore poor or repeated readings and measure the ride correctly; they are optional.
   static Future<_Result> send(double latitude, double longitude,
-      {bool handleExpiredSession = true}) async {
+      {bool handleExpiredSession = true,
+      double? accuracy,
+      double? speedKmh,
+      DateTime? recordedAt}) async {
     final now = DateTime.now();
     if (_lastSent != null && now.difference(_lastSent!) < _minGap) {
       return _Result.throttled;
@@ -66,6 +89,9 @@ class LocationPing {
             'latitude': latitude.toString(),
             'longitude': longitude.toString(),
             'locality': prefs.getString('Locality') ?? '',
+            if (accuracy != null && accuracy >= 0) 'accuracy': accuracy.toStringAsFixed(1),
+            if (speedKmh != null && speedKmh >= 0) 'speed_kmh': speedKmh.toStringAsFixed(1),
+            if (recordedAt != null) 'recorded_at': recordedAt.millisecondsSinceEpoch.toString(),
           });
     try {
       final response = await request.send();
@@ -86,5 +112,8 @@ class LocationPing {
     }
   }
 }
+// <<< END    class LocationPing
 
+// >>> START  class _Result
 enum _Result { ok, failed, throttled, noSession }
+// <<< END    class _Result

@@ -1,34 +1,33 @@
-import 'package:app_settings/app_settings.dart';
+// ----------------------------------------------------------------------
+// Registration: personal details
+//
+// Name, date of birth, address etc.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
-import 'package:base_project_flutter/globalFuctions/addressGoogleMaps.dart';
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../api_services/userApi.dart';
 import '../../../constants/constants.dart';
-import '../../../constants/imageConstant.dart';
 
 import '../../../globalWidgets/button.dart';
 import 'package:intl/intl.dart';
 
-import '../../../globalWidgets/leadingbackbtn.dart';
 import '../../../globalWidgets/texfildtital.dart';
 import '../../../globalWidgets/textfildcustom.dart';
 
 import '../../../responsive.dart';
 import '../add_Details.dart';
 
+// >>> START  class PersonalDetails
 class PersonalDetails extends StatefulWidget {
   PersonalDetails({
     Key? key,
@@ -39,35 +38,38 @@ class PersonalDetails extends StatefulWidget {
     this.gender,
     this.address,
   }) : super(key: key);
-  var firstName;
-  var lastName;
-  var Email;
+  final firstName;
+  final lastName;
+  final Email;
   final DateOfBirth;
-  var gender;
-  var address;
+  final gender;
+  final address;
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
 }
+// <<< END    class PersonalDetails
 
+// >>> START  class _PersonalDetailsState
 class _PersonalDetailsState extends State<PersonalDetails> {
+  // Editable copies of the values passed in (the widget's own fields are final).
+  late dynamic _enteredFirstName = widget.firstName;
+  late dynamic _enteredEmail = widget.Email;
+  late dynamic _enteredAddress = widget.address;
+  // >>> START  _PersonalDetailsState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     fectData();
     // TODO: implement initState
     super.initState();
   }
+  // <<< END    _PersonalDetailsState.initState()
 
-  @override
   var gender1;
   List<String> gender = ['Male', 'Female', 'Others'];
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _homeAddressController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _pincodeController = TextEditingController();
-  final TextEditingController _dobeController = TextEditingController();
 
   final TextEditingController _emailaddress = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
@@ -81,16 +83,19 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   var _selectedDate;
   var formattedTemporaryDate;
 
+  // >>> START  _PersonalDetailsState.dateFormate()  -  date formate
   dateFormate(now) {
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     final String formatted = formatter.format(now);
     return formatted;
   }
+  // <<< END    _PersonalDetailsState.dateFormate()
 
   bool isSelected = false;
   bool isDateSelected = false;
   bool istextSelected = false;
 
+  // >>> START  _PersonalDetailsState._selectDate()  -  select date
   void _selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
@@ -144,7 +149,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       });
     }
   }
+  // <<< END    _PersonalDetailsState._selectDate()
 
+  // >>> START  _PersonalDetailsState.fectData()  -  fect data
   fectData() {
     print(widget.gender);
     setState(() {
@@ -152,7 +159,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       print(gender1);
     });
   }
+  // <<< END    _PersonalDetailsState.fectData()
 
+  // >>> START  _PersonalDetailsState.validateEmail()  -  validate email
   String? validateEmail(String? value) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
         r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
@@ -166,7 +175,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
         ? 'Enter a valid email address'
         : null;
   }
+  // <<< END    _PersonalDetailsState.validateEmail()
 
+  // >>> START  _PersonalDetailsState.calculateAge()  -  calculate age
   //Age Calculation
   calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -181,42 +192,50 @@ class _PersonalDetailsState extends State<PersonalDetails> {
     }
     return age;
   }
+  // <<< END    _PersonalDetailsState.calculateAge()
 
 
+  // >>> START  _PersonalDetailsState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
+    // Scaffold gives TextFields their Material ancestor and a white page;
+    // SafeArea keeps the title clear of the status bar. The keyboard inset
+    // is already applied by the Padding below.
     return Scaffold(
       backgroundColor: tWhite,
-      appBar: AppBar(
-        elevation: 0.5,
-        backgroundColor: tWhite,
-        leading: BackButtonLeading(
-          onTap: () {
-            Twl.forceNavigateTo(context, AddDetailsView());
-          },
-        ),
-        title: Text('personal_details'.tr,
-            style: TextStyle(
-                fontSize: isTab(context) ? 14.sp : 16.sp,
-                color: tSecondaryColor,
-                fontWeight: FontWeight.w800)),
-      ),
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.forceNavigateTo(context, AddDetailsView());
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Container(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: SingleChildScrollView(
-                        child: Column(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+      child: Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            color: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                color: tWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                boxShadow: [tBoxShadow],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
+                            SizedBox(
+                              height: 1.6.h,
+                            ),
+                            Center(
+                              child: Text('personal_details'.tr,
+                                  style: TextStyle(
+                                      fontSize: isTab(context) ? 14.sp : 16.sp,
+                                      color: tSecondaryColor,
+                                      fontWeight: FontWeight.w800)),
+                            ),
                             SizedBox(
                               height: 1.6.h,
                             ),
@@ -247,8 +266,8 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                   fontWeight: FontWeight.w600,
                                   color: tSecondaryColor),
                               controller: _firstNameController
-                                ..text = widget.firstName != null
-                                    ? widget.firstName.toString()
+                                ..text = _enteredFirstName != null
+                                    ? _enteredFirstName.toString()
                                     : ''
                                 ..selection = TextSelection.fromPosition(
                                     TextPosition(
@@ -256,11 +275,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                             _firstNameController.text.length -
                                                 0)),
                               onChanged: (txt) {
-                                widget.firstName = txt;
+                                _enteredFirstName = txt;
                                 _firstNameController.value = TextEditingValue(
                                     text: txt,
                                     selection: TextSelection.collapsed(
-                                      offset: widget.firstName,
+                                      offset: _enteredFirstName,
                                     ));
                               },
                               textCapitalization: TextCapitalization.words,
@@ -276,6 +295,32 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 }
                               },
                               hinttext: 'full_name'.tr,
+                              keyboardType: TextInputType.text,
+                            ),
+                            SizedBox(
+                              height: 2.h,
+                            ),
+                            // The backend requires a last name.
+                            TextFildTital(
+                              text: 'last_name'.tr,
+                            ),
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            TextFieldWidgets(
+                              readOnly: false,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: tSecondaryColor),
+                              controller: _lastnameController,
+                              textCapitalization: TextCapitalization.words,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Last name can\'t be empty';
+                                }
+                                return null;
+                              },
+                              hinttext: 'last_name'.tr,
                               keyboardType: TextInputType.text,
                             ),
                             SizedBox(
@@ -319,18 +364,18 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                   fontWeight: FontWeight.w600,
                                   color: tSecondaryColor),
                               controller: _emailaddress
-                                ..text = widget.Email != null
-                                    ? widget.Email.toString()
+                                ..text = _enteredEmail != null
+                                    ? _enteredEmail.toString()
                                     : ''
                                 ..selection = TextSelection.fromPosition(
                                     TextPosition(
                                         offset: _emailaddress.text.length - 0)),
                               onChanged: (txt) {
-                                widget.Email = txt;
+                                _enteredEmail = txt;
                                 _emailaddress.value = TextEditingValue(
                                     text: txt,
                                     selection: TextSelection.collapsed(
-                                      offset: widget.Email,
+                                      offset: _enteredEmail,
                                     ));
                               },
                               keyboardType: TextInputType.text,
@@ -364,7 +409,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 ),
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
-                                  color: tlightGray.withOpacity(0.4),
+                                  color: tlightGray.withValues(alpha: 0.4),
                                   border: Border.all(
                                     color: tgreen,
                                     width: 1.0,
@@ -486,12 +531,12 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 color: tSecondaryColor,
                               ),
                               controller: _homeAddressController
-                                ..text = widget.address != null ? widget.address.toString() : ''
+                                ..text = _enteredAddress != null ? _enteredAddress.toString() : ''
                                 ..selection = TextSelection.fromPosition(
                                   TextPosition(offset: _homeAddressController.text.length - 0),
                                 ),
                               onChanged: (txt) {
-                                widget.address = txt;
+                                _enteredAddress = txt;
 
                                 _homeAddressController.value = TextEditingValue(
                                   text: txt,
@@ -603,15 +648,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             SizedBox(
                               height: 4.h,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Button(
+                            Button(
               textcolor: tWhite,
               bottonText: 'next'.tr,
               borderSide: BorderSide(
@@ -655,6 +692,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   return;
                 }
                 stopLoading();
+                final sheetContext = context;
                 showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -727,8 +765,19 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                               .updateProfileAPi(context, param);
                                           if (res != null &&
                                               res['status'] == 'OK') {
-                                            Twl.forceNavigateTo(
-                                                context, AddDetailsView());
+                                            Navigator.of(context).pop();
+                                            // Opened as a bottom sheet from the Add
+                                            // Details hub: just close it. Opened as a
+                                            // full page (startup / OTP / language):
+                                            // there is nothing to pop back to, so go
+                                            // to the hub, which routes to the next step.
+                                            if (ModalRoute.of(sheetContext)
+                                                is PageRoute) {
+                                              Twl.forceNavigateTo(sheetContext,
+                                                  const AddDetailsView());
+                                            } else {
+                                              Twl.navigateBack(sheetContext);
+                                            }
                                             stopLoading();
                                           } else {
                                             stopLoading();
@@ -763,17 +812,24 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             SizedBox(
               height: 2.h,
             )
-          ],
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
+      ),
+      ),
       ),
     );
   }
+  // <<< END    _PersonalDetailsState.build()
 
 
 
+  // >>> START  _PersonalDetailsState.sendCurrentLocation()  -  send current location
   Future<bool> sendCurrentLocation(BuildContext context) async {
     print("Getting current Location");
-    LocationPermission permission;
 
     // Check location service status
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -829,11 +885,15 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
     return false;
   }
+  // <<< END    _PersonalDetailsState.sendCurrentLocation()
 
+  // >>> START  _PersonalDetailsState.openLocationSettings()  -  open location settings
   Future<void> openLocationSettings() async {
     await openAppSettings();
   }
+  // <<< END    _PersonalDetailsState.openLocationSettings()
 
 
 }
+// <<< END    class _PersonalDetailsState
 

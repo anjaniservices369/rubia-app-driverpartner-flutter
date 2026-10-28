@@ -1,8 +1,11 @@
-import 'dart:io';
+// ----------------------------------------------------------------------
+// Referral code
+//
+// Optional: enter the code of the driver who invited you.
+// ----------------------------------------------------------------------
 
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -14,27 +17,30 @@ import '../../globalWidgets/button.dart';
 import '../../globalWidgets/customTextFiled.dart';
 import '../../responsive.dart';
 // import '../chooseAppLanguage/appLanguaeg.dart';
-import '../appLanguage/chooseAppLanguage.dart';
 import '../location_popup_page.dart';
-import '../otpPage/otpPage.dart';
 
+// >>> START  class ReferalCodeView
 class ReferalCodeView extends StatefulWidget {
   @override
   State<ReferalCodeView> createState() => _ReferalCodeViewState();
 }
+// <<< END    class ReferalCodeView
 
+// >>> START  class _ReferalCodeViewState
 class _ReferalCodeViewState extends State<ReferalCodeView> {
-  @override
   var referal = 0;
   final TextEditingController _referralCodecontroller = TextEditingController();
 
   final _formKey = new GlobalKey<FormState>();
+  // >>> START  _ReferalCodeViewState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tBlack,
-      body: WillPopScope(
-        onWillPop: () {
-          return Twl.willpopAlert(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          Twl.willpopAlert(context);
         },
         child: Form(
           key: _formKey,
@@ -286,4 +292,6 @@ class _ReferalCodeViewState extends State<ReferalCodeView> {
       ),
     );
   }
+  // <<< END    _ReferalCodeViewState.build()
 }
+// <<< END    class _ReferalCodeViewState

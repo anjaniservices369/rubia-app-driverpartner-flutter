@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// History filter sheet
+//
+// Filter rides by date.
+// ----------------------------------------------------------------------
 // ignore_for_file: override_on_non_overriding_member
 
 import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
@@ -13,19 +18,23 @@ import '../../../constants/constants.dart';
 import '../../../providers/earningsProvider.dart';
 import '../../../responsive.dart';
 
+// >>> START  class HistoryBottomSheet
 class HistoryBottomSheet extends StatefulWidget {
   const HistoryBottomSheet({Key? key}) : super(key: key);
 
   @override
   State<HistoryBottomSheet> createState() => _HistoryBottomSheetState();
 }
+// <<< END    class HistoryBottomSheet
 
+// >>> START  class _HistoryBottomSheetState
 class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
   String filterValue = "All";
 
   @override
   List<String> searchlist = ['Today', 'yesterday', 'Last Week', 'Custom'];
 
+  // >>> START  _HistoryBottomSheetState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
     return Consumer<EarningsProvider>(builder: (context, provider, _) {
       return Padding(
@@ -110,7 +119,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
                         sharedPreferences.setString(
                             'filteredValue', 'Yesterday');
 
-                        var now = new DateTime.now();
                         var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                         String endDate = formatter
                             .format(DateTime.now().subtract(Duration(days: 1)));
@@ -148,7 +156,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
                         sharedPreferences.setString(
                             'filteredValue', 'Last 7 Days');
 
-                        var now = new DateTime.now();
                         var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                         String endDate = formatter
                             .format(DateTime.now().add(Duration(days: 1)));
@@ -187,7 +194,6 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
                             return Container();
                           },
                           transitionBuilder: (ctx, a1, a2, child) {
-                            var curve = Curves.easeInOut.transform(a1.value);
                             return PickCustomDate(
                               filterValue: filterValue,
                             );
@@ -205,10 +211,13 @@ class _HistoryBottomSheetState extends State<HistoryBottomSheet> {
       );
     });
   }
+  // <<< END    _HistoryBottomSheetState.build()
 }
+// <<< END    class _HistoryBottomSheetState
 
+// >>> START  class PickCustomDate
 class PickCustomDate extends StatefulWidget {
-  String filterValue;
+  final String filterValue;
 
   PickCustomDate({
     Key? key,
@@ -218,15 +227,20 @@ class PickCustomDate extends StatefulWidget {
   @override
   State<PickCustomDate> createState() => _PickCustomDateState();
 }
+// <<< END    class PickCustomDate
 
+// >>> START  class _PickCustomDateState
 class _PickCustomDateState extends State<PickCustomDate> {
+  // >>> START  _PickCustomDateState.initState()  -  runs once when the screen opens
   @override
   void initState() {
     super.initState();
   }
+  // <<< END    _PickCustomDateState.initState()
 
   var startDate;
   var endDate;
+  // >>> START  _PickCustomDateState._onSelectionChanged()  -  on selection changed
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
     debugPrint(args.value.startDate.toString().substring(0, 10));
@@ -236,7 +250,9 @@ class _PickCustomDateState extends State<PickCustomDate> {
       endDate = formatter.format(args.value.endDate);
     });
   }
+  // <<< END    _PickCustomDateState._onSelectionChanged()
 
+  // >>> START  _PickCustomDateState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -249,7 +265,7 @@ class _PickCustomDateState extends State<PickCustomDate> {
             height: 300,
             width: 400,
             child: SfDateRangePicker(
-              rangeSelectionColor: tPrimaryColor.withOpacity(0.4),
+              rangeSelectionColor: tPrimaryColor.withValues(alpha: 0.4),
               startRangeSelectionColor: tPrimaryColor,
               endRangeSelectionColor: tPrimaryColor,
               rangeTextStyle: TextStyle(
@@ -271,7 +287,7 @@ class _PickCustomDateState extends State<PickCustomDate> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
-                backgroundColor: tPrimaryColor.withOpacity(0.7),
+                backgroundColor: tPrimaryColor.withValues(alpha: 0.7),
               ),
               backgroundColor: tWhite,
               onSelectionChanged: _onSelectionChanged,
@@ -301,7 +317,6 @@ class _PickCustomDateState extends State<PickCustomDate> {
                       await SharedPreferences.getInstance();
                   sharedPreferences.remove('filteredEarnigs');
                   sharedPreferences.setString('filteredEarnigs', 'Custom');
-                  var formatter = new DateFormat('yyyy-MM-dd 00:00:00');
                   print('dates');
                   print(startDate);
                   print(endDate);
@@ -309,7 +324,6 @@ class _PickCustomDateState extends State<PickCustomDate> {
                   sharedPreferences.setString('startDate', startDate);
                   sharedPreferences.setString('endDate', endDate);
                   setState(() {
-                    widget.filterValue = 'Custom';
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => MyRidesView(
@@ -328,6 +342,7 @@ class _PickCustomDateState extends State<PickCustomDate> {
         ],
       ),
     );
-    ;
   }
+  // <<< END    _PickCustomDateState.build()
 }
+// <<< END    class _PickCustomDateState

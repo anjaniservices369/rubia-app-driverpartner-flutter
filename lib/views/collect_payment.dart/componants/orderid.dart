@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Ride id banner
+//
+// Shows the ride id.
+// ----------------------------------------------------------------------
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -5,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../constants/constants.dart';
 import '../../../../responsive.dart';
 
+// >>> START  class OrderID
 class OrderID extends StatefulWidget {
   const OrderID({
     Key? key,
@@ -13,8 +19,11 @@ class OrderID extends StatefulWidget {
   @override
   State<OrderID> createState() => _OrderIDState();
 }
+// <<< END    class OrderID
 
+// >>> START  class _OrderIDState
 class _OrderIDState extends State<OrderID> {
+  // >>> START  _OrderIDState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,4 +52,6 @@ class _OrderIDState extends State<OrderID> {
       ),
     );
   }
+  // <<< END    _OrderIDState.build()
 }
+// <<< END    class _OrderIDState

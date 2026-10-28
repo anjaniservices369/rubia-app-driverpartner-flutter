@@ -1,16 +1,20 @@
+// ----------------------------------------------------------------------
+// Estimated fare breakdown
+//
+// Explains the estimated fare.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
 import 'package:base_project_flutter/views/bookingsPage/componats/price_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:intl/intl.dart';
 
 import '../../../globalFuctions/globalFunctions.dart';
 import '../../../responsive.dart';
 
+// >>> START  class EstimateWidget
 class EstimateWidget extends StatefulWidget {
   EstimateWidget({Key? key, this.estimateDetails, this.billDetails})
       : super(key: key);
@@ -21,7 +25,9 @@ class EstimateWidget extends StatefulWidget {
   @override
   State<EstimateWidget> createState() => EstimateWidgetState();
 }
+// <<< END    class EstimateWidget
 
+// >>> START  class EstimateWidgetState
 class EstimateWidgetState extends State<EstimateWidget> {
   List<String> texts = [
     'beyond_1km'.tr,
@@ -31,11 +37,10 @@ class EstimateWidgetState extends State<EstimateWidget> {
     'cancellation_fee'.tr,
   ];
 
+  // >>> START  EstimateWidgetState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
-    final currentTime = DateTime.now();
-    final isNightTime = currentTime.hour >= 22 ||
-        currentTime.hour < 6; // 22 is 10 o'clock at night
+ // 22 is 10 o'clock at night
 //     // final tripOptionsProvider = Provider.of<TripOptionsProvider>(context);
 
 //     final pickupTimeFormat = DateFormat('HH:mm');
@@ -272,13 +277,17 @@ class EstimateWidgetState extends State<EstimateWidget> {
       ),
     );
   }
+  // <<< END    EstimateWidgetState.build()
 }
+// <<< END    class EstimateWidgetState
 
+// >>> START  class EstimatePriceHeadWidget
 class EstimatePriceHeadWidget extends StatelessWidget {
   const EstimatePriceHeadWidget({
     Key? key,
   }) : super(key: key);
 
+  // >>> START  EstimatePriceHeadWidget.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -320,4 +329,6 @@ class EstimatePriceHeadWidget extends StatelessWidget {
       ),
     );
   }
+  // <<< END    EstimatePriceHeadWidget.build()
 }
+// <<< END    class EstimatePriceHeadWidget

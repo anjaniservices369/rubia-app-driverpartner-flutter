@@ -1,9 +1,14 @@
+// ----------------------------------------------------------------------
+// Notification list state
+//
+// Holds the list of in-app notifications.
+// ----------------------------------------------------------------------
 import 'dart:developer';
 
 import 'package:base_project_flutter/api_services/userApi.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+// >>> START  class MyNotifactionProvider
 class MyNotifactionProvider extends ChangeNotifier {
   List myNotificationList = [];
   bool myNotificationGetting = false;
@@ -11,11 +16,9 @@ class MyNotifactionProvider extends ChangeNotifier {
   int currentPage = 0;
   int totalPages = 0;
   String resNOK = '';
-  String get _resNOK => resNOK;
 
   getFavorites({context, page}) async {
     myNotificationGetting = true;
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var res = await UserAPI().getMyNotifaction(context, page);
     try {
       if (res['status'] == 'OK') {
@@ -41,3 +44,4 @@ class MyNotifactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+// <<< END    class MyNotifactionProvider

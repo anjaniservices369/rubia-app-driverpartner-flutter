@@ -1,6 +1,14 @@
+// ----------------------------------------------------------------------
+// Shared helpers ('Twl')
+//
+// A toolbox used by many screens: pop-up alerts, moving between screens,
+// date formatting, picking/cropping photos and uploading them.
+//
+// Developer note: Class is Twl. pickImage()/uploadImage() upload through
+// MediaApi and return '1' on failure.
+// ----------------------------------------------------------------------
 import 'dart:io';
 
-import 'package:base_project_flutter/providers/globalFunctionProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 
@@ -13,12 +21,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/constants.dart';
 
 import 'package:intl/intl.dart';
 
+// >>> START  class Twl
+/// Shared toolbox for screens: alerts, navigation, date formatting and photo picking/uploading.
+/// (The name is historical.)
 class Twl {
   bool isLoading = true;
 
@@ -36,11 +46,10 @@ class Twl {
 
 //getImage start
 
+  // >>> START  Twl.getImage()  -  get image
   static getImage(String type) async {
     late File? _image;
 
-    bool _loading = true;
-    late String url;
     final picker = ImagePicker();
     var pickedFile;
     if (type == 'camera') {
@@ -74,7 +83,6 @@ class Twl {
       ],
     );
     // setState(() {
-    _loading = false;
     if (croppedFile != null) {
       File _file = File(croppedFile.path);
       print(_file.lengthSync());
@@ -84,50 +92,25 @@ class Twl {
         print(_image);
         return _image;
       } else {}
-      _loading = true;
     } else {
       print('No image selected.');
     }
     // });
 
     if (croppedFile != null) {
-      _loading = false;
       File _file = File(croppedFile.path);
       print(_file.lengthSync());
       // ignore: non_constant_identifier_names
       String ImageName = 'store-image-update';
       print("13" + ImageName);
-      // ignore: unused_local_variable
-      // String url;
-      // Upload file
-      //   FirebaseStorage storage = FirebaseStorage.instance;
-      //   Reference ref =
-      //       storage.ref().child("$ImageName" + DateTime.now().toString());
-      //   print(ref);
 
-      //   UploadTask uploadTask = ref.putFile(_file);
-      //   print(uploadTask);
 
-      //   // setState(() => isLoading = true);
-      //   uploadTask.then((resp) async {
-      //     _loading = false;
-      //     url = await resp.ref.getDownloadURL();
-      //     print('Image url');
-      //     print(url);
-      //     return url;
-      //     // setState(() {
-      //     //   _loading = false;
-      //     //   storeimage = url;
-      //     //   print('storeimage');
-      //     //   print(storeimage);
-      //     //   _loading = true;
-      //     // });
-      //   }
-      //   );
     }
   }
+  // <<< END    Twl.getImage()
 //getImage end
 
+  // >>> START  Twl.createAlert()  -  create alert
   static createAlert(BuildContext context, error, errormsg) async {
     showDialog(
         context: context,
@@ -140,7 +123,9 @@ class Twl {
           );
         });
   }
+  // <<< END    Twl.createAlert()
 
+  // >>> START  Twl.willpopAlert()  -  willpop alert
   static willpopAlert(BuildContext context) {
     showDialog(
       context: context,
@@ -206,18 +191,24 @@ class Twl {
       },
     );
   }
+  // <<< END    Twl.willpopAlert()
 
+  // >>> START  Twl.navigateTo()  -  navigate to
   static navigateTo(BuildContext context, page) async {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => page),
     );
   }
+  // <<< END    Twl.navigateTo()
 
+  // >>> START  Twl.navigateBack()  -  navigate back
   static navigateBack(BuildContext context) async {
     Navigator.pop(context);
   }
+  // <<< END    Twl.navigateBack()
 
+  // >>> START  Twl.errorHandler()  -  error handler
   static errorHandler(BuildContext context, errorRes) async {
     switch (errorRes) {
       case 301:
@@ -273,12 +264,16 @@ class Twl {
         ));
     }
   }
+  // <<< END    Twl.errorHandler()
 
+  // >>> START  Twl.forceNavigateTo()  -  force navigate to
   static forceNavigateTo(BuildContext context, page) async {
     Navigator.pushReplacement(context,
         new MaterialPageRoute(builder: (BuildContext context) => page));
   }
+  // <<< END    Twl.forceNavigateTo()
 
+  // >>> START  Twl.dateFormate()  -  date formate
   // Date Formate
   static dateFormate(now) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -286,28 +281,36 @@ class Twl {
     final String formatted = formatter.format(DateTime.parse(now.toString()));
     return formatted;
   }
+  // <<< END    Twl.dateFormate()
 
+  // >>> START  Twl.dateReverseFormate()  -  date reverse formate
   static dateReverseFormate(now) {
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
     final String formatted = formatter.format(DateTime.parse(now.toString()));
     return formatted;
   }
+  // <<< END    Twl.dateReverseFormate()
 
+  // >>> START  Twl.dateTimeFormate()  -  date time formate
   static dateTimeFormate(now) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm');
 
     final String formatted = formatter.format(DateTime.parse(now.toString()));
     return formatted;
   }
+  // <<< END    Twl.dateTimeFormate()
 
+  // >>> START  Twl.dateTime()  -  date time
   static dateTime(now) {
     final DateFormat formatter = DateFormat('hh:mm aa');
 
     final String formatted = formatter.format(DateTime.parse(now.toString()));
     return formatted;
   }
+  // <<< END    Twl.dateTime()
 
+  // >>> START  Twl.timeFormate()  -  time formate
   //time format
   static timeFormate(now) {
     final inputFormat = DateFormat('HH:mm:ss');
@@ -315,12 +318,16 @@ class Twl {
     final dateTime = inputFormat.parse(now);
     return outputFormat.format(dateTime);
   }
+  // <<< END    Twl.timeFormate()
 
+  // >>> START  Twl.reviewTotal()  -  review total
   static reviewTotal(var actualValue, var totalValue) {
     final totalPrecentage = (actualValue / totalValue) * 100;
     return totalPrecentage;
   }
+  // <<< END    Twl.reviewTotal()
 
+  // >>> START  Twl.uploadImage()  -  upload image
   Future<String> uploadImage() async {
     var pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
@@ -336,7 +343,9 @@ class Twl {
     }
     return '1';
   }
+  // <<< END    Twl.uploadImage()
 
+  // >>> START  Twl.pickImage()  -  pick image
   Future<String> pickImage(BuildContext context) async {
     final picker = ImagePicker();
     final imageSource = await showBarModalBottomSheet<ImageSource>(
@@ -406,7 +415,9 @@ class Twl {
     }
     return '1';
   }
+  // <<< END    Twl.pickImage()
 
+  // >>> START  Twl.wallateShowDailogBox()  -  wallate show dailog box
   static wallateShowDailogBox(context, var checkDetails) {
     return showDialog(
       context: context,
@@ -570,4 +581,6 @@ class Twl {
       },
     );
   }
+  // <<< END    Twl.wallateShowDailogBox()
 }
+// <<< END    class Twl

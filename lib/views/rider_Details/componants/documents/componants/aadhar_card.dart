@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------
+// Document: Aadhaar card
+//
+// Front and back photo of the Aadhaar card.
+// ----------------------------------------------------------------------
 import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +19,7 @@ import '../../../../../globalWidgets/textfildcustom.dart';
 import '../../../../../responsive.dart';
 import '../documents.dart';
 
+// >>> START  class AdharCard
 class AdharCard extends StatefulWidget {
   const AdharCard({Key? key, this.chasisNumber}) : super(key: key);
   final chasisNumber;
@@ -21,11 +27,14 @@ class AdharCard extends StatefulWidget {
   @override
   State<AdharCard> createState() => _AdharCardState();
 }
+// <<< END    class AdharCard
 
+// >>> START  class _AdharCardState
 class _AdharCardState extends State<AdharCard> {
   TextEditingController _aadharNumberController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
 
+  // >>> START  _AdharCardState.panValidate()  -  pan validate
   String? panValidate(String value) {
     String p = "[A-Z]{5}[0-9]{4}[A-Z]{1}";
 
@@ -39,12 +48,14 @@ class _AdharCardState extends State<AdharCard> {
 
     // return regExp.hasMatch(em);
   }
+  // <<< END    _AdharCardState.panValidate()
 
   var aadharFrontImg;
   var aadharBackImg;
   bool aadharFrontImgLoading = false;
   bool aadharBackImgLoading = false;
 
+  // >>> START  _AdharCardState.build()  -  draws this screen / widget (its layout)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -402,4 +413,6 @@ class _AdharCardState extends State<AdharCard> {
       ),
     );
   }
+  // <<< END    _AdharCardState.build()
 }
+// <<< END    class _AdharCardState
