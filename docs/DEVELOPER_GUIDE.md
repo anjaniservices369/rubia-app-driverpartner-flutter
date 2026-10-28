@@ -417,3 +417,41 @@ of the Ride History date range). `AcceptedRideDetails.dart` shows the server's r
 
 ## Account deletion (28 Oct 2026)
 UserAPI.deleteAccount posts to driver/delete-account (DELETE_ACCOUNT in apiConstants.dart); _ProfilePageState._confirmDeleteAccount in views/profilePage/profilePage.dart asks, calls it, clears SharedPreferences and goes to LoginPageView. Server side: AccountDeletion::deleteUser in the backend (app/components/AccountDeletion.php). globalWidgets/driverFoodStayNote.dart shows the food-and-stay note on the ride details and the bill.
+
+## Registration screens and the 28 Oct 2026 end-to-end run
+**Page versus bottom sheet.** `rider_Details/componants/emergency_Contacts.dart`, `vehicle_Types.dart`
+and `bank_details.dart` return a bare `Form`. From the Add-details hub they are shown with
+`showModalBottomSheet`, which supplies a Material ancestor. `main.dart` (`nextScreen:`) and
+`otpPage.dart` push them as full pages, where the `TextField`s had no Material ancestor
+(crash) and the old `Twl.navigateBack(context)` popped the only route (black screen). Each `build()`
+now keeps the form in `final form` and, when `ModalRoute.of(context) is PageRoute`, wraps it in
+`Scaffold(body: SafeArea(child: form))`; after a successful save a page goes to
+`AddDetailsView` via `Twl.forceNavigateTo`, a sheet still calls `Twl.navigateBack`. `personal_Details.dart`
+already did this and is the reference.
+
+**Licence save.** `documents/componants/driving_licence.dart`: `selectedIssuedDate` and
+`selectedExpiryDate` are null until a date is picked (the boxes show `DateTime.now()` as text),
+so `Twl.dateFormate(null)` threw and the spinner never stopped. `onTap` now checks both dates first and
+alerts; a failed `validate()` also calls `stopLoading()`.
+
+**Startup flags need an email.** `main.dart` reads `driver/check`'s `personal_details`,
+`driver_emergency_contacts`, `driver_vehicle_types`, `document_verification` ... only when
+`check['detail']['email'] != null`; a driver without an email always restarts at Personal details.
+
+**What a driver needs before rides show up** (all server data, no app change): `is_paid_joining_fee`,
+`profile_verified = 1`, `user.profile_image` set (the selfie step), and a row in `driver_subscription`
+with `status = 1` and a future `end_date`; without the subscription the Bookings tab shows
+"Your subscription is not active".
+
+**Run of 28 Oct 2026.** Two phones (customer app, Partner app) against the local PHP backend and
+`mysql:8.4` (see the customer app's `PROJECT_GUIDE.md` §7.2). Verified: OTP login of a new number,
+all registration steps except the selfie (camera) and the joining fee (gateway), `accept-ride`,
+`go-for-pickup`, `arrived-location` (ride OTP is `booking.otp`), `collect-cash`, the compulsory
+review. `start-ride` and `complete-ride` were called through the API (the start sheet wants camera photos).
+The bill was Rs 630 for 6.009 km (driver Rs 540, platform Rs 90) against a customer estimate of Rs 819 and
+driver-list figures of Rs 702 / Rs 710.10; the difference is not explained yet.
+
+**New known issues:** `address` posted by `personal_Details.dart` is not saved by the server (the dev
+database kept it empty); the vehicle dropdown lists each type twice; the end-of-ride *Completed* tab was
+empty before the cash was collected; background location is requested twice at set-up; typos
+"u want submit" and "vechile".

@@ -91,6 +91,17 @@ history screens. The Available and Accepted ride lists had no active booking at 
 so accepting and completing a ride and collecting payment were not tested. The test account
 was already marked Online; no availability or payment setting was changed during the test.
 
+**Full run on 28 October 2026 (two phones, local test server).** A brand-new driver was registered
+from the first login to the Home screen, then took a customer's ride from acceptance to payment and
+review. Registration (personal details, emergency contacts, vehicle type, driving licence, Aadhaar,
+PAN, police verification, bank details) worked. The selfie and the joining-fee payment were not
+tested (the selfie needs the camera; the fee opens the payment gateway); they were marked done in
+the *test* database only. Ride steps through the app: accept, go for pickup, arrived with the
+customer's 4-digit code. The ride start and finish were sent from the server side, not tapped on
+the phone (the start screen asks for selfies and car photos). Then the app's Collect Cash and the
+compulsory 5-star review worked, and the customer's phone showed the bill and its own compulsory
+rating. No real money was moved.
+
 ### Flow notes
 
 The location explanation and readiness steps now appear within one guided screen. The driver
@@ -248,3 +259,17 @@ You asked for the app to work with the updated backend. In plain words:
 - Outstation round trips show a note that the customer provides the driver's food and stay (not in the fare).
 - A driver must have a photo to accept a ride; ride bill, payment collection and the compulsory rating are as in section 9.
 - **Splash:** only the logo on white (Android 12 system splash `values-v31`, same size in-app, fade).
+
+## 11. What changed on 28 October 2026 (registration screens)
+- **Registration screens that went blank or crashed are fixed.** *Emergency contacts*, *Vehicle types*
+  and *Bank details* used to work only when opened from the *Add details* list. When the app opened one of
+  them by itself (after logging in again, or on start-up) it crashed ("No Material widget") or ended on a
+  black screen after saving. They now open as normal pages and, after saving, return to the *Add details* list.
+- **Driving licence:** pressing *Save* without choosing the issued and expiry dates left the button
+  spinning forever with no message. It now says "Please select the issued date and the expiry date".
+- **Still open (found in the same test):**
+  - The home address typed in *Personal details* is not stored on the driver's record.
+  - The vehicle list shows each type twice with no label (probably one set per gear type).
+  - Typos: "Are you sure u want submit the fields" and "Select vechile type".
+  - Background location is asked for twice during set-up.
+  - The completed-ride *Completed* tab was empty until the payment was collected.
