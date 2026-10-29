@@ -45,9 +45,8 @@ default:
       files:
         - pubspec.lock
     paths:
+      # The Gradle folders are not cached on purpose: restoring them doubles their size on the free runner's small disk.
       - .pub-cache/
-      - .gradle/caches/
-      - .gradle/wrapper/
 
 verify:
   stage: verify
