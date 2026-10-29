@@ -255,7 +255,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               height: 3.h,
                             ),
                             TextFildTital(
-                              text: 'full_name'.tr,
+                              text: 'first_name'.tr,
                             ),
                             SizedBox(
                               height: 1.h,
@@ -285,16 +285,16 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               textCapitalization: TextCapitalization.words,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'full_name_Cant_Be_Empty'.tr;
+                                  return 'firstName_Cant_Be_Empty'.tr;
                                 } else if (value.length != 1 &&
                                     value.length < 1) {
-                                  return 'full_name_Must_Be_Minimum_1_Digits'
+                                  return 'firstName_Must_Be_Minimum_1_Digits'
                                       .tr;
                                 } else {
                                   return null;
                                 }
                               },
-                              hinttext: 'full_name'.tr,
+                              hinttext: 'first_name'.tr,
                               keyboardType: TextInputType.text,
                             ),
                             SizedBox(

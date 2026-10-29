@@ -545,6 +545,8 @@ class LanguageTranslations extends Translations {
               "code, you can received a free Ride",
 //ReferalCodeView
           'login': 'Login',
+          'login_or_register': 'Login / Register',
+          'continue_text': 'Continue',
           "referral_code_can't_be_empty": "Referral Code Can't Be Empty",
           "referral_code": "Referral Code",
           "skip": "Skip",
@@ -1193,6 +1195,8 @@ class LanguageTranslations extends Translations {
               "मोबाइल नंबर 10 अंकों का होना चाहिए",
           'enter_Mobile_Number': 'मोबाइल नंबर दर्ज करें',
           'login': 'लॉग इन करें',
+          'login_or_register': 'लॉग इन / रजिस्टर करें',
+          'continue_text': 'जारी रखें',
 //NotificationView
           "clear": "साफ़ करे",
           "start_your_first_ride_with_winter_Offers.":
@@ -1840,6 +1844,8 @@ class LanguageTranslations extends Translations {
           "mobile_Number_Must_Be_10_Digits": "మొబైల్ నంబర్ 10 అంకెల ఉండాలి",
           'enter_Mobile_Number': 'మొబైల్ నంబర్ నమోదు చేయండి',
           'login': 'లాగిన్',
+          'login_or_register': 'లాగిన్ / రిజిస్టర్',
+          'continue_text': 'కొనసాగించండి',
 //NotificationView
           "clear": "తిరిగి నివేదించండి",
           "start_your_first_ride_with_winter_Offers.":

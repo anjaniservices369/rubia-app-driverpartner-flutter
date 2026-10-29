@@ -30,7 +30,7 @@ earnings, documents) lives on the backend server; the app is the driver's window
 ## 2. A driver's journey (what the app does, in order)
 
 ### Step A — Joining
-1. **Welcome and login** — a new driver sees the onboarding slides, then enters a mobile
+1. **Welcome and login** — a new driver sees the logo splash, then the *Login / Register* screen and enters a mobile
    number and requests an **SMS code (OTP)**. The app can offer to read the received code
    automatically. There are no passwords. The driver's language can be changed from the
    Profile area.
@@ -273,3 +273,8 @@ You asked for the app to work with the updated backend. In plain words:
   - Typos: "Are you sure u want submit the fields" and "Select vechile type".
   - Background location is asked for twice during set-up.
   - The completed-ride *Completed* tab was empty until the payment was collected.
+- **29 Oct 2026:** the three intro slides after the splash were removed; a new partner goes straight to *Login / Register*
+  (button *Continue*). The first registration field is labelled *First Name* (was *Full Name*), and the OTP screen's
+  heading is translated. Run on the Redmi from the splash: all five registration steps, including the selfie taken with
+  the camera and the other documents, saved without any database edits; the app stops at the joining-fee screen
+  (payment was not made).

@@ -35,7 +35,7 @@ import 'package:base_project_flutter/providers/themeProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
 import 'package:base_project_flutter/views/joiningfees/joining%20_fees.dart';
 import 'package:base_project_flutter/views/location_popup_page.dart';
-import 'package:base_project_flutter/views/onBoardingpage/onBoardingPage.dart';
+import 'package:base_project_flutter/views/logiPage/loginPage.dart';
 import 'package:base_project_flutter/views/profile_review/profile_review.dart';
 import 'package:base_project_flutter/views/rider_Details/add_Details.dart';
 import 'package:base_project_flutter/views/translate.dart';
@@ -335,7 +335,7 @@ class _MyAppState extends State<MyApp> {
               splash: Center(child: SizedBox(width: 117, child: Image.asset(Images.DRIVERLOGO, fit: BoxFit.contain))), // same size as the Android 12 system splash logo
               splashIconSize: 300,
               nextScreen: widget.checkAuth == null || widget.checkAuth == ''
-                  ? OnboardingPage()
+                  ? LoginPageView()
                   : personalDetails == false
                   ? PersonalDetails()
                   : isEmergencyContactDetails == false

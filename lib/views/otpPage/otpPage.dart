@@ -22,6 +22,7 @@ import 'package:base_project_flutter/views/rider_details/componants/vehicle_Type
 import 'package:base_project_flutter/api_services/pushService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_icon_button/loading_icon_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -149,7 +150,7 @@ class _OtpPageViewState extends State<OtpPageView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'OTP Verification',
+                        'OTP_Verification'.tr,
                         style: GoogleFonts.mulish(
                           color: tSecondaryColor,
                           fontWeight: FontWeight.w800,
@@ -162,7 +163,7 @@ class _OtpPageViewState extends State<OtpPageView> {
                       Row(
                         children: [
                           Text(
-                            'Sent to' + " ",
+                            'sent_to'.tr + " ",
                             style: TextStyle(
                               color: tbrown,
                               fontSize: isTab(context) ? 9.sp : 11.sp,

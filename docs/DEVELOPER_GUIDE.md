@@ -54,7 +54,7 @@ Naming is inconsistent (`componants`, `globalFuctions`, `stetuesConstant`, `hoem
 1. Create notification channels (`new_booking_alert` with ringtone, `other_high_importance_channel`).
 2. `PushService.init()` — starts OneSignal if `oneSignalAppId` is set.
 3. Read `authCode` from `SharedPreferences`.
-   - none → *Onboarding*.
+   - none → *Login / Register* (`LoginPageView`; the three intro slides were removed on 29 Oct 2026).
    - present → call `driver/check`. On `OK` the response tells which onboarding step is
      unfinished; on a *session-invalid* NOK the stored code is deleted.
 4. First screen is chosen in this order (first false wins):
@@ -109,7 +109,7 @@ instead of `error`. Always check `status`.
 
 | Folder | Purpose |
 |---|---|
-| `appLanguage`, `onBoardingpage`, `logiPage`, `otpPage`, `referalCode` | First-run flow: language, intro, login, OTP, optional referral code |
+| `appLanguage`, `logiPage`, `otpPage`, `referalCode` | First-run flow: language, login / register, OTP, optional referral code |
 | `rider_Details` | Registration wizard: personal, emergency contacts, vehicle types, documents (`documents/componants/*`), bank, submit (`add_Details.dart`) |
 | `joiningfees` | One-time fee payment (Cashfree) |
 | `profile_review` | Approval states: under review / approved / blocked |
@@ -132,7 +132,7 @@ This is the current source-defined flow; it is a guide to navigation and options
 that every backend-dependent branch has been exercised.
 
 1. **First launch and login**
-   - A fresh session starts with onboarding. Its final action opens Login; Login accepts a
+   - A fresh session starts on the Login / Register screen (the intro slides are gone); it accepts a
      mobile number and requests an SMS OTP.
    - OTP supports resending and correcting the mobile number. Verification stores the session
      and routes the driver to the next registration step.

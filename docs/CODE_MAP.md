@@ -13,7 +13,7 @@
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (125 files, about 43,268 lines)
+## 2. Files (124 files, about 42,933 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -83,9 +83,8 @@
 | `views/logiPage/loginPage.dart` | 179 | Login (mobile number) - The driver types their mobile number; an SMS code is sent. |  |
 | `views/odometer/ending_odometer_details.dart` | 282 | Ending odometer - Driver enters the odometer reading and photo at ride end. | unused |
 | `views/odometer/starting_odometer_details.dart` | 276 | Starting odometer - Driver enters the odometer reading and photo at ride start. | unused |
-| `views/onBoardingpage/onBoardingPage.dart` | 342 | Intro slides - Three welcome slides shown before login. |  |
 | `views/order_completed/order_completed.dart` | 134 | Ride completed - 'Great job' end screen with Ready for next ride. |  |
-| `views/otpPage/otpPage.dart` | 479 | Enter SMS code (OTP) - The driver enters the 4-digit SMS code to log in. The code is read from the SMS automatically (one tap to allow). |  |
+| `views/otpPage/otpPage.dart` | 480 | Enter SMS code (OTP) - The driver enters the 4-digit SMS code to log in. The code is read from the SMS automatically (one tap to allow). |  |
 | `views/profile_review/ApplicationStatus.dart` | 399 | Application status - Shows approved / pending status of the application. |  |
 | `views/profile_review/profile_block.dart` | 314 | Profile blocked - Shown when the account has been blocked by the admin. |  |
 | `views/profile_review/profile_review.dart` | 353 | Profile under review - Shown while your team checks the documents. |  |
@@ -134,7 +133,7 @@
 | `views/rider_Details/componants/personal_Details.dart` | 900 | Registration: personal details - Name, date of birth, address etc. |  |
 | `views/rider_Details/componants/vehicle_Types.dart` | 558 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
-| `views/translate.dart` | 2044 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
+| `views/translate.dart` | 2050 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
 | `views/wallet/AmountReview.dart` | 270 | Confirm top-up amount - Reviews the amount before paying. |  |
 | `views/wallet/components.dart` | 742 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |

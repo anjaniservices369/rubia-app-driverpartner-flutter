@@ -82,7 +82,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Login".tr,
+                            'login_or_register'.tr,
                             style: GoogleFonts.mulish(
                               color: tSecondaryColor,
                               fontWeight: FontWeight.w800,
@@ -126,7 +126,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Button(
                         textcolor: tWhite,
-                        bottonText: 'Login'.tr,
+                        bottonText: 'continue_text'.tr,
                         onTap: (startLoading, stopLoading, btnState) async {
                           startLoading();
                           if (_formKey.currentState!.validate()) {
