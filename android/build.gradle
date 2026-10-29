@@ -25,6 +25,23 @@ subprojects { sub ->
             android.compileOptions.sourceCompatibility = JavaVersion.VERSION_17
             android.compileOptions.targetCompatibility = JavaVersion.VERSION_17
         }
+        // Kotlin must target the same Java version as the Java side of the same module; otherwise a build on a newer JDK (CI uses 21)
+        // stops with "Inconsistent JVM Target Compatibility Between Java and Kotlin Tasks". Copy the module's own Java target to Kotlin.
+        sub.afterEvaluate {
+            def a = sub.extensions.findByName("android")
+            if (a != null) {
+                def target = a.compileOptions.targetCompatibility.toString()
+                sub.tasks.configureEach { t ->
+                    if (t.class.name.contains('KotlinCompile')) {
+                        try {
+                            t.kotlinOptions.jvmTarget = target
+                        } catch (Throwable ignored) {
+                            try { t.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(target)) } catch (Throwable ignored2) {}
+                        }
+                    }
+                }
+            }
+        }
         if (android != null && android.namespace == null) {
             def manifest = sub.file("src/main/AndroidManifest.xml")
             if (manifest.exists()) {
