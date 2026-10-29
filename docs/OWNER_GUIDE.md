@@ -317,3 +317,5 @@ You asked for the app to work with the updated backend. In plain words:
 ## 13. Builds and releases (29 Oct 2026)
 
 New app versions are built by GitHub Actions: pushing to `develop` makes a signed test build, pushing to `staging` a staging build, and a tag such as `v1.2.3` a production release (with a required approval click). Details for a developer are in [CI_CD.md](CI_CD.md). The git history was also cleaned of old build files; anyone with an old copy of the code must download it again.
+
+**After the joining fee (checked 30 Oct 2026).** The driver lands on the "Profile under review" screen: "Your profile is under reviewing process. Please wait 2 to 4 days." (it used to say "Please Visit our office"). "Check Status" says the application is still in progress until your team approves the driver in the dashboard (Users > Drivers). On approval the driver is sent a "Profile verification" notification and, the next time the app opens or signs in, moves on to the location step and then Home. Tested on a phone against the local backend.

@@ -230,7 +230,7 @@ class _ProfileReviewState extends State<ProfileReview> {
                                             isTab(context) ? 11.sp : 13.sp),
                                   ),
                                   Text(
-                                    "process. Please Visit our office.".tr,
+                                    "process. Please wait 2 to 4 days.".tr,
                                     style: GoogleFonts.mulish(
                                         color: tSecondaryColor,
                                         fontWeight: FontWeight.w600,
