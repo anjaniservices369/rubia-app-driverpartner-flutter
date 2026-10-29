@@ -75,7 +75,17 @@ class _VechileSelectionState extends State<VechileSelection> {
     responce = await DriverDetailsApi().getDriverVehicleTypes(context, type);
     if (responce != null && responce['status'] == 'OK') {
       for (var i = 0; i <= responce['details'].length - 1; i++) {
-        vechileTitle.add(responce['details'][i]['title']);
+        // Every vehicle exists once per gear type (1 automatic, 2 manual); name the gear so the two
+        // entries are not shown as identical lines (and so selecting one does not unselect the other).
+        final gear = responce['details'][i]['type'].toString();
+        final gearName = gear == vehicle_types_automatic.toString()
+            ? 'automatic'.tr
+            : gear == vehicle_types_manual.toString()
+                ? 'manual'.tr
+                : '';
+        vechileTitle.add(gearName.isEmpty
+            ? responce['details'][i]['title']
+            : responce['details'][i]['title'] + ' (' + gearName + ')');
         vechileListId.add(responce['details'][i]['id'].toString());
         print('vechileTitle');
         print(vechileTitle);
@@ -351,7 +361,7 @@ class _VechileSelectionState extends State<VechileSelection> {
                                     width: 70.w,
                                     child: Text(
                                       vechileNewList.isEmpty
-                                          ? 'Select vechile type'
+                                          ? 'select_vehicle_type'.tr
                                           : vechileNewList
                                           .join(', ')
                                           .toString(),

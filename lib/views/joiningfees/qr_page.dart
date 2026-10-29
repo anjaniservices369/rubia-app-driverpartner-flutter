@@ -308,7 +308,9 @@ class _QRPageState extends State<QRPage> {
                                 Twl.forceNavigateTo(context, ProfileReview());
                                 print(param);
                               } else {
-                                Twl.createAlert(context, 'Oops', res['error'].toString());
+                                // This used to read res (the order, which has no error) and showed "null".
+                                Twl.createAlert(context, 'Oops',
+                                    '${resp?['error'] ?? 'Payment not confirmed yet. Please try again.'}');
                               }
                               print("Verify Payment");
                               stopLoading();

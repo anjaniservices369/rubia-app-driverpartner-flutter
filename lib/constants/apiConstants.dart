@@ -51,6 +51,8 @@ const String PAY_JOINING_FEE = 'driver/pay-joining-fee?auth_code=';
 
 //Payment GateWay Apis Cashfree
 const String CREATE_ORDER = 'driver/create-order?auth_code=';
+const String RAZORPAY_CREATE_ORDER = 'driver/razorpay-create-order?auth_code=';
+const String CASHFREE_CREATE_ORDER = 'driver/cashfree-create-order?auth_code=';
 
 //Subscriptio Apis
 const String DRIVER_SUSCRIPTION = 'driver/subscribe-now?auth_code=';

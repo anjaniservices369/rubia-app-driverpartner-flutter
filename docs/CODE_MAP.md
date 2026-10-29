@@ -6,19 +6,19 @@
 
 | Status | Finding |
 |---|---|
-| WARNING | Cashfree runs in TEST mode unless the release is built with `--dart-define=CASHFREE_PRODUCTION=true` (and the server holds live keys) |
+| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383` |
 | note | In-app wallet withdrawal is switched off (drivers are told to visit the office); its endpoint `driver/f` is a placeholder |
 | ok | `apiBaseUrl` = `(not found)` |
 | ok | OneSignal App ID is set |
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (124 files, about 42,933 lines)
+## 2. Files (124 files, about 43,061 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
 | `api_services/ApiHelper.dart` | 208 | Server request helper - The single place every request to the Rubia server goes through. It also notices when the server says the driver's login has expired and sends ... |  |
-| `api_services/DriverDetailApis.dart` | 214 | Driver profile, documents & money requests - Requests about the driver's profile: registration steps, vehicle types, documents, bank details, online/offline status, jo... |  |
+| `api_services/DriverDetailApis.dart` | 236 | Driver profile, documents & money requests - Requests about the driver's profile: registration steps, vehicle types, documents, bank details, online/offline status, jo... |  |
 | `api_services/locationPing.dart` | 120 | Live location reporting - While the driver is Online, reports their position to the server about every 20 seconds so the admin map can show them. |  |
 | `api_services/mediaApi.dart` | 62 | Photo / document upload - Sends one picture (selfie, car photo, licence...) to the Rubia server and gets back the web address where it is stored on the Rubia server. |  |
 | `api_services/newBookingAlert.dart` | 172 | New booking alert - While the driver is Online and the app is open (foreground or background), checks for new Available bookings every 10 seconds, rings noti6x once fo... |  |
@@ -29,7 +29,7 @@
 | `api_services/userApi.dart` | 198 | Account & login requests - Requests about the driver's account: send/verify the SMS code, check the session, log out, notifications, location updates, odometer, push d... |  |
 | `background_services/background_services.dart` | 239 | Ride-tracking background service - While a ride is in progress this keeps recording the driver's route even if the app is minimised, and shows the 'location is being t... |  |
 | `background_services/notification.dart` | 101 | Local notification helper - Helper for creating Android notification channels and showing on-device notifications (e.g. the tracking notification). |  |
-| `constants/apiConstants.dart` | 139 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
+| `constants/apiConstants.dart` | 141 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
 | `constants/BookingStatusConstants.dart` | 72 | Booking status labels - Turns a booking's status number into the words shown to the driver (Pending, Accepted, Way to pickup ...). |  |
 | `constants/constants.dart` | 89 | Colours and spacing - The brand colours and standard spacing used across the app. Change a colour here to restyle every screen. |  |
 | `constants/imageConstant.dart` | 137 | Image file names - A list of the picture files bundled with the app (logos, icons, illustrations), so screens refer to them by name. |  |
@@ -75,8 +75,8 @@
 | `views/homePage/componats/earning_card.dart` | 215 | Today's earnings tiles - Today's earnings and cash collected. |  |
 | `views/homePage/componats/notifactionPage.dart` | 359 | Notifications list - List of messages received, with clear option. |  |
 | `views/homePage/homePage.dart` | 509 | Home screen - Map with the Online/Offline switch, today's earnings and notifications. Going online starts sending the driver's position to the server. |  |
-| `views/joiningfees/joining _fees.dart` | 343 | Pay joining fee - The driver pays the one-time joining fee through Cashfree. |  |
-| `views/joiningfees/qr_page.dart` | 347 | Joining fee by QR / manual transfer - Alternative payment: pay by QR and confirm with support. |  |
+| `views/joiningfees/joining _fees.dart` | 418 | Pay joining fee - The driver pays the one-time joining fee through Razorpay Checkout or Cashfree and picks which one. |  |
+| `views/joiningfees/qr_page.dart` | 349 | Joining fee by QR / manual transfer - Alternative payment: pay by QR and confirm with support. | unused |
 | `views/location_error_page/location_error_page.dart` | 124 | Location problem page - Shown when the driver's location details are missing; going back returns to the location explainer. |  |
 | `views/location_popup_page.dart` | 236 | Always-allow location explainer - Explains why 'Allow all the time' location is needed and sends the driver to the phone's settings. |  |
 | `views/locationError/locationError.dart` | 484 | Location gate - Checks the driver's location is on and sends the first position to the server before opening the home screen. |  |
@@ -130,10 +130,10 @@
 | `views/rider_Details/componants/documents/componants/take_your_selfie.dart` | 372 | Document: selfie - Driver's profile selfie (uploaded to the server). |  |
 | `views/rider_Details/componants/documents/documents.dart` | 416 | Registration: documents hub - List of documents to upload and their status. |  |
 | `views/rider_Details/componants/emergency_Contacts.dart` | 475 | Registration: emergency contacts - Two people to contact in an emergency. |  |
-| `views/rider_Details/componants/personal_Details.dart` | 900 | Registration: personal details - Name, date of birth, address etc. |  |
-| `views/rider_Details/componants/vehicle_Types.dart` | 558 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
+| `views/rider_Details/componants/personal_Details.dart` | 899 | Registration: personal details - Name, date of birth, address etc. |  |
+| `views/rider_Details/componants/vehicle_Types.dart` | 568 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
-| `views/translate.dart` | 2050 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
+| `views/translate.dart` | 2068 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
 | `views/wallet/AmountReview.dart` | 270 | Confirm top-up amount - Reviews the amount before paying. |  |
 | `views/wallet/components.dart` | 742 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |
@@ -142,7 +142,7 @@
 | `views/wallet/transactiondetails.dart` | 330 | Transaction details - One wallet transaction in detail. |  |
 | `views/wallet/walletpage.dart` | 70 | Wallet - Wallet screen: balance, add money, withdraw and transactions. |  |
 
-## 3. Files nothing imports (12)
+## 3. Files nothing imports (13)
 
 These are not referenced by any other Dart file; most are leftovers and can be deleted after a quick check.
 
@@ -154,12 +154,13 @@ These are not referenced by any other Dart file; most are leftovers and can be d
 - `views/collect_payment.dart/componants/generateQR_card.dart` (74 lines)
 - `views/collect_payment.dart/componants/orderid.dart` (58 lines)
 - `views/enable_location/enable_location.dart` (172 lines)
+- `views/joiningfees/qr_page.dart` (349 lines)
 - `views/odometer/ending_odometer_details.dart` (282 lines)
 - `views/odometer/starting_odometer_details.dart` (276 lines)
 - `views/profilePage/earnings/componants/coustomDatePicker.dart` (143 lines)
 - `views/profilePage/notifications/notifications.dart` (403 lines)
 
-## 4. Server endpoints (64)
+## 4. Server endpoints (66)
 
 Paths are relative to `apiBaseUrl`.
 
@@ -187,6 +188,8 @@ Paths are relative to `apiBaseUrl`.
 | `ADD_DRIVER_BANK_DETAILS` | `driver/driver-bank-details-add?auth_code=` |
 | `PAY_JOINING_FEE` | `driver/pay-joining-fee?auth_code=` |
 | `CREATE_ORDER` | `driver/create-order?auth_code=` |
+| `RAZORPAY_CREATE_ORDER` | `driver/razorpay-create-order?auth_code=` |
+| `CASHFREE_CREATE_ORDER` | `driver/cashfree-create-order?auth_code=` |
 | `DRIVER_SUSCRIPTION` | `driver/subscribe-now?auth_code=` |
 | `DRIVER_PLAN_DETAILS` | `driver/plan?auth_code=` |
 | `MY_ADDRESS_LIST` | `driver/all-address-list?auth_code=` |

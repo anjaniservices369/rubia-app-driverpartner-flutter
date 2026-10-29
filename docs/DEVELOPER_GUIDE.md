@@ -455,3 +455,15 @@ driver-list figures of Rs 702 / Rs 710.10; the difference is not explained yet.
 database kept it empty); the vehicle dropdown lists each type twice; the end-of-ride *Completed* tab was
 empty before the cash was collected; background location is requested twice at set-up; typos
 "u want submit" and "vechile".
+
+## Payments: joining fee (29 Oct 2026)
+`views/joiningfees/joining _fees.dart` asks the server for an order and opens the chosen gateway:
+- **Razorpay:** `driver/razorpay-create-order` (`purpose=joining_fee`, the server fixes the amount) -> `razorpay_flutter` checkout ->
+  `driver/pay-joining-fee` with `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature` (signature checked and payment fetched server side).
+- **Cashfree:** `driver/cashfree-create-order` -> `flutter_cashfree_pg_sdk` web checkout (sandbox or production from the `mode` the server returns) ->
+  `driver/pay-joining-fee` with `gateway=cashfree&orderId=...`; the server reads the order back from Cashfree and requires `PAID` for the same amount.
+- The fee shown comes from `driver/check` -> `joining_fee_amount`. `qr_page.dart` is no longer reachable. The `CASHFREE_PRODUCTION`
+  switch in section 9.1 now only applies to the wallet top-up and subscription screens, which still use the older Cashfree code.
+- Backend: `PaymentOrders::createCashfree` / `confirmCashfree` (rows in `payment_order` with `gateway='cashfree'`), the new action is
+  whitelisted in `DriverController::behaviors()`. `driver/update-profile` now stores `address`.
+- Registration screens: the vehicle list names the gear (`Sedan (Automatic)`), and the old typos were replaced by translated texts.

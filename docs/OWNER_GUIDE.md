@@ -278,3 +278,15 @@ You asked for the app to work with the updated backend. In plain words:
   heading is translated. Run on the Redmi from the splash: all five registration steps, including the selfie taken with
   the camera and the other documents, saved without any database edits; the app stops at the joining-fee screen
   (payment was not made).
+
+## 12. Paying the joining fee (29 Oct 2026)
+- The joining-fee screen shows the fee set in the admin dashboard (it used to say Rs 500 always) and lets the driver
+  choose **Razorpay** or **Cashfree**. Razorpay's checkout offers UPI (PhonePe, Google Pay, Paytm and other UPI apps), cards,
+  netbanking and wallets; Cashfree offers UPI (PhonePe, Google Pay, Paytm, any UPI id or QR), cards, wallets and netbanking.
+- The old "QR Payment" page (fixed UPI id, screenshot on WhatsApp) can no longer be reached; its Continue button always failed.
+- The app never decides a payment is paid: the server reads the payment back from the gateway and only then marks the fee paid.
+- Tested on a phone in the gateways' **test modes** (Razorpay demo bank page, Razorpay test UPI, Cashfree simulator): a failed
+  payment leaves the fee unpaid and shows a message; a successful one marks it paid (Rs 499) and the app goes to profile review.
+  No real money moved and the real PhonePe / Google Pay / Paytm apps were not operated. A live-key test of each is still needed.
+- **PhonePe as its own gateway** does not exist on the server (only a placeholder) and needs PhonePe merchant credentials.
+- Wallet top-up and subscription still use the older code and were not changed.

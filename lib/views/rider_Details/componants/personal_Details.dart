@@ -698,8 +698,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text(
-                          'Are you sure u want submit the fields..?'),
+                      title: Text('confirm_submit_fields'.tr),
                       actions: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
