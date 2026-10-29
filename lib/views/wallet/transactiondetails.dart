@@ -16,7 +16,7 @@ import 'package:sizer/sizer.dart';
 import '../../../constants/imageConstant.dart';
 
 import '../../constants/stetuesConstant.dart';
-import 'HistoryBottomSheet.dart';
+import 'historybottomsheet.dart';
 
 // >>> START  class TransactionDetailsWidget
 class TransactionDetailsWidget extends StatefulWidget {

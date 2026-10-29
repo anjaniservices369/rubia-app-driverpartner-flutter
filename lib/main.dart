@@ -51,11 +51,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'constants/imageConstant.dart';
 import 'globalFuctions/globalFunctions.dart';
-import 'views/rider_details/componants/bank_details.dart';
-import 'views/rider_details/componants/documents/documents.dart';
-import 'views/rider_details/componants/emergency_Contacts.dart';
-import 'views/rider_details/componants/personal_Details.dart';
-import 'views/rider_details/componants/vehicle_Types.dart';
+import 'views/rider_Details/componants/bank_details.dart';
+import 'views/rider_Details/componants/documents/documents.dart';
+import 'views/rider_Details/componants/emergency_Contacts.dart';
+import 'views/rider_Details/componants/personal_Details.dart';
+import 'views/rider_Details/componants/vehicle_Types.dart';
 import 'dart:io';
 
 //

@@ -29,9 +29,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/imageConstant.dart';
 

@@ -9,7 +9,7 @@ import 'package:base_project_flutter/api_services/DriverDetailApis.dart';
 import 'package:base_project_flutter/constants/imageConstant.dart';
 import 'package:base_project_flutter/providers/globalFunctionProvider.dart';
 import 'package:base_project_flutter/responsive.dart';
-import 'package:base_project_flutter/views/rider_details/componants/documents/documents.dart';
+import 'package:base_project_flutter/views/rider_Details/componants/documents/documents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

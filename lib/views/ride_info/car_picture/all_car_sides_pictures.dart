@@ -7,7 +7,7 @@
 // Developer note: Posts driver/vehicle-verification with media URLs.
 // ----------------------------------------------------------------------
 import 'package:base_project_flutter/constants/constants.dart';
-import 'package:base_project_flutter/views/ride_info/carNumberadd.dart';
+import 'package:base_project_flutter/views/ride_info/carnumberadd.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

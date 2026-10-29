@@ -21,7 +21,7 @@ import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 import '../bottomNavigation.dart/bottomNavigation.dart';
-import '../rider_details/add_Details.dart';
+import '../rider_Details/add_Details.dart';
 
 // >>> START  class ChooseAppLanguageView
 class ChooseAppLanguageView extends StatefulWidget {

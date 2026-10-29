@@ -12,7 +12,7 @@
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (122 files, about 42,120 lines)
+## 2. Files (122 files, about 42,118 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -131,7 +131,7 @@
 | `views/rider_Details/componants/vehicle_Types.dart` | 568 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
 | `views/translate.dart` | 2068 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
-| `views/wallet/components.dart` | 637 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
+| `views/wallet/components.dart` | 635 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |
 | `views/wallet/pickCustomDate.dart` | 158 | Pick a date range - Date range picker for transactions. |  |
 | `views/wallet/transactiondetails.dart` | 330 | Transaction details - One wallet transaction in detail. |  |
