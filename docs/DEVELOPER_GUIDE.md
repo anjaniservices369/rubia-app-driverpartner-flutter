@@ -473,3 +473,8 @@ are no longer reachable from the wallet): same two gateways as the joining fee w
 `driver/add-balance` (Razorpay: the three `razorpay_*` fields; Cashfree: `gateway=cashfree&orderId=`). The credit is the gateway's amount, shown as
 `Amount credit N (Gateway order)` in the transaction list. Server `actionWithdraw` now validates the amount (`^\d{1,7}$`, 1..balance); a withdrawal is a
 pending debit row (`payment_type` 2, `status` 2) that the office settles.
+
+**Removed 29 Oct 2026:** `joiningfees/qr_page.dart`, `wallet/qr_payment.dart`, `wallet/AmountReview.dart`, `subscription/QR_subscription.dart`,
+`subscription/SubscriptionReview.dart` and the `qr_code.jpg` asset. Subscription payment is `profilePage/subscription/subscription_pay.dart`
+(`purpose=subscription`, server price, `driver/subscribe-now`). Backend: `manual-payment-submit/status`, `PaymentOrders::manualSubmit/Decision/Status`,
+the dashboard approval list and the `company_upi_*` settings were deleted; `payment-options` now returns `{amount, checkout, qr}` only.

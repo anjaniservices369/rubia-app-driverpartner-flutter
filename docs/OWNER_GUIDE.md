@@ -296,3 +296,7 @@ You asked for the app to work with the updated backend. In plain words:
 - **Withdraw** is still manual: the app shows the office address, phone and timings. The server's withdraw call (not used by the app) used to accept a
   negative amount, which *raised* the balance, and refused to withdraw the exact full balance. It now accepts only a whole number of rupees
   from 1 up to the full balance.
+- **The old manual QR payment is gone (29 Oct 2026).** The fixed-UPI-id QR pages for the joining fee, wallet top-up and subscription ("send the
+  screenshot on WhatsApp"), and the company UPI id + UTR approval list in the dashboard's Payments screen, were removed. All three payments now go
+  through Razorpay or Cashfree inside the app and are confirmed by the server. Old manual payments already recorded stay visible in *Latest payments*.
+  **Subscription:** *Subscribe now* opens the same gateway sheet; the price is the active plan's price.

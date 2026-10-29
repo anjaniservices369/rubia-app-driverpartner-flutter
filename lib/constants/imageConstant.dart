@@ -131,6 +131,5 @@ class Images {
   static const String LINE = 'assets/icons/Line.png';
 
   ///payment
-  static const String JOINING_QR_CODE = 'assets/images/qr_code.jpg';
 }
 // <<< END    class Images

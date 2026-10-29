@@ -26,7 +26,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../globalFuctions/globalFunctions.dart';
-import 'QR_subscription.dart';
+import 'subscription_pay.dart';
 
 // >>> START  class Subscription
 class Subscription extends StatefulWidget {
@@ -543,8 +543,8 @@ class _SubscriptionState extends State<Subscription> {
                                 ),
                                 onTap:
                                     (startLoading, stopLoading, btnState) async {
-                                      Twl.forceNavigateTo(
-                                          context, QRSubscriptionPage(price:planDetails['price'].toString()));
+                                      showSubscriptionPay(
+                                          context, planDetails['price'].toString());
                                 },
                               )
                             : Row(

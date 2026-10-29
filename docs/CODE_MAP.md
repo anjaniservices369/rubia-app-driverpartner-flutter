@@ -6,14 +6,14 @@
 
 | Status | Finding |
 |---|---|
-| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383`, `lib/views/wallet/wallet_topup.dart:110` |
+| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383`, `lib/views/profilePage/subscription/subscription_pay.dart:100`, `lib/views/wallet/wallet_topup.dart:110` |
 | note | In-app wallet withdrawal is switched off (drivers are told to visit the office); its endpoint `driver/f` is a placeholder |
 | ok | `apiBaseUrl` = `(not found)` |
 | ok | OneSignal App ID is set |
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (125 files, about 43,306 lines)
+## 2. Files (121 files, about 41,993 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -32,7 +32,7 @@
 | `constants/apiConstants.dart` | 141 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
 | `constants/BookingStatusConstants.dart` | 72 | Booking status labels - Turns a booking's status number into the words shown to the driver (Pending, Accepted, Way to pickup ...). |  |
 | `constants/constants.dart` | 89 | Colours and spacing - The brand colours and standard spacing used across the app. Change a colour here to restyle every screen. |  |
-| `constants/imageConstant.dart` | 137 | Image file names - A list of the picture files bundled with the app (logos, icons, illustrations), so screens refer to them by name. |  |
+| `constants/imageConstant.dart` | 136 | Image file names - A list of the picture files bundled with the app (logos, icons, illustrations), so screens refer to them by name. |  |
 | `constants/stetuesConstant.dart` | 104 | Status codes - The numbers the server uses for states: ride status, payment type, online/offline, profile approved/rejected, image types. |  |
 | `globalFuctions/addressGoogleMaps.dart` | 282 | Address picker map - A map screen where an address can be searched or chosen. | unused |
 | `globalFuctions/globalFunctions.dart` | 587 | Shared helpers ('Twl') - A toolbox used by many screens: pop-up alerts, moving between screens, date formatting, picking/cropping photos and uploading them. |  |
@@ -76,7 +76,6 @@
 | `views/homePage/componats/notifactionPage.dart` | 359 | Notifications list - List of messages received, with clear option. |  |
 | `views/homePage/homePage.dart` | 509 | Home screen - Map with the Online/Offline switch, today's earnings and notifications. Going online starts sending the driver's position to the server. |  |
 | `views/joiningfees/joining _fees.dart` | 418 | Pay joining fee - The driver pays the one-time joining fee through Razorpay Checkout or Cashfree and picks which one. |  |
-| `views/joiningfees/qr_page.dart` | 349 | Joining fee by QR / manual transfer - Alternative payment: pay by QR and confirm with support. | unused |
 | `views/location_error_page/location_error_page.dart` | 124 | Location problem page - Shown when the driver's location details are missing; going back returns to the location explainer. |  |
 | `views/location_popup_page.dart` | 236 | Always-allow location explainer - Explains why 'Allow all the time' location is needed and sends the driver to the phone's settings. |  |
 | `views/locationError/locationError.dart` | 484 | Location gate - Checks the driver's location is on and sends the first position to the server before opening the home screen. |  |
@@ -102,9 +101,8 @@
 | `views/profilePage/ridehistory/bottomsheet.dart` | 349 | History filter sheet - Filter rides by date. |  |
 | `views/profilePage/ridehistory/ridehistory.dart` | 189 | Ride history - Completed and cancelled rides. |  |
 | `views/profilePage/ridehistory/ridetab.dart` | 635 | Ride history list - List of past rides for one tab. |  |
-| `views/profilePage/subscription/QR_subscription.dart` | 352 | Subscription by QR - Pay a plan by QR and confirm with support. |  |
 | `views/profilePage/subscription/subscription.dart` | 665 | Subscription plans - Paid membership plans the driver can buy. |  |
-| `views/profilePage/subscription/SubscriptionReview.dart` | 284 | Subscription review - Confirm plan before paying. |  |
+| `views/profilePage/subscription/subscription_pay.dart` | 217 | Pay for the subscription plan - A small sheet: shows the plan price, the driver picks Razorpay or Cashfree and pays. The price is set by the server from the active pla... |  |
 | `views/profilePage/support/support.dart` | 178 | Support - Support phone / chat. |  |
 | `views/profilePage/tutorials/tutorialspage.dart` | 293 | Training tutorials - How-to guides for drivers. |  |
 | `views/referalCode/referalCode.dart` | 298 | Referral code - Optional: enter the code of the driver who invited you. |  |
@@ -134,16 +132,14 @@
 | `views/rider_Details/componants/vehicle_Types.dart` | 568 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
 | `views/translate.dart` | 2071 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
-| `views/wallet/AmountReview.dart` | 270 | Confirm top-up amount - Reviews the amount before paying. |  |
 | `views/wallet/components.dart` | 740 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |
 | `views/wallet/pickCustomDate.dart` | 158 | Pick a date range - Date range picker for transactions. |  |
-| `views/wallet/qr_payment.dart` | 274 | Wallet top-up by QR - Pay by QR and confirm with support. | unused |
 | `views/wallet/transactiondetails.dart` | 330 | Transaction details - One wallet transaction in detail. |  |
 | `views/wallet/wallet_topup.dart` | 244 | Add money to the wallet - A small sheet: the driver types an amount, picks Razorpay or Cashfree and pays. The server creates the order, checks the payment with the gat... |  |
 | `views/wallet/walletpage.dart` | 70 | Wallet - Wallet screen: balance, add money, withdraw and transactions. |  |
 
-## 3. Files nothing imports (14)
+## 3. Files nothing imports (12)
 
 These are not referenced by any other Dart file; most are leftovers and can be deleted after a quick check.
 
@@ -155,12 +151,10 @@ These are not referenced by any other Dart file; most are leftovers and can be d
 - `views/collect_payment.dart/componants/generateQR_card.dart` (74 lines)
 - `views/collect_payment.dart/componants/orderid.dart` (58 lines)
 - `views/enable_location/enable_location.dart` (172 lines)
-- `views/joiningfees/qr_page.dart` (349 lines)
 - `views/odometer/ending_odometer_details.dart` (282 lines)
 - `views/odometer/starting_odometer_details.dart` (276 lines)
 - `views/profilePage/earnings/componants/coustomDatePicker.dart` (143 lines)
 - `views/profilePage/notifications/notifications.dart` (403 lines)
-- `views/wallet/qr_payment.dart` (274 lines)
 
 ## 4. Server endpoints (66)
 
