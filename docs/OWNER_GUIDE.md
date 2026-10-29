@@ -290,3 +290,9 @@ You asked for the app to work with the updated backend. In plain words:
   No real money moved and the real PhonePe / Google Pay / Paytm apps were not operated. A live-key test of each is still needed.
 - **PhonePe as its own gateway** does not exist on the server (only a placeholder) and needs PhonePe merchant credentials.
 - Wallet top-up and subscription still use the older code and were not changed.
+- **Wallet top-up (29 Oct 2026):** *Add Balance* no longer opens the fixed-UPI-id QR page (which never recorded anything). It opens a small
+  sheet: type an amount (1 to 50,000 rupees), choose Razorpay or Cashfree and pay; the wallet is credited only after the server has checked the
+  payment with the gateway. Tested with a UPI payment and a test card on Razorpay: the balance and the transaction list update at once.
+- **Withdraw** is still manual: the app shows the office address, phone and timings. The server's withdraw call (not used by the app) used to accept a
+  negative amount, which *raised* the balance, and refused to withdraw the exact full balance. It now accepts only a whole number of rupees
+  from 1 up to the full balance.

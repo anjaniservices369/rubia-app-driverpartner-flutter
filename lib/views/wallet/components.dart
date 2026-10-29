@@ -14,7 +14,7 @@ import 'package:base_project_flutter/globalFuctions/globalFunctions.dart';
 import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/globalWidgets/customTextFiled.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
-import 'package:base_project_flutter/views/wallet/qr_payment.dart';
+import 'package:base_project_flutter/views/wallet/wallet_topup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
@@ -267,8 +267,7 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                                     ? Container()
                                     : GestureDetector(
                                         onTap: () {
-                                          // createAlert(context);
-                                          Twl.forceNavigateTo(context, QRPayment());
+                                          showWalletTopUp(context);
                                         },
                                         child: Icon(
                                           Icons.add_circle,
@@ -316,8 +315,7 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                             ),
                             borderRadius: 15.0,
                             onTap: (startLoading, stopLoading, btnState) async {
-                              // createAlert(context);
-                              Twl.forceNavigateTo(context, QRPayment());
+                              showWalletTopUp(context);
                             }
                             ),
                       ),

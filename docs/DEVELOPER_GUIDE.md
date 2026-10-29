@@ -467,3 +467,9 @@ empty before the cash was collected; background location is requested twice at s
 - Backend: `PaymentOrders::createCashfree` / `confirmCashfree` (rows in `payment_order` with `gateway='cashfree'`), the new action is
   whitelisted in `DriverController::behaviors()`. `driver/update-profile` now stores `address`.
 - Registration screens: the vehicle list names the gear (`Sedan (Automatic)`), and the old typos were replaced by translated texts.
+
+**Wallet top-up (29 Oct 2026).** `views/wallet/wallet_topup.dart` (`showWalletTopUp`) replaces the QR flow (`qr_payment.dart` / `AmountReview.dart`
+are no longer reachable from the wallet): same two gateways as the joining fee with `purpose=wallet_topup` and the typed `amount`, then
+`driver/add-balance` (Razorpay: the three `razorpay_*` fields; Cashfree: `gateway=cashfree&orderId=`). The credit is the gateway's amount, shown as
+`Amount credit N (Gateway order)` in the transaction list. Server `actionWithdraw` now validates the amount (`^\d{1,7}$`, 1..balance); a withdrawal is a
+pending debit row (`payment_type` 2, `status` 2) that the office settles.

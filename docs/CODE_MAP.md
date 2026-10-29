@@ -6,14 +6,14 @@
 
 | Status | Finding |
 |---|---|
-| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383` |
+| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383`, `lib/views/wallet/wallet_topup.dart:110` |
 | note | In-app wallet withdrawal is switched off (drivers are told to visit the office); its endpoint `driver/f` is a placeholder |
 | ok | `apiBaseUrl` = `(not found)` |
 | ok | OneSignal App ID is set |
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (124 files, about 43,061 lines)
+## 2. Files (125 files, about 43,306 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -133,16 +133,17 @@
 | `views/rider_Details/componants/personal_Details.dart` | 899 | Registration: personal details - Name, date of birth, address etc. |  |
 | `views/rider_Details/componants/vehicle_Types.dart` | 568 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
-| `views/translate.dart` | 2068 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
+| `views/translate.dart` | 2071 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
 | `views/wallet/AmountReview.dart` | 270 | Confirm top-up amount - Reviews the amount before paying. |  |
-| `views/wallet/components.dart` | 742 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
+| `views/wallet/components.dart` | 740 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |
 | `views/wallet/pickCustomDate.dart` | 158 | Pick a date range - Date range picker for transactions. |  |
-| `views/wallet/qr_payment.dart` | 274 | Wallet top-up by QR - Pay by QR and confirm with support. |  |
+| `views/wallet/qr_payment.dart` | 274 | Wallet top-up by QR - Pay by QR and confirm with support. | unused |
 | `views/wallet/transactiondetails.dart` | 330 | Transaction details - One wallet transaction in detail. |  |
+| `views/wallet/wallet_topup.dart` | 244 | Add money to the wallet - A small sheet: the driver types an amount, picks Razorpay or Cashfree and pays. The server creates the order, checks the payment with the gat... |  |
 | `views/wallet/walletpage.dart` | 70 | Wallet - Wallet screen: balance, add money, withdraw and transactions. |  |
 
-## 3. Files nothing imports (13)
+## 3. Files nothing imports (14)
 
 These are not referenced by any other Dart file; most are leftovers and can be deleted after a quick check.
 
@@ -159,6 +160,7 @@ These are not referenced by any other Dart file; most are leftovers and can be d
 - `views/odometer/starting_odometer_details.dart` (276 lines)
 - `views/profilePage/earnings/componants/coustomDatePicker.dart` (143 lines)
 - `views/profilePage/notifications/notifications.dart` (403 lines)
+- `views/wallet/qr_payment.dart` (274 lines)
 
 ## 4. Server endpoints (66)
 

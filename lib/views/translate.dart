@@ -546,6 +546,7 @@ class LanguageTranslations extends Translations {
 //ReferalCodeView
           'login': 'Login',
           'login_or_register': 'Login / Register',
+          'enter_amount': 'Enter amount',
           'pay_joining_fee_amount': 'Pay ₹{amount} Joining fees',
           'pay_with': 'Pay with',
           'pay_with_razorpay_note': 'UPI (PhonePe, Google Pay, Paytm), cards, netbanking, wallets',
@@ -1202,6 +1203,7 @@ class LanguageTranslations extends Translations {
           'enter_Mobile_Number': 'मोबाइल नंबर दर्ज करें',
           'login': 'लॉग इन करें',
           'login_or_register': 'लॉग इन / रजिस्टर करें',
+          'enter_amount': 'राशि दर्ज करें',
           'pay_joining_fee_amount': '₹{amount} ज्वाइनिंग फीस भुगतान करें',
           'pay_with': 'भुगतान का तरीका',
           'pay_with_razorpay_note': 'UPI (फोनपे, गूगल पे, पेटीएम), कार्ड, नेटबैंकिंग, वॉलेट',
@@ -1857,6 +1859,7 @@ class LanguageTranslations extends Translations {
           'enter_Mobile_Number': 'మొబైల్ నంబర్ నమోదు చేయండి',
           'login': 'లాగిన్',
           'login_or_register': 'లాగిన్ / రిజిస్టర్',
+          'enter_amount': 'మొత్తం నమోదు చేయండి',
           'pay_joining_fee_amount': '₹{amount} చేరడానికి ఫీజు చెల్లించండి',
           'pay_with': 'చెల్లింపు విధానం',
           'pay_with_razorpay_note': 'UPI (ఫోన్‌పే, గూగుల్ పే, పేటీఎం), కార్డులు, నెట్‌బ్యాంకింగ్, వాలెట్లు',
