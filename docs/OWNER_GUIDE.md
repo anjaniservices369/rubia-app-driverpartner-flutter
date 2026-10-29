@@ -304,3 +304,12 @@ You asked for the app to work with the updated backend. In plain words:
   the *subscription price*, days and text are set under Plans. Change either one and it applies at once: the app screens, the gateway checkout and the amount
   charged all use the new value (the app never sends a price). Checked by changing the fee to Rs 650 and the plan to Rs 450 and reading them back through
   the API and both gateways, then restoring Rs 499 and Rs 300. Subscribing also works with Razorpay's Wallet option (Mobikwik) in test mode.
+- **Withdrawals go to the driver's own bank account (29 Oct 2026).** *Wallet > Withdraw* now opens a sheet that shows the balance, the minimum
+  (dashboard setting *min_withdraw*) and the bank details the driver registered (account number masked), with a *Change bank details* link, and lets the
+  driver request an amount (whole rupees). A driver with no bank details is asked to add them first. In the dashboard, **Payments > Withdrawals** lists
+  each request with the driver's full bank details; after transferring the money you press *Mark paid* and enter the bank reference (UTR), or *Reject* to
+  return the amount to the balance. The bank used is also written into the request so it stays readable if the driver edits the details later.
+- **Approval stays manual.** After registering and paying the joining fee a driver waits on the *under review* screen until someone checks every detail in
+  the dashboard (Drivers > the driver's profile) and approves. A crash when approving a driver who was not referred (no referral record) was fixed.
+- **Checked end to end (29 Oct 2026, new driver on a real phone, local server):** splash, Login / Register, OTP, all five registration steps (selfie
+  with the camera, licence, Aadhaar, PAN, police, bank), joining fee by Razorpay, dashboard approval, location permission, Home, and the Withdraw sheet.

@@ -338,6 +338,16 @@ class RideBookingsApi {
   }
   // <<< END    RideBookingsApi.walletTransactionWithoutModel()
 
+  // >>> START  RideBookingsApi.getWithdrawInfo()  -  get withdraw info
+  getWithdrawInfo(BuildContext context) async {
+    var headers = await ApiHelper().getHeader(context);
+    var url = WITHDRAW_INFO + headers['auth_code'];
+    var response = await ApiHelper().getTypeGet(context, url);
+    print(response);
+    return response;
+  }
+  // <<< END    RideBookingsApi.getWithdrawInfo()
+
   // >>> START  RideBookingsApi.getAvailableBalance()  -  get available balance
   getAvailableBalance(BuildContext context) async {
     var headers = await ApiHelper().getHeader(context);
@@ -359,9 +369,10 @@ class RideBookingsApi {
   // <<< END    RideBookingsApi.fetchMyReferalEarnings()
 
 
+  /// Sends a withdrawal request (param: amount). The server pays it to the bank details the driver registered.
+  withdrawAmount(BuildContext context, Map<String, String> param) => getWithdrawMoneyWallet(context, param);
+
   // >>> START  RideBookingsApi.getWithdrawMoneyWallet()  -  get withdraw money wallet
-  /// Unused today: the in-app withdraw dialog is switched off (see wallet/components.dart);
-  /// drivers are told to visit the office. The endpoint below is still a placeholder.
   getWithdrawMoneyWallet(
       BuildContext context, Map<String, String> param) async {
     var headers = await ApiHelper().getHeader(context);

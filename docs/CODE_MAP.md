@@ -7,13 +7,12 @@
 | Status | Finding |
 |---|---|
 | BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383`, `lib/views/profilePage/subscription/subscription_pay.dart:100`, `lib/views/wallet/wallet_topup.dart:110` |
-| note | In-app wallet withdrawal is switched off (drivers are told to visit the office); its endpoint `driver/f` is a placeholder |
 | ok | `apiBaseUrl` = `(not found)` |
 | ok | OneSignal App ID is set |
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (121 files, about 41,990 lines)
+## 2. Files (122 files, about 42,120 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -24,12 +23,12 @@
 | `api_services/newBookingAlert.dart` | 172 | New booking alert - While the driver is Online and the app is open (foreground or background), checks for new Available bookings every 10 seconds, rings noti6x once fo... |  |
 | `api_services/offerService.dart` | 201 | Ride-offer poller (switched off) - Would check for new ride offers every 5 seconds, ring a tone and show an accept/reject pop-up. Switched off in the driver app. |  |
 | `api_services/pushService.dart` | 144 | Push notifications (OneSignal) - Sets up push notifications so the driver is alerted about new bookings, and tells the server which phone to notify. |  |
-| `api_services/rideBookingsApi.dart` | 415 | Booking & ride requests - Requests about rides: list bookings, booking details, accept / reject, go for pickup, start, complete, cancel, earnings, reviews, referral ea... |  |
+| `api_services/rideBookingsApi.dart` | 426 | Booking & ride requests - Requests about rides: list bookings, booking details, accept / reject, go for pickup, start, complete, cancel, earnings, reviews, referral ea... |  |
 | `api_services/skipperApi.dart` | 93 | Taxi / skipper ride requests (switched off) - Server calls for the taxi-style ride-offer flow. Not used by the driver app today. |  |
 | `api_services/userApi.dart` | 198 | Account & login requests - Requests about the driver's account: send/verify the SMS code, check the session, log out, notifications, location updates, odometer, push d... |  |
 | `background_services/background_services.dart` | 239 | Ride-tracking background service - While a ride is in progress this keeps recording the driver's route even if the app is minimised, and shows the 'location is being t... |  |
 | `background_services/notification.dart` | 101 | Local notification helper - Helper for creating Android notification channels and showing on-device notifications (e.g. the tracking notification). |  |
-| `constants/apiConstants.dart` | 141 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
+| `constants/apiConstants.dart` | 142 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
 | `constants/BookingStatusConstants.dart` | 72 | Booking status labels - Turns a booking's status number into the words shown to the driver (Pending, Accepted, Way to pickup ...). |  |
 | `constants/constants.dart` | 89 | Colours and spacing - The brand colours and standard spacing used across the app. Change a colour here to restyle every screen. |  |
 | `constants/imageConstant.dart` | 136 | Image file names - A list of the picture files bundled with the app (logos, icons, illustrations), so screens refer to them by name. |  |
@@ -132,11 +131,12 @@
 | `views/rider_Details/componants/vehicle_Types.dart` | 568 | Registration: vehicle types - Which kinds of vehicles (SUV, hatchback..., manual / automatic) the driver can drive. |  |
 | `views/skipperRide/skipperRideScreen.dart` | 182 | Taxi ride progress screen (switched off) - Step-by-step screen for a taxi/skipper ride: on the way, arrived, start with customer code, complete. |  |
 | `views/translate.dart` | 2068 | All on-screen text (translations) - Every sentence shown in the app, in English, Hindi and Telugu. To change wording or add a language, edit this file. |  |
-| `views/wallet/components.dart` | 740 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
+| `views/wallet/components.dart` | 637 | Wallet widgets & top-up - Balance card, add-money flow (Cashfree) and withdraw button. |  |
 | `views/wallet/historybottomsheet.dart` | 252 | Transaction history filter sheet - Bottom sheet to filter wallet transactions by today / yesterday / week / custom dates. |  |
 | `views/wallet/pickCustomDate.dart` | 158 | Pick a date range - Date range picker for transactions. |  |
 | `views/wallet/transactiondetails.dart` | 330 | Transaction details - One wallet transaction in detail. |  |
 | `views/wallet/wallet_topup.dart` | 244 | Add money to the wallet - A small sheet: the driver types an amount, picks Razorpay or Cashfree and pays. The server creates the order, checks the payment with the gat... |  |
+| `views/wallet/wallet_withdraw.dart` | 221 | Withdraw money from the wallet - Shows the bank account the driver registered (the money is always paid to that account), the balance and the minimum, and lets the dri... |  |
 | `views/wallet/walletpage.dart` | 70 | Wallet - Wallet screen: balance, add money, withdraw and transactions. |  |
 
 ## 3. Files nothing imports (12)
@@ -156,7 +156,7 @@ These are not referenced by any other Dart file; most are leftovers and can be d
 - `views/profilePage/earnings/componants/coustomDatePicker.dart` (143 lines)
 - `views/profilePage/notifications/notifications.dart` (403 lines)
 
-## 4. Server endpoints (66)
+## 4. Server endpoints (67)
 
 Paths are relative to `apiBaseUrl`.
 
@@ -210,7 +210,8 @@ Paths are relative to `apiBaseUrl`.
 | `ADD_RATINGS_REVIEWS` | `driver/add-review?auth_code=` |
 | `ADD_BALANCE` | `driver/add-balance?auth_code=` |
 | `AVAILABLE_BALANCE` | `driver/available-balance?auth_code=` |
-| `WITHDRAW_AMOUNT` | `driver/f?auth_code=` |
+| `WITHDRAW_AMOUNT` | `driver/withdraw?auth_code=` |
+| `WITHDRAW_INFO` | `driver/withdraw-info?auth_code=` |
 | `TRANSACTION_LIST` | `driver/transaction-list?auth_code=` |
 | `DASHBOARD_EARNINGS` | `driver/earnings-dash-board?auth_code=` |
 | `DRIVER_EARNINGS` | `driver/my-earnings?auth_code=` |

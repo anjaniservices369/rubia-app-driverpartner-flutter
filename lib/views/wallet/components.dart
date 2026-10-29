@@ -15,6 +15,7 @@ import 'package:base_project_flutter/globalWidgets/button.dart';
 import 'package:base_project_flutter/globalWidgets/customTextFiled.dart';
 import 'package:base_project_flutter/views/bottomNavigation.dart/bottomNavigation.dart';
 import 'package:base_project_flutter/views/wallet/wallet_topup.dart';
+import 'package:base_project_flutter/views/wallet/wallet_withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
@@ -51,109 +52,6 @@ class WalletCardWidget extends StatefulWidget {
 class _WalletCardWidgetState extends State<WalletCardWidget> {
   final TextEditingController _amountController = TextEditingController();
 
-
-  // >>> START  _WalletCardWidgetState._showContactInfoDialog()  -  show contact info dialog
-  void _showContactInfoDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Note : ', style: GoogleFonts.mulish(
-            color: tBlack,
-            fontSize: isTab(context) ? 16.sp : 14.sp,
-            fontWeight: FontWeight.w800,
-          ),
-          ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Please visit our office with necessary documents to complete the withdraw process.',style: GoogleFonts.mulish(
-                color: tBlack,
-                fontSize: isTab(context) ? 16.sp : 14.sp,
-                fontWeight: FontWeight.w500,
-              ),),
-              SizedBox(height: 10),
-              Text('Phone: +91 78936 53899',style: GoogleFonts.mulish(
-                color: tBlack,
-                fontSize: isTab(context) ? 16.sp : 14.sp,
-                fontWeight: FontWeight.w500,
-              ),),
-              SizedBox(height: 10),
-              Text('Email: rubia.services@gmail.com',style: GoogleFonts.mulish(
-                color: tBlack,
-                fontSize: isTab(context) ? 14.sp : 12.sp,
-                fontWeight: FontWeight.w500,
-              ),),
-              SizedBox(height: 10),
-              Text('Address:  Rubia Services(OPC) Pvt.Ltd Lig 60/5, 4th Phase, KPHB Colony, Hyderabad, 500085' ,style: GoogleFonts.mulish(
-                color: tBlack,
-                fontSize: isTab(context) ? 14.sp : 12.sp,
-                fontWeight: FontWeight.w500,
-              ),),
-              SizedBox(height: 10),
-              Text('Timings:  9:00AM to 7:00PM',style: GoogleFonts.mulish(
-                color: tBlack,
-                fontSize: isTab(context) ? 15.sp : 13.sp,
-                fontWeight: FontWeight.w800,
-              ),),
-              SizedBox(height: 10),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: 100,
-                    child: Button(
-                      color: tPrimaryColor,
-                      textcolor: tWhite,
-                      bottonText: 'Call'.tr,
-                      borderSide: BorderSide(color: tPrimaryColor),
-                      onTap: (startLoading, stopLoading, btnState) async {
-                        launchUrl(Uri.parse("tel://+917893653899"));
-                      },
-                    ),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Button(
-                      color: tPrimaryColor,
-                      textcolor: tWhite,
-                      bottonText: 'Location'.tr,
-                      borderSide: BorderSide(color: tPrimaryColor),
-                      onTap: (startLoading, stopLoading, btnState) async {
-                        MapsLauncher.launchCoordinates(17.4739803, 78.3886243);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-
-            ],
-          ),
-          actions: [
-            Center(
-              child: Container(
-                child: Button(
-                  color: tPrimaryColor,
-                  textcolor: tWhite,
-                  bottonText: 'OK'.tr,
-                  borderSide: BorderSide(color: tPrimaryColor),
-                  onTap: (startLoading, stopLoading, btnState) async{
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height:2.h,
-            ),
-          ],
-        );
-      },
-    );
-  }
-  // <<< END    _WalletCardWidgetState._showContactInfoDialog()
 
   // >>> START  _WalletCardWidgetState.initState()  -  runs once when the screen opens
   @override
@@ -350,8 +248,7 @@ class _WalletCardWidgetState extends State<WalletCardWidget> {
                             ),
                             borderRadius: 15.0,
                             onTap: (startLoading, stopLoading, btnState) async {
-                              // withDrawAlert(context);
-                              _showContactInfoDialog(context);
+                              showWalletWithdraw(context);
                             }),
                       ),
                     ],

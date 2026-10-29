@@ -89,7 +89,8 @@ const String ADD_RATINGS_REVIEWS = 'driver/add-review?auth_code=';
 const String ADD_BALANCE = 'driver/add-balance?auth_code=';
 const String AVAILABLE_BALANCE = 'driver/available-balance?auth_code=';
 // Placeholder path: the withdraw dialog is disabled; withdrawals are handled at the office.
-const String WITHDRAW_AMOUNT = 'driver/f?auth_code=';
+const String WITHDRAW_AMOUNT = 'driver/withdraw?auth_code=';
+const String WITHDRAW_INFO = 'driver/withdraw-info?auth_code=';
 const String TRANSACTION_LIST = 'driver/transaction-list?auth_code=';
 const String DASHBOARD_EARNINGS = 'driver/earnings-dash-board?auth_code=';
 const String DRIVER_EARNINGS = 'driver/my-earnings?auth_code=';

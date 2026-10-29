@@ -478,3 +478,10 @@ pending debit row (`payment_type` 2, `status` 2) that the office settles.
 `subscription/SubscriptionReview.dart` and the `qr_code.jpg` asset. Subscription payment is `profilePage/subscription/subscription_pay.dart`
 (`purpose=subscription`, server price, `driver/subscribe-now`). Backend: `manual-payment-submit/status`, `PaymentOrders::manualSubmit/Decision/Status`,
 the dashboard approval list and the `company_upi_*` settings were deleted; `payment-options` now returns `{amount, checkout, qr}` only.
+
+**Withdraw (29 Oct 2026).** `views/wallet/wallet_withdraw.dart` (`showWalletWithdraw`) calls `driver/withdraw-info` (balance, `min_withdraw`, masked bank, pending
+requests) then `driver/withdraw` (`WITHDRAW_AMOUNT` now points at it; it used to be the placeholder `driver/f`). Server `actionWithdraw` requires a
+registered bank account (`driver_bank_details`), enforces `min_withdraw`, accepts whole rupees only and stores `Withdrawal N to <bank> A/C ****1234 IFSC ... (waiting
+for the office to pay)` in `driver_wallet.method_reason` (status 2 = pending debit). Dashboard: `PaymentsController::actionWithdrawals` / `actionSettle`
+(`/admin/payments/withdrawals`) mark a request paid (status 1, reference stored in `method_reason`) or rejected (status 4, balance restored).
+`UsersController::actionUserVerifyProfile` no longer crashes for a driver without a referral record.
