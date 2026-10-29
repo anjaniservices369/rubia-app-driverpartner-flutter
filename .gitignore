@@ -55,3 +55,6 @@ jks/
 *.jks
 *.keystore
 key.properties
+
+# Personal Claude Code permission overrides
+.claude/settings.local.json
