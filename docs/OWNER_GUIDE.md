@@ -300,3 +300,7 @@ You asked for the app to work with the updated backend. In plain words:
   screenshot on WhatsApp"), and the company UPI id + UTR approval list in the dashboard's Payments screen, were removed. All three payments now go
   through Razorpay or Cashfree inside the app and are confirmed by the server. Old manual payments already recorded stay visible in *Latest payments*.
   **Subscription:** *Subscribe now* opens the same gateway sheet; the price is the active plan's price.
+- **Prices come from the dashboard (checked 29 Oct 2026).** The *joining fee* is set in the dashboard under Integrations -> Driver settings (0 = no fee);
+  the *subscription price*, days and text are set under Plans. Change either one and it applies at once: the app screens, the gateway checkout and the amount
+  charged all use the new value (the app never sends a price). Checked by changing the fee to Rs 650 and the plan to Rs 450 and reading them back through
+  the API and both gateways, then restoring Rs 499 and Rs 300. Subscribing also works with Razorpay's Wallet option (Mobikwik) in test mode.

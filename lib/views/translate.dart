@@ -61,7 +61,6 @@ class LanguageTranslations extends Translations {
           'make_sure_that_picture_should_be_clear_and_detail.':
               'Make sure that picture should be clear and detail',
           'make_picture_clear.': 'and Privacy Policy.',
-          'Pay_₹500_Joining_fees': 'Pay ₹500 Joining fees',
           'Joining_fees': 'Joining fees',
           'by_submission_you_agree_to_our': 'By submission you agree to our',
           'terms_&_condition': 'Terms & Condition',
@@ -794,7 +793,6 @@ class LanguageTranslations extends Translations {
           "make_sure_that_picture_should_be_clear_and_detail.":
               "यह सुनिश्चित करें कि चित्र स्पष्ट और विवरण हों",
           "make_picture_clear.": "और गोपनीयता नीति।",
-          "Pay_₹500_Joining_fees": "₹500 ज्वाइनिंग फीस भुगतान करें",
           "Joining_fees": "ज्वाइनिंग फीस",
           "by_submission_you_agree_to_our":
               "जमा करके आप हमारे से सहमत होते हैं",
@@ -1443,7 +1441,6 @@ class LanguageTranslations extends Translations {
           "make_sure_that_picture_should_be_clear_and_detail.":
               "దయచేసి చిత్రం స్పష్టం మరియు వివరాలు ఉండాలని ఖచ్చితం చేయండి",
           "make_picture_clear.": "మరియు గోప్యతా విధానం.",
-          "Pay_₹500_Joining_fees": "₹500 చేరడానికి ఫీజు చెల్లించండి",
           "Joining_fees": "చేరడానికి ఫీజు",
           "by_submission_you_agree_to_our":
               "మార్గదర్శకాలు & నిబంధనలు తప్పక గొట్టించినట్లుగా అంగీకరిస్తారు",
