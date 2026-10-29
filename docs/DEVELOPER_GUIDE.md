@@ -485,3 +485,7 @@ registered bank account (`driver_bank_details`), enforces `min_withdraw`, accept
 for the office to pay)` in `driver_wallet.method_reason` (status 2 = pending debit). Dashboard: `PaymentsController::actionWithdrawals` / `actionSettle`
 (`/admin/payments/withdrawals`) mark a request paid (status 1, reference stored in `method_reason`) or rejected (status 4, balance restored).
 `UsersController::actionUserVerifyProfile` no longer crashes for a driver without a referral record.
+
+## 12. CI/CD, environments and repository history (29 Oct 2026)
+
+See [CI_CD.md](CI_CD.md): GitHub Actions and GitLab pipelines, the dev / staging / production environments, the secret and variable names, the `API_BASE_URL` values (keep the trailing slash) and the cleaned git history (clone again if your clone is old).

@@ -313,3 +313,7 @@ You asked for the app to work with the updated backend. In plain words:
   the dashboard (Drivers > the driver's profile) and approves. A crash when approving a driver who was not referred (no referral record) was fixed.
 - **Checked end to end (29 Oct 2026, new driver on a real phone, local server):** splash, Login / Register, OTP, all five registration steps (selfie
   with the camera, licence, Aadhaar, PAN, police, bank), joining fee by Razorpay, dashboard approval, location permission, Home, and the Withdraw sheet.
+
+## 13. Builds and releases (29 Oct 2026)
+
+New app versions are built by GitHub Actions: pushing to `develop` makes a signed test build, pushing to `staging` a staging build, and a tag such as `v1.2.3` a production release (with a required approval click). Details for a developer are in [CI_CD.md](CI_CD.md). The git history was also cleaned of old build files; anyone with an old copy of the code must download it again.
