@@ -28,8 +28,46 @@ class LocationPopUpPage extends StatefulWidget {
 // <<< END    class LocationPopUpPage
 
 // >>> START  class _LocationPopUpPageState
-class _LocationPopUpPageState extends State<LocationPopUpPage> {
+class _LocationPopUpPageState extends State<LocationPopUpPage> with WidgetsBindingObserver {
   bool _permissionsGranted = false;
+  bool _checkingPermissions = true;
+
+  // >>> START  _LocationPopUpPageState.initState()  -  runs once when the screen opens
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refreshPermissions();
+  }
+  // <<< END    _LocationPopUpPageState.initState()
+
+  // >>> START  _LocationPopUpPageState.dispose()  -  cleanup when the screen closes
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  // <<< END    _LocationPopUpPageState.dispose()
+
+  // >>> START  _LocationPopUpPageState.didChangeAppLifecycleState()  -  did change app lifecycle state
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshPermissions();
+  }
+  // <<< END    _LocationPopUpPageState.didChangeAppLifecycleState()
+
+  // >>> START  _LocationPopUpPageState._refreshPermissions()  -  refresh permissions
+  Future<void> _refreshPermissions() async {
+    final foreground = await Permission.locationWhenInUse.status;
+    final background = await Permission.locationAlways.status;
+    final notifications = await Permission.notification.status;
+    if (!mounted) return;
+    setState(() {
+      _permissionsGranted = foreground.isGranted && background.isGranted && notifications.isGranted;
+      _checkingPermissions = false;
+    });
+  }
+  // <<< END    _LocationPopUpPageState._refreshPermissions()
 
   // void initState() {
   //   super.initState();
@@ -77,6 +115,9 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
 
   // >>> START  _LocationPopUpPageState.build()  -  draws this screen / widget (its layout)
   Widget build(BuildContext context) {
+    if (_checkingPermissions) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     if (_permissionsGranted) {
       // Keep consent and readiness in one route; the readiness screen retains
       // its GPS, current-location, backend submission, and success behavior.
@@ -149,6 +190,8 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                           onTap: (startLoading, stopLoading, btnState) async {
                             startLoading();
                             bool result = await _checkLocationPermission();
+                            if (!mounted) return;
+                            stopLoading();
                             if (result) {
                               print('true >>>.');
                               print(result);
@@ -167,7 +210,6 @@ class _LocationPopUpPageState extends State<LocationPopUpPage> {
                               print('false >>>.');
                             }
 
-                            stopLoading();
                           },
                         ),
                       ),

@@ -31,6 +31,9 @@ import '../../globalFuctions/globalFunctions.dart';
 import '../../globalWidgets/button.dart';
 import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
+import '../../models/booking_rules.dart';
+import '../../constants/stetuesConstant.dart';
+import '../location_popup_page.dart';
 import '../profile_review/profile_review.dart';
 
 // >>> START  class JoiningFees
@@ -51,6 +54,8 @@ class _JoiningFeesState extends State<JoiningFees> {
   String _gateway = 'razorpay';
   // The joining fee set in the admin dashboard (driver/check -> joining_fee_amount); the screen no longer hard-codes it.
   String _fee = '';
+  bool _loadingFee = true;
+  String? _feeError;
   // The Submit button's spinner switch; it is stopped when the checkout closes or the payment is verified.
   VoidCallback? _stopSpinner;
 
@@ -67,18 +72,40 @@ class _JoiningFeesState extends State<JoiningFees> {
   // <<< END    _JoiningFeesState.initState()
 
   // >>> START  _JoiningFeesState._loadFee()  -  load fee
-  Future<void> _loadFee() async {
+  Future<bool> _loadFee() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final code = prefs.getString('authCode');
-      if (code == null) return;
+      if (code == null) throw StateError('Please sign in again to check your joining fee.');
       final check = await UserAPI().checkApi(code);
-      final fee = check?['detail']?['joining_fee_amount'];
-      if (fee != null && mounted) {
-        final n = double.tryParse(fee.toString());
-        setState(() => _fee = n == null ? fee.toString() : (n == n.roundToDouble() ? n.toInt().toString() : n.toStringAsFixed(2)));
+      if (check == null || check['status'] != 'OK' || check['detail'] is! Map) {
+        throw StateError(check?['error']?.toString() ?? 'Could not refresh the joining fee. Please try again.');
       }
-    } catch (_) {}
+      if (!mounted) return false;
+      final detail = Map<String, dynamic>.from(check['detail']);
+      if (!requiresJoiningFee(detail)) {
+        _stopSpinner?.call();
+        _stopSpinner = null;
+        Twl.forceNavigateTo(context,
+            detail['profile_verified'] == profile_verified_yes
+                ? LocationPopUpPage() : ProfileReview());
+        return false;
+      }
+      final fee = num.parse(detail['joining_fee_amount'].toString());
+      setState(() {
+        _fee = fee == fee.roundToDouble() ? fee.toInt().toString() : fee.toStringAsFixed(2);
+        _loadingFee = false;
+        _feeError = null;
+      });
+      return true;
+    } catch (error, stack) {
+      debugPrint('Joining fee refresh failed: $error\n$stack');
+      if (mounted) setState(() {
+        _loadingFee = false;
+        _feeError = error.toString();
+      });
+      return false;
+    }
   }
   // <<< END    _JoiningFeesState._loadFee()
 
@@ -109,7 +136,20 @@ class _JoiningFeesState extends State<JoiningFees> {
                 color: tSecondaryColor,
                 fontWeight: FontWeight.w700)),
       ),
-      body: Padding(
+      body: _loadingFee
+          ? const Center(child: CircularProgressIndicator())
+          : _feeError != null
+          ? Center(child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Text(_feeError!, textAlign: TextAlign.center),
+                TextButton(onPressed: () {
+                  setState(() => _loadingFee = true);
+                  _loadFee();
+                }, child: const Text('Try again')),
+              ]),
+            ))
+          : Padding(
         padding: EdgeInsets.symmetric(horizontal: tDefaultPadding),
         child: Column(
           children: [
@@ -244,7 +284,7 @@ class _JoiningFeesState extends State<JoiningFees> {
                     await _startPayment();
                   } else {
                     Twl.createAlert(
-                        context, 'Alert', 'Joining fee is manditory');
+                        context, 'Alert', 'Please accept the terms before paying the joining fee');
                   }
                 }),
             SizedBox(
@@ -308,6 +348,11 @@ class _JoiningFeesState extends State<JoiningFees> {
 
   // >>> START  _JoiningFeesState._startPayment()  -  start payment
   Future<void> _startPayment() async {
+    if (!await _loadFee()) {
+      if (mounted) _stopSpinner?.call();
+      return;
+    }
+    if (!mounted) return;
     if (_gateway == 'cashfree') {
       await _startCashfree();
       return;

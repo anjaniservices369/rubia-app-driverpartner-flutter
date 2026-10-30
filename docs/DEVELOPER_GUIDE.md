@@ -3,6 +3,43 @@
 *Written for: developers who will maintain this Flutter app. A plain-language overview for the
 business owner is in `OWNER_GUIDE.md`.*
 
+## Latest device regression - 2026-10-30
+
+The updated debug APK was installed on the Redmi without clearing its session. Granted location
+permissions skipped consent and setup reached Home. Before the Realme customer submitted booking
+**1698**, fresh `driver/check` and `driver/available-balance` confirmed Online (1), active
+subscription (1, through 2026-11-30) and wallet INR 61. The initial INR -39 balance correctly
+blocked going online; an approved, labelled INR 100 synthetic credit in the isolated local
+database resolved it. No gateway payment was performed.
+
+Booking 1698 exercised acceptance before pickup, wrong-code rejection, correct-code verification
+with immediate checklist, actual camera capture/upload for both stages, vehicle E2E1698 entry,
+start, end, drop confirmation, test cash receipt, and both reviews through the apps. The fixed
+Collect fare card showed INR 273, matching bill and collection; net driver earnings were INR 234.
+It was a zero-distance stationary test, not a driven trip or actual cash exchange.
+
+All ten distinct `(before|after, front|back|side1|side2|selfie)` slots persisted. Eleven camera
+records include an extra after/back capture; all eleven returned local HTTP 200 image responses
+and appeared in dashboard HTML. Capture/upload passed; valid vehicle/photo-content compliance
+was not established. Do not claim exactly ten records or discard the extra audit record.
+
+Twelve backend reconciliation assertions passed, including one earnings row, one INR 39 wallet
+debit for this ride, both five-star test reviews, and preservation of earlier booking 1285.
+Wallet ended at INR 22. Driver was taken offline and both apps, local server and ADB forwarding
+were stopped afterward. Fresh onboarding/approval screens, live gateway, SMS and push were not
+replayed in this cycle. Zero-fee routing has rule tests; GPS-disabled retry has widget coverage.
+
+Focused checks:
+
+```powershell
+flutter test test\api_constants_test.dart test\translations_test.dart test\booking_rules_test.dart test\location_setup_test.dart
+```
+
+The existing tests, ten new fare/onboarding cases and one permission/GPS retry widget test
+passed; changed Dart code passed analysis and the debug APK built. Customer OTP visibility
+has two focused arrival tests in the customer project. Backend expiry has sixteen isolated
+regressions. Local APKs target port 8082 via `API_BASE_URL`; this is not a production release.
+
 ---
 
 ## 1. Stack at a glance
@@ -64,6 +101,21 @@ Naming is inconsistent (`componants`, `globalFuctions`, `stetuesConstant`, `hoem
 
 > A network failure during step 3 shows a retry screen and keeps the stored session. Do not
 > treat a temporary backend failure as a logged-out account.
+
+The registration checklist refreshes `driver/check` before continuing. JoiningFees also
+rechecks before opening a gateway: zero-fee/already-paid drivers bypass checkout. Approved
+drivers continue to location; others continue to profile review. Approval text describes
+profile approval, not a payment.
+
+Location consent checks existing permissions and rechecks on app resume. The readiness gate
+bounds GPS acquisition, reverse geocoding and server submission, persists coordinates only
+after an OK response, and presents errors with retry instead of a premature success message.
+
+Completed accepted-ride cards use `collectibleBookingFare` in `lib/models/booking_rules.dart`:
+the server's `price_detail.estimatePrice` plus `Pending_cancellation_charges`, matching the
+bill/collection screen. Driver earnings remain the pre-completion estimate, not the amount
+to collect from the customer. OTP submission keeps the arrival widget mounted while the
+provider notifies listeners; a successful response opens the checklist as a dialog directly.
 
 ---
 

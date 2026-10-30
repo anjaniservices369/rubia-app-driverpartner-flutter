@@ -22,6 +22,10 @@ import '../../globalWidgets/leadingbackbtn.dart';
 import '../../responsive.dart';
 
 import '../joiningfees/joining _fees.dart';
+import '../../models/booking_rules.dart';
+import '../profile_review/profile_review.dart';
+import '../location_popup_page.dart';
+import '../../constants/stetuesConstant.dart';
 import 'componants/bank_details.dart';
 import 'componants/documents/documents.dart';
 import 'componants/emergency_Contacts.dart';
@@ -498,20 +502,41 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                   Button(
                     textcolor: tWhite,
                     bottonText: 'next'.tr,
-                    onTap: (startLoading, stopLoading, btnState) {
+                    onTap: (startLoading, stopLoading, btnState) async {
+                      if (!ischeckbox) {
+                        Twl.createAlert(context, 'Message', 'Please accept terms and conditions');
+                        return;
+                      }
+                      startLoading();
+                      final prefs = await SharedPreferences.getInstance();
+                      final code = prefs.getString('authCode');
+                      final response = code == null ? null : await UserAPI().checkApi(code);
+                      if (!mounted) return;
+                      stopLoading();
+                      if (response == null || response['status'] != 'OK' || response['detail'] is! Map) {
+                        Twl.createAlert(context, 'Unable to continue',
+                            response?['error']?.toString() ?? 'Could not refresh your registration. Please try again.');
+                        return;
+                      }
+                      setState(() => checkDetails = response['detail']);
                       if (checkDetails['personal_details'] == true &&
                           checkDetails['driver_emergency_contacts'] == true &&
                           checkDetails['driver_vehicle_types'] == true &&
                           checkDetails['driver_bank_details'] == true &&
                           checkDetails['document_verification'] == true &&
                           checkDetails['driver_bank_details'] == true) {
-                        ischeckbox == true
-                            ? Twl.forceNavigateTo(context, JoiningFees())
-                            : Twl.createAlert(context, 'Message',
-                                'Please accept terms and conditions');
+                        try {
+                          Twl.forceNavigateTo(context,
+                              requiresJoiningFee(Map<String, dynamic>.from(checkDetails))
+                                  ? JoiningFees()
+                                  : checkDetails['profile_verified'] == profile_verified_yes
+                                      ? LocationPopUpPage() : ProfileReview());
+                        } on FormatException catch (error) {
+                          Twl.createAlert(context, 'Unable to continue', error.message);
+                        }
                       } else {
                         Twl.createAlert(context, 'Alert..!',
-                            'All required fields are manditory');
+                            'Please complete all required registration details');
                       }
                       // Twl.forceNavigateTo(context, JoiningFees());
                     },

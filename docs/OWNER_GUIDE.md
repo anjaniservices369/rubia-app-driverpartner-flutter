@@ -41,7 +41,7 @@ earnings, documents) lives on the backend server; the app is the driver's window
    4. Documents: selfie, driving licence, Aadhaar card, PAN card
    5. Bank / UPI details
    6. Submit
-3. **Joining fee** — the driver pays the one-time joining fee (the screen says ₹500).
+3. **Joining fee** — uses the current dashboard fee. A zero fee or an already-paid fee skips checkout and continues to approval/location setup.
 4. **Profile review** — your team checks the documents in the admin panel and approves,
    rejects or blocks the driver. The driver sees one of three screens: *under review*,
    *approved*, or *blocked*.
@@ -51,6 +51,8 @@ earnings, documents) lives on the backend server; the app is the driver's window
    permissions, checks location/GPS readiness, and submits the driver's current position before
    opening the main app. If permission is denied, the driver is shown recovery guidance and can
    open Android settings; permission is never granted automatically.
+   Already-granted permissions skip the disclosure. GPS/address/server updates show progress;
+   failed setup shows a retry action rather than claiming that location was saved.
 
 ### Step B — A normal working day
 1. **Home screen** — a map with a big **Online / Offline** switch and today's earnings.
@@ -63,6 +65,7 @@ earnings, documents) lives on the backend server; the app is the driver's window
    1. *Go for pickup*
    2. *Arrived* — the customer is notified
    3. Driver asks the customer for a **4-digit ride code** and types it in (proves they met)
+      — a valid code opens the pre-ride verification checklist immediately; an invalid code can be retried on the same screen.
    4. **Before the ride:** driver selfie and vehicle photos
    5. Enters the vehicle number and starts the ride
    6. *Complete ride* — end-of-ride verification/photos and drop-location confirmation
@@ -85,11 +88,32 @@ earnings, documents) lives on the backend server; the app is the driver's window
 
 ### What has and has not been tested on a device
 
-A manual Android smoke test reached the Home map after onboarding, OTP login, and location
+An earlier manual Android smoke test reached the Home map after onboarding, OTP login, and location
 setup, and opened the Bookings, Wallet, Profile, tutorial, notification, earnings, and ride
 history screens. The Available and Accepted ride lists had no active booking at the time,
 so accepting and completing a ride and collecting payment were not tested. The test account
-was already marked Online; no availability or payment setting was changed during the test.
+was already marked Online; no availability or payment setting was changed during that earlier test.
+
+**Latest repeat run on 30 October 2026 (Realme customer, Redmi driver, isolated local server).**
+Booking **1698** was created only after checking that the updated driver was Online, subscribed
+through 30 November, and had a positive wallet. A labelled, user-approved INR 100 test credit
+resolved the previous INR -39 balance and left INR 61 before booking; no real payment was made.
+
+Acceptance, wrong-code rejection, correct-code verification, camera capture/upload, vehicle
+number entry, start, completion, drop-location confirmation, test cash receipt and both reviews
+were performed in the apps. Correct OTP opened the checklist without returning to the list.
+All ten required before/after photo slots were saved; eleven records include an extra capture,
+and every image was accessible from the dashboard. The completed Collect fare card, bill and
+collection screen all agreed on **INR 273**, not the **INR 234** driver net earnings.
+
+The dashboard showed vehicle **E2E1698**, INR 234 driver net, INR 39 platform/GST deduction,
+both reviews, and both customer emergency contacts. Twelve reconciliation checks passed.
+Wallet ended at **INR 22**; the driver was taken Offline and test services stopped afterward.
+
+This was a **stationary workflow test**, not a real driven trip, vehicle-condition inspection,
+or real cash exchange. Unlike the earlier run, ride photos and start/end used the actual app
+screens. Fresh onboarding, approval messaging, real gateway payments, SMS and push delivery
+were not replayed in this cycle. Zero-fee routing and GPS-error recovery have automated coverage.
 
 **Full run on 28 October 2026 (two phones, local test server).** A brand-new driver was registered
 from the first login to the Home screen, then took a customer's ride from acceptance to payment and
@@ -105,7 +129,7 @@ rating. No real money was moved.
 ### Flow notes
 
 The location explanation and readiness steps now appear within one guided screen. The driver
-must still explicitly respond to the permission request before the app checks GPS, gets the
+must explicitly respond if permission has not already been granted before the app checks GPS, gets the
 current position, and submits it. After OTP login, the app resumes the registration step using
 the same document-completion status as it uses on startup. Registration screens and their
 validation remain separate. Ride OTP, identity/vehicle checks, ride start, and completion are

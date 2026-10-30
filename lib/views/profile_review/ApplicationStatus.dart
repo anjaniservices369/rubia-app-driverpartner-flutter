@@ -366,7 +366,7 @@ class _VerificationSucessPageState extends State<VerificationSucessPage> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Your payment is successfully completed',
+              'Your driver profile has been approved',
               style: GoogleFonts.mulish(color: tBlack, fontSize: isTab(context) ? 10.sp : 12.sp),
             ),
             SizedBox(height: 8.h),

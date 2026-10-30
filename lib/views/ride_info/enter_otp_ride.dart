@@ -468,21 +468,12 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                       bottonText: 'Next',
                                       onTap: (startLoading, stopLoading,
                                           btnState) async {
+                                        if (!_formKey.currentState!.validate()) return;
                                         startLoading();
-                                        homePageProvider.status = '0';
-                                        print(logStr.toString());
-                                        if (_formKey.currentState!.validate()) {
-                                          print('logStr >>>>>>>');
-
-                                          print(logStr.toString());
-                                          // _onStart();
-                                          bool result = await _onStart();
-                                          if (result) {
-                                            print(result);
-                                            print('Location >>>>>>>>>>>>.');
-
-                                            print(
-                                                'Location 1221378216368126 >>>>>>>>>>>>.');
+                                        try {
+                                          final trackingReady = await _onStart();
+                                          if (!mounted) return;
+                                          if (trackingReady) {
                                             Map<String, String> param = {
                                               'booking_id': widget
                                                   .bookingDetails['id']
@@ -497,38 +488,32 @@ class _OtpDetailCardState extends State<OtpDetailCard> {
                                                   .toString(),
                                               'otp': _otpCodeController.text,
                                             };
-                                            print(param);
-                                            var res = await homePageProvider
+                                            final res = await homePageProvider
                                                 .getDriverArrivedLocation(
                                                 context, param);
-                                            if (res['status'] == 'OK') {
-                                              return showDialog(
+                                            if (!mounted) return;
+                                            if (res != null && res['status'] == 'OK') {
+                                              stopLoading();
+                                              await showDialog<void>(
                                                   context: context,
-                                                  builder: (ctx) => Column(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .center,
-                                                    children: [
-                                                      Text(logStr
-                                                          .toString()),
-                                                      VerificationPopUp(
-                                                          bookingDetails: widget
-                                                              .bookingDetails)
-                                                      // VerificationPopUp(bookingDetails: widget.bookingDetails)
-                                                    ],
-                                                  ));
+                                                  barrierDismissible: false,
+                                                  builder: (ctx) => VerificationPopUp(
+                                                      bookingDetails: widget.bookingDetails));
                                             } else {
                                               Twl.createAlert(context, 'Oops',
-                                                  res['error'].toString());
+                                                  res?['error']?.toString() ?? 'Could not verify the ride code. Please try again.');
                                             }
                                           } else {
                                             Twl.createAlert(context, 'Oops',
-                                                "Failed to execute background location.Please enable your location permission to always use");
+                                                'Ride tracking could not start. Enable location all the time in app settings, then try again.');
                                           }
-
-                                          stopLoading();
+                                        } catch (error, stack) {
+                                          debugPrint('Ride code verification failed: $error\n$stack');
+                                          if (mounted) Twl.createAlert(context, 'Unable to verify ride code',
+                                              'Check your connection and try again.');
+                                        } finally {
+                                          if (mounted) stopLoading();
                                         }
-                                        stopLoading();
                                       },
                                     ),
                                   ),

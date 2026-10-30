@@ -6,13 +6,13 @@
 
 | Status | Finding |
 |---|---|
-| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:383`, `lib/views/profilePage/subscription/subscription_pay.dart:100`, `lib/views/wallet/wallet_topup.dart:110` |
+| BLOCKER | Cashfree is hard-wired to SANDBOX (test) mode at: `lib/views/joiningfees/joining _fees.dart:428`, `lib/views/profilePage/subscription/subscription_pay.dart:100`, `lib/views/wallet/wallet_topup.dart:110` |
 | ok | `apiBaseUrl` = `(not found)` |
 | ok | OneSignal App ID is set |
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (122 files, about 42,118 lines)
+## 2. Files (123 files, about 41,894 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -45,6 +45,7 @@
 | `globalWidgets/textfildcustom.dart` | 109 | Text input (style B) - Second variant of the styled text box for forms. |  |
 | `globalWidgets/viewDetailsButton.dart` | 52 | View details button - The "View full details" button at the bottom of every booking card (Available rides, Accepted rides). |  |
 | `main.dart` | 562 | App entry point - Starts the driver app: sets up push notifications, checks whether the driver is already logged in, and decides which screen to show first (login, the... |  |
+| `models/booking_rules.dart` | 29 | (no header comment yet) |  |
 | `providers/background_locator.dart` | 119 | Background locator state - Starts/stops the background location plugin and checks permission. |  |
 | `providers/bookingProvider.dart` | 93 | Accept-ride & distance helper - Helper for accepting a ride and for measuring the distance between two GPS points. | unused |
 | `providers/earningsProvider.dart` | 39 | Earnings filter state - Holds the date range chosen on the earnings screens. |  |
@@ -59,7 +60,7 @@
 | `views/bill_details/final_collect_bill_amount.dart` | 434 | Final fare breakdown - Itemised final fare. |  |
 | `views/bill_details/route_conversion_card.dart` | 151 | Route card (billed differently from booked) - Shown on the ride details and bill when a ride was booked one way / in-city but billed as another type: the message and a... |  |
 | `views/bookingsPage/bookingPage.dart` | 302 | Bookings (two tabs) - Available rides, Accepted rides and Completed rides (paid and rated). |  |
-| `views/bookingsPage/componats/accepted_rides.dart` | 691 | Accepted rides list - Rides the driver has accepted (status 12). |  |
+| `views/bookingsPage/componats/accepted_rides.dart` | 692 | Accepted rides list - Rides the driver has accepted (status 12). |  |
 | `views/bookingsPage/componats/AcceptedRideDetails.dart` | 574 | Ride offer details - Bottom sheet with route, fare and the Accept Ride button. |  |
 | `views/bookingsPage/componats/avalableRIde.dart` | 722 | Available rides list - Rides offered to this driver, with a summary card and 'view details'. |  |
 | `views/bookingsPage/componats/estimated_fare.dart` | 335 | Estimated fare breakdown - Explains the estimated fare. | unused |
@@ -74,10 +75,10 @@
 | `views/homePage/componats/earning_card.dart` | 215 | Today's earnings tiles - Today's earnings and cash collected. |  |
 | `views/homePage/componats/notifactionPage.dart` | 359 | Notifications list - List of messages received, with clear option. |  |
 | `views/homePage/homePage.dart` | 509 | Home screen - Map with the Online/Offline switch, today's earnings and notifications. Going online starts sending the driver's position to the server. |  |
-| `views/joiningfees/joining _fees.dart` | 418 | Pay joining fee - The driver pays the one-time joining fee through Razorpay Checkout or Cashfree and picks which one. |  |
+| `views/joiningfees/joining _fees.dart` | 463 | Pay joining fee - The driver pays the one-time joining fee through Razorpay Checkout or Cashfree and picks which one. |  |
 | `views/location_error_page/location_error_page.dart` | 124 | Location problem page - Shown when the driver's location details are missing; going back returns to the location explainer. |  |
-| `views/location_popup_page.dart` | 236 | Always-allow location explainer - Explains why 'Allow all the time' location is needed and sends the driver to the phone's settings. |  |
-| `views/locationError/locationError.dart` | 484 | Location gate - Checks the driver's location is on and sends the first position to the server before opening the home screen. |  |
+| `views/location_popup_page.dart` | 278 | Always-allow location explainer - Explains why 'Allow all the time' location is needed and sends the driver to the phone's settings. |  |
+| `views/locationError/locationError.dart` | 133 | (no header comment yet) |  |
 | `views/logiPage/loginPage.dart` | 179 | Login (mobile number) - The driver types their mobile number; an SMS code is sent. |  |
 | `views/odometer/ending_odometer_details.dart` | 282 | Ending odometer - Driver enters the odometer reading and photo at ride end. | unused |
 | `views/odometer/starting_odometer_details.dart` | 276 | Starting odometer - Driver enters the odometer reading and photo at ride start. | unused |
@@ -113,13 +114,13 @@
 | `views/ride_info/carnumberadd.dart` | 458 | Enter car number - Driver types the car number and taps Start ride. |  |
 | `views/ride_info/completer_ride.dart` | 519 | Ride screen - in progress - Shows the drop location and the 'Complete ride' slider. |  |
 | `views/ride_info/componants/verification_popup.dart` | 159 | Start of ride checklist pop-up - Reminder to take selfie and car photos before starting. |  |
-| `views/ride_info/enter_otp_ride.dart` | 871 | Ride screen - customer OTP - The driver asks the customer for their 4-digit ride code and enters it; this confirms pickup and starts the trip checks. |  |
+| `views/ride_info/enter_otp_ride.dart` | 856 | Ride screen - customer OTP - The driver asks the customer for their 4-digit ride code and enters it; this confirms pickup and starts the trip checks. |  |
 | `views/ride_info/file_manager.dart` | 45 | File helper - Small helper for local files used by the location callback. |  |
 | `views/ride_info/final_bill_amount.dart` | 434 | Final bill breakdown - Explains how the final fare is made up. |  |
 | `views/ride_info/location_callback_handler.dart` | 47 | Background locator callbacks - Callbacks used by the background location plugin. |  |
 | `views/ride_info/location_service_repository.dart` | 138 | Background locator storage - Stores location updates received from the background plugin. |  |
 | `views/ride_info/ride_info.dart` | 819 | Ride screen - pickup - Map and customer details for an accepted ride; the driver slides 'Go for pickup' then 'Arrived'. |  |
-| `views/rider_Details/add_Details.dart` | 530 | Registration checklist - Shows the registration steps (personal, emergency, vehicle, documents, bank) with ticks and the final Submit button. |  |
+| `views/rider_Details/add_Details.dart` | 555 | Registration checklist - Shows the registration steps (personal, emergency, vehicle, documents, bank) with ticks and the final Submit button. |  |
 | `views/rider_Details/componants/bank_details.dart` | 382 | Registration: bank / UPI details - Where the driver's earnings are paid. |  |
 | `views/rider_Details/componants/documents/componants/aadhar_card.dart` | 419 | Document: Aadhaar card - Front and back photo of the Aadhaar card. |  |
 | `views/rider_Details/componants/documents/componants/driving_licence.dart` | 643 | Document: driving licence - Front and back photo of the licence. |  |
@@ -295,7 +296,10 @@ Paths are relative to `apiBaseUrl`.
 
 ## 6. Documentation coverage
 
-Every Dart file has a header comment.
+2 file(s) have no header comment. Add one (see any other file for the style):
+
+- `models/booking_rules.dart`
+- `views/locationError/locationError.dart`
 
 ## 7. Libraries used (28)
 

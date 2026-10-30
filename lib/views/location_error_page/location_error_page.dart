@@ -77,7 +77,7 @@ class _LocationErrorPageState extends State<LocationErrorPage> {
                                 //   ),
                                 // ),
                                 Text(
-                                  "Failed to execute background location.Please enable your location permission to always use allow all the time ".tr,
+                                  "Location or notification permission is not enabled. In app settings, allow location all the time and enable notifications, then try again.".tr,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.mulish(fontSize: isTab(context) ? 9.sp : 13.sp, fontWeight: FontWeight.w400, color: tWhite),

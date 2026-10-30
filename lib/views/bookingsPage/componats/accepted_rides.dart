@@ -5,6 +5,7 @@
 // ----------------------------------------------------------------------
 import 'dart:async';
 import 'dart:convert';
+import 'package:base_project_flutter/models/booking_rules.dart';
 
 import 'package:base_project_flutter/api_services/rideBookingsApi.dart';
 import 'package:base_project_flutter/constants/BookingStatusConstants.dart';
@@ -493,7 +494,7 @@ class _AcceptedRidesState extends State<AcceptedRides> {
                                   ),
                             booking['status'] == STATUS_RIDE_COMPLETED
                                 ? Text(
-                                    currencySymbol + booking['driver_earnings'].toString(),
+                                    currencySymbol + collectibleBookingFare(Map<String, dynamic>.from(booking)).toStringAsFixed(2),
                                     style: GoogleFonts.mulish(
                                       color: tPrimaryColor,
                                       fontWeight: FontWeight.w700,
