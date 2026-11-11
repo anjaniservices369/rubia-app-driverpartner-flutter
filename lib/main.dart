@@ -323,10 +323,16 @@ class _MyAppState extends State<MyApp> {
           locale: widget.locale ?? const Locale('en', 'US'),
           fallbackLocale: const Locale('en', 'US'),
           debugShowCheckedModeBanner: false,
+          // Same base theme as the Customer app: Mulish text and icons in the brand navy, and a navy-seeded colour scheme so dialogs,
+          // sheets and any unstyled text pick up the brand instead of the Material defaults (black text, purple-grey surfaces).
           theme: ThemeData(
             textTheme: GoogleFonts.mulishTextTheme(
               Theme.of(context).textTheme,
-            ),
+            ).apply(bodyColor: tBlue, displayColor: tBlue),
+            iconTheme: const IconThemeData(color: tBlue),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: tBlue,
+            ).copyWith(onSurface: tBlue),
             primarySwatch: Colors.blue,
           ),
           home: ConnectivityWrapper(

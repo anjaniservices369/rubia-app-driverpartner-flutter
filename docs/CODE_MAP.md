@@ -12,7 +12,7 @@
 | ok | Certificate-skipping override is installed in debug builds only |
 | ok | Every language offered in the picker has translations (en_us, hi_in, tl_in) |
 
-## 2. Files (123 files, about 41,894 lines)
+## 2. Files (123 files, about 41,901 lines)
 
 | File | Lines | Purpose | Status |
 |---|---:|---|---|
@@ -30,7 +30,7 @@
 | `background_services/notification.dart` | 101 | Local notification helper - Helper for creating Android notification channels and showing on-device notifications (e.g. the tracking notification). |  |
 | `constants/apiConstants.dart` | 142 | Server addresses & switches - Every server address the app calls, plus the OneSignal App ID and feature switches. THIS is where the app is pointed at the test or the l... |  |
 | `constants/BookingStatusConstants.dart` | 72 | Booking status labels - Turns a booking's status number into the words shown to the driver (Pending, Accepted, Way to pickup ...). |  |
-| `constants/constants.dart` | 89 | Colours and spacing - The brand colours and standard spacing used across the app. Change a colour here to restyle every screen. |  |
+| `constants/constants.dart` | 90 | Colours and spacing - The brand colours and standard spacing used across the app. Change a colour here to restyle every screen. |  |
 | `constants/imageConstant.dart` | 136 | Image file names - A list of the picture files bundled with the app (logos, icons, illustrations), so screens refer to them by name. |  |
 | `constants/stetuesConstant.dart` | 104 | Status codes - The numbers the server uses for states: ride status, payment type, online/offline, profile approved/rejected, image types. |  |
 | `globalFuctions/addressGoogleMaps.dart` | 282 | Address picker map - A map screen where an address can be searched or chosen. | unused |
@@ -44,7 +44,7 @@
 | `globalWidgets/texfildtital.dart` | 34 | Text-box title - Small label shown above a text box. |  |
 | `globalWidgets/textfildcustom.dart` | 109 | Text input (style B) - Second variant of the styled text box for forms. |  |
 | `globalWidgets/viewDetailsButton.dart` | 52 | View details button - The "View full details" button at the bottom of every booking card (Available rides, Accepted rides). |  |
-| `main.dart` | 562 | App entry point - Starts the driver app: sets up push notifications, checks whether the driver is already logged in, and decides which screen to show first (login, the... |  |
+| `main.dart` | 568 | App entry point - Starts the driver app: sets up push notifications, checks whether the driver is already logged in, and decides which screen to show first (login, the... |  |
 | `models/booking_rules.dart` | 29 | (no header comment yet) |  |
 | `providers/background_locator.dart` | 119 | Background locator state - Starts/stops the background location plugin and checks permission. |  |
 | `providers/bookingProvider.dart` | 93 | Accept-ride & distance helper - Helper for accepting a ride and for measuring the distance between two GPS points. | unused |

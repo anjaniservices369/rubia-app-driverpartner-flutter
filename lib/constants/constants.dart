@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 const tDefaultPadding = 20.0;
 var tPrimaryColor = Color(0XFFFF8F0C);
-var tBackground = Color(0XFFFDFDFD);
+var tBackground = Color(0XFFF5F5F5); // same as the Customer app
 var tAppbarColor = Color(0XFFFFC10C);
 var tSecondaryColor = Color(0XFF144272);
 const tGreen = Color(0XFF169755);
@@ -50,11 +50,12 @@ const tLightBrown = Color(0XFF935A29);
 // FF8F0C
 //var tYellow = Color(0XFFF57C00);
 const tDivider = Color(0XFFE1E1E1);
-const tlightGray = Color(0XFFCCCCCC);
+const tlightGray = Color(0XFFC4C4C4); // same as the Customer app
 
+// Card and button shadows are tinted with the brand navy, as in the Customer app (they were plain black).
 const tBoxShadow = BoxShadow(
-  color: Color(0x26000000),
-  blurRadius: 6,
+  color: Color(0x23144272),
+  blurRadius: 4,
   offset: Offset(0, 1),
 );
 
@@ -69,7 +70,7 @@ const tProfileShadow = BoxShadow(
   offset: Offset(0, 4),
 );
 const tBackbtnBoxShadow = BoxShadow(
-  color: Color(0x23000000),
+  color: Color(0x23144272),
   blurRadius: 4,
   offset: Offset(0, 1),
 );
